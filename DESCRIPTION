@@ -5,8 +5,7 @@ Version: 0.1.0
 Date: 2019-04-03
 Author: Teun van den Brand
 Maintainer: Teun van den Brand <tahvdbrand@gmail.com>
-Description: This package adds some convenience functions to ggplot2. On the one hand, it adds the ability to force the sizes of facet panels and setting multiple gradient fill scales. 
-On the other hand, it adds genomics specific functions, such as adding ideograms to plots and a Hi-C triangle plot.
+Description: This package adds some convenience functions to ggplot2. On the one hand, it adds the ability to force the sizes of facet panels and setting multiple gradient fill scales. On the other hand, it adds genomics specific functions, such as adding ideograms to plots and a Hi-C triangle plot.
 License: GPL-3
 Encoding: UTF-8
 LazyData: true

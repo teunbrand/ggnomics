@@ -4,7 +4,7 @@
 #'   scales. It takes in listed arguments for each aesthetic and disseminates
 #'   these to \code{\link[ggplot2]{continuous_scale}}.
 #'
-#' @param ...,colours,values,space,na.value,guide,colors listed arguments in
+#' @param ...,colours,values,na.value,guide,colors listed arguments in
 #'   \code{\link[ggplot2]{scale_colour_gradientn}} (e.g. \code{colours =
 #'   list(c("white", "red"), c("black", "blue"))}).
 #' @param aesthetics a \code{character} vector with names of aesthetic mapping.
@@ -38,63 +38,114 @@
 #' ggplot(df, aes(x, y)) +
 #'   geom_raster(aes(fill1 = v)) +
 #'   geom_raster(aes(fill2 = w)) +
-#'   geom_raster(aes(fill3 = z))
+#'   geom_raster(aes(fill3 = z)) +
 #'   scale_fill_multi(aesthetics = c("fill1", "fill2", "fill3"),
 #'                    colours = list(c("white", "red"),
 #'                                   c("black", "blue"),
 #'                                   c("grey50", "green")))
-scale_fill_multi <- function(..., colours, values = NULL, space = "Lab", na.value = "transparent",
+scale_fill_multi <- function(..., colours, values = NULL, na.value = "transparent",
                              guide = "colourbar", aesthetics = "fill", colors){
 
   # Convert to proper spelling of colour
-  colours <- if (missing(colours))
-    if (missing(colors))
+  colours <- if (missing(colours)){
+    if (missing(colors)){
       c("white", "black")
-  else colors
-  else colours
+    } else {
+      colors
+    }
+  } else {
+    colours
+  }
 
-  # Digest extra arguments
-  extra.args <- lapply(seq(aesthetics), function(i){
+  # Distribute arguments across multiple scales
+  scales <- distribute_scale_multi(aesthetics = aesthetics,
+                                   colours    = colours,
+                                   values     = values,
+                                   na.value   = na.value,
+                                   guide      = guide,
+                                   ...)
+
+  structure(list(scales = scales,
+                 aes = aesthetics,
+                 replaced_aes = standardise_aes_names("fill")),
+            class = "MultiScale")
+}
+
+#' @describeIn scale_fill_multi
+#' @export
+scale_colour_multi <- function(..., colours, values = NULL, na.value = "transparent",
+                             guide = "colourbar", aesthetics = "colour", colors){
+
+  # Convert to proper spelling of colour
+  colours <- if (missing(colours)){
+    if (missing(colors)){
+      c("white", "black")
+    } else {
+      colors
+    }
+  } else {
+    colours
+  }
+
+  # Distribute arguments across multiple scales
+  scales <- distribute_scale_multi(
+    aesthetics = aesthetics,
+    colours    = colours,
+    values     = values,
+    na.value   = na.value,
+    guide      = guide,
+    ...
+  )
+
+  structure(list(scales = scales,
+                 aes = aesthetics,
+                 replaced_aes = standardise_aes_names("colour")),
+            class = "MultiScale")
+}
+
+distribute_scale_multi <- function(aesthetics, colours, values, na.value, guide, ...)
+{
+  # Interpret extra arguments
+  extra_args <- lapply(seq(aesthetics), function(i){
     lapply(list(...), pickvalue, i)
   })
 
-  # Choose guide
+  # Interpret guides
   guide <- lapply(seq(aesthetics), function(i){
-    this.guide <- pickvalue(guide, i)
-    if (all(class(this.guide) == "character") && length(this.guide) == 1) {
-      if(standardise_aes_names(this.guide) == standardise_aes_names("colourbar")){
-        this.guide <- guide_colourbar()
-      } else if (this.guide == "legend") {
-        this.guide <- guide_legend()
+    this_guide <- pickvalue(guide, i)
+    if (all(class(this_guide) == "character") && length(this_guide) == 1) {
+      if(standardise_aes_names(this_guide) == standardise_aes_names("colourbar")){
+        this_guide <- guide_colourbar()
+      } else if (this_guide == "legend") {
+        this_guide <- guide_legend()
       }
     }
-    if (any(class(this.guide) == "guide")) {
-      this.guide$available_aes <- aesthetics[[i]]
+    if (any(class(this_guide) == "guide")) {
+      this_guide$available_aes <- aesthetics[[i]]
     } else {
       stop("I haven't programmed this path yet.\nChoose a legend or colourbar guide", call. = FALSE)
     }
-    return(this.guide)
+    return(this_guide)
   })
 
-  # Build scales
+  # Interpret scales
   scales <- lapply(seq(aesthetics), function(i){
     aes <- aesthetics[[i]]
-    pass.args = list(
+    pass_args = list(
       aesthetics = aes,
       scale_name = paste0("MultiScale_", aes),
       palette = scales::gradient_n_pal(colours = pickvalue(colours, i),
-                                       values  = pickvalue(values, i),
-                                       space   = pickvalue(space, i)),
+                                       values  = pickvalue(values,  i)),
       na.value = pickvalue(na.value, i),
-      guide = pickvalue(guide, i)
+      guide    = pickvalue(guide,    i)
     )
-    pass.args <- append(pass.args, pickvalue(extra.args, i))
-    out <- do.call("continuous_scale", pass.args)
+    pass_args <- append(pass_args, pickvalue(extra_args, i))
+    out <- do.call("continuous_scale", pass_args)
     return(out)
   })
-
-  structure(list(scales = scales, aes = aesthetics), class = "MultiScale")
+  return(scales)
 }
+
 
 pickvalue <- function(x, i){
   if (class(x)[[1]] != "list"){
@@ -114,33 +165,48 @@ ggplot_add.MultiScale <- function(object, plot, object_name){
     plot$scales$add(i)
   }
 
+  replaced_aes <- object$replaced_aes
+  replaced_pattern <- paste0("^", replaced_aes, "$")
+
   plot$layers <- lapply(plot$layers, function(lay){
     if(!(names(lay$mapping) %in% object$aes)) {
       return(lay)
     }
-    new.aes <- object$aes[object$aes %in% names(lay$mapping)]
-    old.geom <- lay$geom
-    old.geom.nahandle <- old.geom$handle_na
-    new.geom.nahandle <- function(self, data, params){
-      colnames(data)  <- gsub(new.aes, "fill", colnames(data))
-      old.geom.nahandle(data, params)
+    new_aes  <- object$aes[object$aes %in% names(lay$mapping)]
+    old_geom <- lay$geom
+    old_geom_nahandle <- old_geom$handle_na
+    new_geom_nahandle <- function(self, data, params){
+      colnames(data)  <- eval(gsub(new_aes,
+                              replaced_aes,
+                              colnames(data)))
+      old_geom_nahandle(data, params)
     }
 
-    new.geom <-
-      ggproto(paste0("New", new.aes, class(old.geom)[1]),
-              old.geom,
-              handle_na =
-                new.geom.nahandle,
-              default_aes =
-                setNames(old.geom$default_aes,
-                         gsub("^fill$", new.aes, names(old.geom$default_aes))),
-              non_missing_aes =
-                gsub("^fill$", new.aes, old.geom$non_missing_aes),
-              optional_aes =
-                gsub("^fill$", new.aes, old.geom$optional_aes),
-              required_aes =
-                gsub("^fill$", new.aes, old.geom$required_aes))
-    lay$geom <- new.geom
+    new_geom <-
+      ggproto(
+        paste0("New", new_aes, class(old_geom)[1]),
+        old_geom,
+        handle_na =
+          new_geom_nahandle,
+        default_aes =
+          setNames(old_geom$default_aes,
+                   gsub(replaced_pattern,
+                        new_aes,
+                        names(old_geom$default_aes))),
+        non_missing_aes =
+          gsub(replaced_pattern,
+               new_aes,
+               old_geom$non_missing_aes),
+        optional_aes =
+          gsub(replaced_pattern,
+               new_aes,
+               old_geom$optional_aes),
+        required_aes =
+          gsub(replaced_pattern,
+               new_aes,
+               old_geom$required_aes)
+      )
+    lay$geom <- new_geom
     return(lay)
   })
   return(plot)

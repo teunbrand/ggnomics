@@ -1,7 +1,7 @@
 
 <!-- README.md is generated from README.Rmd. Please edit that file -->
 
-# ggnomics
+# ggnomics <img src="man/figures/icon.png" align = "right" width = "120" />
 
 This package was written to extend `ggplot2` in the following way:
 
@@ -10,8 +10,9 @@ This package was written to extend `ggplot2` in the following way:
 
 Towards the first goal, this package provides the function
 `force_panelsize()` to force ggplot panels to adopt a specific ratio or
-absolute dimension. It also provides `scale_fill_multi()` to map
-multiple aesthetics to different colour scales.
+absolute dimension. It also provides `scale_fill/colour_multi()` to map
+multiple aesthetics to different colour scales. To make the handling of
+subsets of data as seperate geoms easier, it provides `ggsubset()`.
 
 Towards the second goal it provides functions such as `facet_ideogrid()`
 and `facet_ideowrap()` which will put ideograms with highlights next to
@@ -25,38 +26,52 @@ unstable and is subject to changes in the future.
 
 ## Installation
 
-You can install tbggenomics from github with:
+You can install ggnomics from github with:
 
 ``` r
 # install.packages("devtools")
-devtools::install_github("teunbrand/ggenomics")
+devtools::install_github("teunbrand/ggnomics")
 ```
 
 ## Example
 
-This is a basic example of `scale_fill_multi()` and `force_panelsizes()`
-in action:
+This is a basic example of `scale_colour_multi()`, `force_panelsizes()`
+and `ggsubset()` in action:
 
 ``` r
 library(ggplot2)
-library(tbggenomics)
+library(ggnomics)
 
 phi <- 2/(1 + sqrt(5))
 
-ggplot(iris, aes(x = Sepal.Length, y = Sepal.Width)) +
-  geom_point(data = iris[iris$Species == "setosa",],     
-             aes(sepal.width = Sepal.Width), shape = 21) +
-  geom_point(data = iris[iris$Species == "versicolor",], 
-             aes(petal.length = Petal.Length), shape = 21) +
-  geom_point(data = iris[iris$Species == "virginica",],  
-             aes(petal.width = Petal.Width), shape = 21) +
+g <- ggplot(iris, aes(x = Sepal.Length, y = Sepal.Width)) +
+  geom_point(aes(sepal.width = Sepal.Width),
+             ggsubset(Species == "setosa")) +
+  geom_point(aes(petal.length = Petal.Length),
+             ggsubset(Species == "versicolor")) +
+  geom_point(aes(petal.width = Petal.Width),
+             ggsubset(Species == "virginica")) +
   facet_grid(~ Species, scales = "free") +
-  scale_fill_multi(aesthetics = c("sepal.width", "petal.length", "petal.width"),
-                   colours = list(c("white", "green"),
-                                  c("white", "red"),
-                                  c("white", "blue")),
-                   guide = guide_colourbar(barheight = unit(50, "pt"))) +
+  scale_colour_multi(aesthetics = c("sepal.width", 
+                                    "petal.length", 
+                                    "petal.width"),
+                     colours = list(c("white", "green"),
+                                    c("white", "red"),
+                                    c("white", "blue")),
+                     guide = guide_colourbar(barheight = unit(50, "pt"))) +
   force_panelsizes(rows = 1, cols = c(1, phi, phi^2), respect = TRUE)
+#> Warning: Ignoring unknown aesthetics: sepal.width
+#> Warning: Ignoring unknown aesthetics: petal.length
+#> Warning: Ignoring unknown aesthetics: petal.width
+g
 ```
 
-![](README-example-1.png)<!-- -->
+![](man/figures/README-example-1.png)<!-- -->
+
+The warning about ignoring unknown aesthetics can be circumvented by
+updating the defaults of geoms,
+e.g.:
+
+``` r
+ggplot2::update_geom_defaults("point", list(fill = c("sepal.width", "petal.length", "petak.width")))
+```

@@ -5,3 +5,5 @@
 .Ruserdata
 .swp
 README.Rmd
+.gitignore.save
+ggnomics.Rproj

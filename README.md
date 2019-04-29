@@ -35,8 +35,8 @@ devtools::install_github("teunbrand/ggnomics")
 
 ## Example
 
-This is a basic example of `scale_colour_multi()`, `force_panelsizes()`
-and `ggsubset()` in action:
+This is a basic example of `scale_colour_multi()`, `facet_nested()`,
+`force_panelsizes()` and `ggsubset()` in action:
 
 ``` r
 library(ggplot2)
@@ -44,14 +44,19 @@ library(ggnomics)
 
 phi <- 2/(1 + sqrt(5))
 
-g <- ggplot(iris, aes(x = Sepal.Length, y = Sepal.Width)) +
+df <- iris
+df$nester <- ifelse(df$Species == "setosa",
+                    "Short Leaves",
+                    "Long Leaves")
+
+g <- ggplot(df, aes(x = Sepal.Length, y = Petal.Length)) +
   geom_point(aes(sepal.width = Sepal.Width),
              ggsubset(Species == "setosa")) +
   geom_point(aes(petal.length = Petal.Length),
              ggsubset(Species == "versicolor")) +
   geom_point(aes(petal.width = Petal.Width),
              ggsubset(Species == "virginica")) +
-  facet_grid(~ Species, scales = "free") +
+  facet_nested(~ nester + Species, scales = "free") +
   scale_colour_multi(aesthetics = c("sepal.width", 
                                     "petal.length", 
                                     "petal.width"),
@@ -73,5 +78,5 @@ updating the defaults of geoms,
 e.g.:
 
 ``` r
-ggplot2::update_geom_defaults("point", list(fill = c("sepal.width", "petal.length", "petak.width")))
+ggplot2::update_geom_defaults("point", list(fill = c("sepal.width", "petal.length", "petal.width")))
 ```

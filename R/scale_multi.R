@@ -71,7 +71,7 @@ scale_fill_multi <- function(..., colours, values = NULL, na.value = "transparen
             class = "MultiScale")
 }
 
-#' @describeIn scale_fill_multi
+#' @rdname  scale_fill_multi
 #' @export
 scale_colour_multi <- function(..., colours, values = NULL, na.value = "transparent",
                              guide = "colourbar", aesthetics = "colour", colors){

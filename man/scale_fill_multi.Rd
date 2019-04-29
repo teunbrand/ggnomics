@@ -2,10 +2,15 @@
 % Please edit documentation in R/scale_multi.R
 \name{scale_fill_multi}
 \alias{scale_fill_multi}
+\alias{scale_colour_multi}
 \title{Multiple gradient colour scales}
 \usage{
 scale_fill_multi(..., colours, values = NULL, na.value = "transparent",
   guide = "colourbar", aesthetics = "fill", colors)
+
+scale_colour_multi(..., colours, values = NULL,
+  na.value = "transparent", guide = "colourbar",
+  aesthetics = "colour", colors)
 }
 \arguments{
 \item{..., colours, values, na.value, guide, colors}{listed arguments in

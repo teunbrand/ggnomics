@@ -134,6 +134,13 @@ render.ideo <- function(chr, orient = "x", ranges, theme, high.col, ideodat){
 
   # Format ranges
   this.range <- ranges[[paste0(orient, ".range")]]
+  if (is.unsorted(abs(this.range))) {
+    this.range <- abs(this.range)
+    reversed <- TRUE
+  } else {
+    reversed <- FALSE
+  }
+
   maxlim <- max(dat$polygon$x, dat$rectangles$x + 0.5 * dat$rectangles$width, this.range)
   minlim <- min(dat$polygon$x, dat$rectangles$x - 0.5 * dat$rectangles$width, this.range)
 
@@ -155,6 +162,13 @@ render.ideo <- function(chr, orient = "x", ranges, theme, high.col, ideodat){
                          y = 0.5,
                          width  = diff(this.range[1:2]) / (maxlim - minlim),
                          height = 1)
+
+  # Reverse x if scale is reversed
+  if (reversed) {
+    poly$x <- 1 - poly$x
+    rect$x <- 1 - rect$x
+    hi.light$x <- 1 - hi.light$x
+  }
 
   # Switch x/y when orientation is y
   if (orient == "y") {

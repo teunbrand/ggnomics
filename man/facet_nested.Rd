@@ -40,7 +40,11 @@ Unlike \code{facet_grid()}, this function only automatically expands
   outermost variable, while the last variable is interpreted to be the
   innermost variable. They display order is always such that the outermost
   variable is placed the furthest away from the panels. Strips are
+<<<<<<< HEAD
   automatically grouped/merged when they span a nested variable.
+=======
+  automatically grouped when they span a nested variable.
+>>>>>>> 49206a7162c260e0d5e8934ed5c0b1923fe1d364
 
   The \code{bleed} argument controls wether lower-level variables are allowed
   to be merged when higher-level are different, i.e. they can bleed over

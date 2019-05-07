@@ -10,6 +10,9 @@
 #'   draw a nesting line to indicate the nesting of variables.
 #' @param resect  a \code{unit} vector of length 1, indicating how much the
 #'   nesting line should be shortened.
+#' @param bleed a \code{logical} vector of length 1, indicating wether merging
+#'   of lower-level variables is allowed when the higher-level variables are
+#'   seperate. See details.
 #'
 #' @details Unlike \code{facet_grid()}, this function only automatically expands
 #'   missing variables when they have no variables in that direction, to allow
@@ -20,9 +23,24 @@
 #'   \code{rows} or \code{cols}. The first variable is interpreted to be the
 #'   outermost variable, while the last variable is interpreted to be the
 #'   innermost variable. They display order is always such that the outermost
-#'   variable is placed the furthest away from the panels.
+#'   variable is placed the furthest away from the panels. Strips are
+#'   automatically grouped when they span a nested variable.
 #'
-#'   Strips are automatically grouped when they span a nested variable.
+#'   The \code{bleed} argument controls wether lower-level variables are allowed
+#'   to be merged when higher-level are different, i.e. they can bleed over
+#'   hierarchies. Suppose the \code{facet_grid()} behaviour would be the
+#'   following:
+#'
+#'   \code{[_1_][_2_][_2_]} \cr \code{[_3_][_3_][_4_]}
+#'
+#'   In such case, the default \code{bleed = FALSE} argument would result in the
+#'   following:
+#'
+#'   \code{[_1_][___2____]} \cr \code{[_3_][_3_][_4_]}
+#'
+#'   Whereas \code{bleed = TRUE} would allow the following:
+#'
+#'   \code{[_1_][___2____]} \cr \code{[___3____][_4_]}
 #'
 #' @export
 #'
@@ -44,7 +62,7 @@
 facet_nested <- function(rows = NULL, cols = NULL, scales = "fixed", space = "fixed",
                          shrink = TRUE, labeller = "label_value", as.table = TRUE,
                          switch = NULL, drop = TRUE, margins = FALSE, facets = NULL,
-                         nest_line = FALSE, resect = unit(0, "mm"))
+                         nest_line = FALSE, resect = unit(0, "mm"), bleed = FALSE)
 {
   if (!is.null(facets)) {
     rows <- facets
@@ -66,7 +84,6 @@ facet_nested <- function(rows = NULL, cols = NULL, scales = "fixed", space = "fi
   }
 
   facets_list <- ggplot2:::grid_as_facets_list(rows, cols)
-  # print(facets_list)
   n <- length(facets_list)
   if (n > 2L) {
     stop("A grid facet specification can't have more than two dimensions",
@@ -92,7 +109,8 @@ facet_nested <- function(rows = NULL, cols = NULL, scales = "fixed", space = "fi
             switch = switch,
             drop = drop,
             nest_line = nest_line,
-            resect = resect
+            resect = resect,
+            bleed = bleed
           ))
 }
 
@@ -316,8 +334,6 @@ merge_strips <- function(panel_table, strip, vars, switch, params, theme, orient
 
   pos_y <- unique(panel_table$layout$t[grabwhat])
   pos_x <- unique(panel_table$layout$l[grabwhat])
-
-  merge <- apply(vars, 2, function(x) any(rle(x)$lengths > 1))
   panel_pos <- find_panel(panel_table)
 
   if (orient == "x") {
@@ -329,6 +345,17 @@ merge_strips <- function(panel_table, strip, vars, switch, params, theme, orient
     nudge <- if (pos_x < panel_pos$l) -1 else 0
     panel_table <- panel_table[, -pos_x]
     panel_table <- gtable_add_cols(panel_table, sizes, pos_x + nudge)
+  }
+
+  bleed <- params$bleed
+
+  if (bleed) {
+    merge <- apply(vars, 2, function(x) any(rle(x)$lengths > 1))
+  } else {
+    merge <- sapply(1:ncol(vars), function(i){
+      x <- apply(subset.data.frame(vars, select = seq(i)), 1, paste0, collapse = "")
+      return(any(rle(x)$lengths > 1))
+    })
   }
 
   for(i in seq_len(n_levels)) {
@@ -368,7 +395,7 @@ merge_strips <- function(panel_table, strip, vars, switch, params, theme, orient
                           lwd = theme$line$size * .pt,
                           lineend = theme$line$lineend))
         panel_table <- gtable_add_grob(
-          panel_table, indicator,
+          panel_table, lapply(seq_along(insert_here), function(x) indicator),
           t = switch(orient, x = pos_y + i + nudge,
                      y = pos_y[starts[insert_here]]),
           b = switch(orient, x = pos_y + i + nudge,

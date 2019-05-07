@@ -9,7 +9,8 @@
 facet_nested(rows = NULL, cols = NULL, scales = "fixed",
   space = "fixed", shrink = TRUE, labeller = "label_value",
   as.table = TRUE, switch = NULL, drop = TRUE, margins = FALSE,
-  facets = NULL, nest_line = FALSE, resect = unit(0, "mm"))
+  facets = NULL, nest_line = FALSE, resect = unit(0, "mm"),
+  bleed = FALSE)
 }
 \arguments{
 \item{rows, cols, scales, space, shrink, labeller, as.table, switch, drop, margins, facets}{see \code{\link[ggplot2]{facet_grid}}}
@@ -19,6 +20,10 @@ draw a nesting line to indicate the nesting of variables.}
 
 \item{resect}{a \code{unit} vector of length 1, indicating how much the
 nesting line should be shortened.}
+
+\item{bleed}{a \code{logical} vector of length 1, indicating wether merging
+of lower-level variables is allowed when the higher-level variables are
+seperate. See details.}
 }
 \description{
 \code{facet_nest()} form a matrix of panels defined by row and
@@ -34,9 +39,24 @@ Unlike \code{facet_grid()}, this function only automatically expands
   \code{rows} or \code{cols}. The first variable is interpreted to be the
   outermost variable, while the last variable is interpreted to be the
   innermost variable. They display order is always such that the outermost
-  variable is placed the furthest away from the panels.
+  variable is placed the furthest away from the panels. Strips are
+  automatically grouped when they span a nested variable.
 
-  Strips are automatically grouped when they span a nested variable.
+  The \code{bleed} argument controls wether lower-level variables are allowed
+  to be merged when higher-level are different, i.e. they can bleed over
+  hierarchies. Suppose the \code{facet_grid()} behaviour would be the
+  following:
+
+  \code{[_1_][_2_][_2_]} \cr \code{[_3_][_3_][_4_]}
+
+  In such case, the default \code{bleed = FALSE} argument would result in the
+  following:
+
+  \code{[_1_][___2____]} \cr \code{[_3_][_3_][_4_]}
+
+  Whereas \code{bleed = TRUE} would allow the following:
+
+  \code{[_1_][___2____]} \cr \code{[___3____][_4_]}
 }
 \examples{
 df <- iris

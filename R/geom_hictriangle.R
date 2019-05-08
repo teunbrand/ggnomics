@@ -32,7 +32,7 @@ geom_hictriangle <- function(exp, ranges, stat = "identity", position = "identit
   if(!check_valid_hiclayer(exp1 = exp, exp2 = NULL, xranges = ranges, yranges = NULL)){
     stop("Invalid Hi-C Layer")
   }
-  data <- extract_hicdata(exp1, exp2 = NULL, xranges = ranges, yranges = NULL, triangle = TRUE)
+  data <- extract_hicdata(exp, exp2 = NULL, xranges = ranges, yranges = NULL, triangle = TRUE)
   rm(exp, ranges)
   mapping <- aes(x = x, y = y, fill = contacts)
   layer(data = data, mapping = mapping, stat = stat, geom = GeomHicTriangle,

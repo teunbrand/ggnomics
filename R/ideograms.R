@@ -117,7 +117,7 @@ tbcache <- new.env()
 #' @param ideodat the data for ideograms.
 #'
 #' @return a grob with an ideogram
-#'
+#' @keywords internal
 render.ideo <- function(chr, orient = "x", ranges, theme, high.col, ideodat){
 
   # Return empty grob on absense of proper chr
@@ -217,6 +217,7 @@ render.ideo <- function(chr, orient = "x", ranges, theme, high.col, ideodat){
 #' @details Since this is a method of a class, this function should only be used
 #'   indirectly by users.
 #'
+#' @keywords internal
 #' @importFrom rlang %||%
 #' @import grid
 #' @import gtable
@@ -493,6 +494,7 @@ draw_ideo_panels_grid <- function(panels, layout, x_scales, y_scales, ranges, co
 #' axes, strips and ideograms and positioning these together in a gtable.
 #'
 #' @return A gtable object
+#' @keywords internal
 #'
 #' @details Since this is a method of a class, this function should only be used
 #'   indirectly by users.

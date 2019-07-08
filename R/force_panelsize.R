@@ -55,9 +55,9 @@ force_panelsizes <- function(rows = NULL, cols = NULL, respect = NULL) {
             class = "forcedsize")
 }
 
+#' @importFrom ggplot2 ggplot_add
 #' @export
 #' @rdname force_panelsizes
-#' @importFrom ggplot2 ggplot_add
 ggplot_add.forcedsize <- function(object, plot, object_name)
 {
   # Simply return plot if no changes are needed

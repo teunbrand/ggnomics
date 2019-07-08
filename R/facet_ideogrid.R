@@ -5,9 +5,7 @@
 #' are checked for chromosome names and if these are found, then ideograms are
 #' plotted in between the strips and panels.
 #'
-#' @param
-#' rows,cols,scales,space,shrink,labeller,as.table,switch,drop,margins,facets
-#' see \code{\link[ggplot2]{facet_grid}}
+#' @inheritParams ggplot2::facet_grid
 #' @param ideo.size \code{\link[grid]{unit}} value object of class \code{"unit"}
 #'   specifying ideogram size.
 #' @param high.col \code{NA} (default) or colour value of ideogram highlights

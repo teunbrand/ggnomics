@@ -20,3 +20,4 @@ A \code{logical} of length 1.
 \description{
 Checks for validity of a Hi-C layer
 }
+\keyword{internal}

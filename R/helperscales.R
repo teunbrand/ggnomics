@@ -17,26 +17,24 @@ format_logtrans <- function(x){
   lapply(x, function(i) do.call("substitute", list(expr(10^.x), list(.x = as.name(i)))))
 }
 
-#' Formatter for megabasepairs
+#' Formatter for genomic coordinates
 #'
-#' Formats values from "1e+06" notation to "1 Mb"
+#' Formats values from \code{"1e+06"} notation to \code{"1 Mb"}.
 #'
-#' @param x A \code{numeric} vector to format.
+#' @param x A \code{numeric} vector to format
 #'
-#' @return A character vector of formatted values.
+#' @return A \code{character} vector of formatted values
 #'
-#' @details Written as convenience function to make chromosome scales easier to read.
+#' @details Written as a convenience function to make genomic coordinates more
+#'   pleasing to see.
 #'
 #' @export
 #'
 #' @examples
-#' format_megabase(c(1:3)*1e7)
-format_megabase <- function(x){paste0(x/1e6, " Mb")}
-
-# format_basepairs <- function(x){
-#   z <- format(x, scientific = FALSE, trim = TRUE)
-#   n <- nchar(z)
-#   z <- ifelse(n > 3, paste0(x/1e3, " kb"), z)
-#   z <- ifelse(n > 6, paste0(x/1e6, " Mb"), z)
-#   return(z)
-# }
+#' format_genco(10^seq(0, 7, by = 1))
+format_genco <- function(x) {
+  cutoffs  <- 10^seq(0, 6, by = 3)
+  prefixes <- c(" bp", " kb", " Mb")
+  idx <- findInterval(x, cutoffs)
+  paste0(x/cutoffs[idx], prefixes[idx])
+}

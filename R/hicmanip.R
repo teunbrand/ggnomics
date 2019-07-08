@@ -6,6 +6,7 @@
 #'   names}\item{\code{integer}}{ vector of start
 #'   positions}\item{\code{integer}}{ vector of end positions}}
 #'
+#' @keywords internal
 #' @return A \code{logical} of length 1.
 check_valid_hiclayer <- function(exp1, exp2, xranges, yranges){
   # Check for presence of ICE, ABS and RES
@@ -77,6 +78,7 @@ check_valid_hiclayer <- function(exp1, exp2, xranges, yranges){
 #'
 #' @return A formatted \code{data.frame}
 #'
+#' @keywords internal
 #' @importFrom GenomicRanges GRanges findOverlaps start seqnames
 #' @importFrom S4Vectors to from
 #' @importFrom IRanges IRanges

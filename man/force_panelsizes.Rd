@@ -7,7 +7,7 @@
 \usage{
 force_panelsizes(rows = NULL, cols = NULL, respect = NULL)
 
-ggplot_add.forcedsize(object, plot, object_name)
+\method{ggplot_add}{forcedsize}(object, plot, object_name)
 }
 \arguments{
 \item{rows}{a \code{numeric} or \code{unit} vector for setting panel heights.}

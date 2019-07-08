@@ -4,13 +4,12 @@
 #' diagonal runs along the x-axis. It can be convenient for displaying details
 #' located in a region of interest and proximal to the diagonal.
 #'
-#' @param exp A GENOVA experiment
+#' @inheritParams ggplot2::geom_polygon
+#' @param exp A \pkg{GENOVA} experiment
 #' @param ranges A GRanges object. Alternatively, a \code{list} of at least
 #'   length 3 with the following elements: \describe{\item{\code{character}}{
 #'   vector of chromosome names}\item{\code{integer}}{ vector of start
 #'   positions}\item{\code{integer}}{ vector of end positions}}
-#' @param stat,position,...,na.rm,show.legend,inherit See
-#'   \code{\link[ggplot2]{geom_polygon}}
 #'
 #' @details The triangle is calculated such that it is rotated by 45 degrees
 #'   clockwise and rescaled such that the x-axis is equivalent to the original
@@ -24,7 +23,7 @@
 #' @export
 #'
 #' @seealso \code{\link[GENOVA]{construct.experiment}} on how to construct a
-#'   GENOVA experiment object. \code{\link[GenomicRanges]{GRanges}} on how to
+#'   \pkg{GENOVA} experiment object. \code{\link[GenomicRanges]{GRanges}} on how to
 #'   make or subset GRanges objects.
 geom_hictriangle <- function(exp, ranges, stat = "identity", position = "identity", ...,
                              na.rm = FALSE, show.legend = NA)

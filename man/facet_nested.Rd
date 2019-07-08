@@ -13,7 +13,76 @@ facet_nested(rows = NULL, cols = NULL, scales = "fixed",
   bleed = FALSE)
 }
 \arguments{
-\item{rows, cols, scales, space, shrink, labeller, as.table, switch, drop, margins, facets}{see \code{\link[ggplot2]{facet_grid}}}
+\item{rows}{A set of variables or expressions quoted by
+\code{\link[=vars]{vars()}} and defining faceting groups on the rows or columns
+dimension. The variables can be named (the names are passed to
+\code{labeller}).
+
+For compatibility with the classic interface, \code{rows} can also be
+a formula with the rows (of the tabular display) on the LHS and
+the columns (of the tabular display) on the RHS; the dot in the
+formula is used to indicate there should be no faceting on this
+dimension (either row or column).}
+
+\item{cols}{A set of variables or expressions quoted by
+\code{\link[=vars]{vars()}} and defining faceting groups on the rows or columns
+dimension. The variables can be named (the names are passed to
+\code{labeller}).
+
+For compatibility with the classic interface, \code{rows} can also be
+a formula with the rows (of the tabular display) on the LHS and
+the columns (of the tabular display) on the RHS; the dot in the
+formula is used to indicate there should be no faceting on this
+dimension (either row or column).}
+
+\item{scales}{Are scales shared across all facets (the default,
+\code{"fixed"}), or do they vary across rows (\code{"free_x"}),
+columns (\code{"free_y"}), or both rows and columns (\code{"free"})?}
+
+\item{space}{If \code{"fixed"}, the default, all panels have the same size.
+If \code{"free_y"} their height will be proportional to the length of the
+y scale; if \code{"free_x"} their width will be proportional to the
+length of the x scale; or if \code{"free"} both height and width will
+vary.  This setting has no effect unless the appropriate scales also vary.}
+
+\item{shrink}{If \code{TRUE}, will shrink scales to fit output of
+statistics, not raw data. If \code{FALSE}, will be range of raw data
+before statistical summary.}
+
+\item{labeller}{A function that takes one data frame of labels and
+returns a list or data frame of character vectors. Each input
+column corresponds to one factor. Thus there will be more than
+one with formulae of the type \code{~cyl + am}. Each output
+column gets displayed as one separate line in the strip
+label. This function should inherit from the "labeller" S3 class
+for compatibility with \code{\link[=labeller]{labeller()}}. See
+\code{\link[=label_value]{label_value()}} for more details and pointers to other
+options.}
+
+\item{as.table}{If \code{TRUE}, the default, the facets are laid out like
+a table with highest values at the bottom-right. If \code{FALSE}, the
+facets are laid out like a plot with the highest value at the top-right.}
+
+\item{switch}{By default, the labels are displayed on the top and
+right of the plot. If \code{"x"}, the top labels will be
+displayed to the bottom. If \code{"y"}, the right-hand side
+labels will be displayed to the left. Can also be set to
+\code{"both"}.}
+
+\item{drop}{If \code{TRUE}, the default, all factor levels not used in the
+data will automatically be dropped. If \code{FALSE}, all factor levels
+will be shown, regardless of whether or not they appear in the data.}
+
+\item{margins}{Either a logical value or a character
+vector. Margins are additional facets which contain all the data
+for each of the possible values of the faceting variables. If
+\code{FALSE}, no additional facets are included (the
+default). If \code{TRUE}, margins are included for all faceting
+variables. If specified as a character vector, it is the names of
+variables for which margins are to be created.}
+
+\item{facets}{This argument is soft-deprecated, please use \code{rows}
+and \code{cols} instead.}
 
 \item{nest_line}{a \code{logical} vector of length 1, indicating whether to
 draw a nesting line to indicate the nesting of variables.}
@@ -40,11 +109,7 @@ Unlike \code{facet_grid()}, this function only automatically expands
   outermost variable, while the last variable is interpreted to be the
   innermost variable. They display order is always such that the outermost
   variable is placed the furthest away from the panels. Strips are
-<<<<<<< HEAD
-  automatically grouped/merged when they span a nested variable.
-=======
   automatically grouped when they span a nested variable.
->>>>>>> 49206a7162c260e0d5e8934ed5c0b1923fe1d364
 
   The \code{bleed} argument controls wether lower-level variables are allowed
   to be merged when higher-level are different, i.e. they can bleed over

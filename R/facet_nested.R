@@ -3,9 +3,7 @@
 #' @description \code{facet_nest()} form a matrix of panels defined by row and
 #'   column faceting variables and nests grouped facets.
 #'
-#' @param
-#' rows,cols,scales,space,shrink,labeller,as.table,switch,drop,margins,facets
-#' see \code{\link[ggplot2]{facet_grid}}
+#' @inheritParams ggplot2::facet_grid
 #' @param nest_line a \code{logical} vector of length 1, indicating whether to
 #'   draw a nesting line to indicate the nesting of variables.
 #' @param resect  a \code{unit} vector of length 1, indicating how much the

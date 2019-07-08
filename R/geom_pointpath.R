@@ -1,11 +1,10 @@
 #' Point Paths
 #'
-#' The point path geom is used to make a scatterplot wherein the order of points
-#' if of interest. This geom was created to mimick the \code{type = 'b'} style
-#' of base R line plots.
+#' The point path geom is used to make a scatterplot wherein the points are
+#' connected with lines in some order. This geom intends to mimick the
+#' \code{type = 'b'} style of base R line plots.
 #'
-#' @param mapping,data,stat,position,...,na.rm,show.legend,inherit.aes see
-#'   \code{\link[ggplot2]{geom_point}}
+#' @inheritParams ggplot2::geom_point
 #'
 #' @export
 #'

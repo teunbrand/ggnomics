@@ -23,3 +23,4 @@ A formatted \code{data.frame}
 \description{
 Extractor function for Hi-C GENOVA experiment objects.
 }
+\keyword{internal}

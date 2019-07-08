@@ -10,7 +10,57 @@ facet_ideowrap(facets, nrow = NULL, ncol = NULL, scales = "fixed",
   ideo.size = unit(0.1, "null"), high.col = NA)
 }
 \arguments{
-\item{facets, nrow, ncol, scales, shrink, labeller, as.table, switch, drop, dir, strip.position}{see \code{\link[ggplot2]{facet_wrap}}}
+\item{facets}{A set of variables or expressions quoted by \code{\link[=vars]{vars()}}
+and defining faceting groups on the rows or columns dimension.
+The variables can be named (the names are passed to \code{labeller}).
+
+For compatibility with the classic interface, can also be a
+formula or character vector. Use either a one sided formula, \code{~a + b},
+or a character vector, \code{c("a", "b")}.}
+
+\item{nrow}{Number of rows and columns.}
+
+\item{ncol}{Number of rows and columns.}
+
+\item{scales}{Should scales be fixed (\code{"fixed"}, the default),
+free (\code{"free"}), or free in one dimension (\code{"free_x"},
+\code{"free_y"})?}
+
+\item{shrink}{If \code{TRUE}, will shrink scales to fit output of
+statistics, not raw data. If \code{FALSE}, will be range of raw data
+before statistical summary.}
+
+\item{labeller}{A function that takes one data frame of labels and
+returns a list or data frame of character vectors. Each input
+column corresponds to one factor. Thus there will be more than
+one with formulae of the type \code{~cyl + am}. Each output
+column gets displayed as one separate line in the strip
+label. This function should inherit from the "labeller" S3 class
+for compatibility with \code{\link[=labeller]{labeller()}}. See
+\code{\link[=label_value]{label_value()}} for more details and pointers to other
+options.}
+
+\item{as.table}{If \code{TRUE}, the default, the facets are laid out like
+a table with highest values at the bottom-right. If \code{FALSE}, the
+facets are laid out like a plot with the highest value at the top-right.}
+
+\item{switch}{By default, the labels are displayed on the top and
+right of the plot. If \code{"x"}, the top labels will be
+displayed to the bottom. If \code{"y"}, the right-hand side
+labels will be displayed to the left. Can also be set to
+\code{"both"}.}
+
+\item{drop}{If \code{TRUE}, the default, all factor levels not used in the
+data will automatically be dropped. If \code{FALSE}, all factor levels
+will be shown, regardless of whether or not they appear in the data.}
+
+\item{dir}{Direction: either \code{"h"} for horizontal, the default, or \code{"v"},
+for vertical.}
+
+\item{strip.position}{By default, the labels are displayed on the top of
+the plot. Using \code{strip.position} it is possible to place the labels on
+either of the four sides by setting \code{strip.position = c("top",
+  "bottom", "left", "right")}}
 
 \item{ideo.size}{\code{\link[grid]{unit}} value object of class \code{"unit"}
 specifying ideogram size.}

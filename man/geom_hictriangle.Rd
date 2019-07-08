@@ -13,15 +13,32 @@ geom_hictriangle(exp, ranges, stat = "identity", position = "identity",
 GeomHicTriangle
 }
 \arguments{
-\item{exp}{A GENOVA experiment}
+\item{exp}{A \pkg{GENOVA} experiment}
 
 \item{ranges}{A GRanges object. Alternatively, a \code{list} of at least
 length 3 with the following elements: \describe{\item{\code{character}}{
 vector of chromosome names}\item{\code{integer}}{ vector of start
 positions}\item{\code{integer}}{ vector of end positions}}}
 
-\item{stat, position, ..., na.rm, show.legend, inherit}{See
-\code{\link[ggplot2]{geom_polygon}}}
+\item{stat}{The statistical transformation to use on the data for this
+layer, as a string.}
+
+\item{position}{Position adjustment, either as a string, or the result of
+a call to a position adjustment function.}
+
+\item{...}{Other arguments passed on to \code{\link[=layer]{layer()}}. These are
+often aesthetics, used to set an aesthetic to a fixed value, like
+\code{colour = "red"} or \code{size = 3}. They may also be parameters
+to the paired geom/stat.}
+
+\item{na.rm}{If \code{FALSE}, the default, missing values are removed with
+a warning. If \code{TRUE}, missing values are silently removed.}
+
+\item{show.legend}{logical. Should this layer be included in the legends?
+\code{NA}, the default, includes if any aesthetics are mapped.
+\code{FALSE} never includes, and \code{TRUE} always includes.
+It can also be a named logical vector to finely select the aesthetics to
+display.}
 }
 \description{
 The Hi-C triangle geom is used to portray a rotated Hi-C matrix such that the
@@ -40,7 +57,7 @@ The triangle is calculated such that it is rotated by 45 degrees
 }
 \seealso{
 \code{\link[GENOVA]{construct.experiment}} on how to construct a
-  GENOVA experiment object. \code{\link[GenomicRanges]{GRanges}} on how to
+  \pkg{GENOVA} experiment object. \code{\link[GenomicRanges]{GRanges}} on how to
   make or subset GRanges objects.
 }
 \keyword{datasets}

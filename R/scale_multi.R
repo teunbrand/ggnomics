@@ -160,6 +160,7 @@ pickvalue <- function(x, i){
 }
 
 #' @export
+#' @importFrom ggplot2 ggplot_add
 ggplot_add.MultiScale <- function(object, plot, object_name){
   for(i in object$scales){
     plot$scales$add(i)

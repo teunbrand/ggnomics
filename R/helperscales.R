@@ -35,6 +35,6 @@ format_logtrans <- function(x){
 format_genco <- function(x) {
   cutoffs  <- 10^seq(0, 6, by = 3)
   prefixes <- c(" bp", " kb", " Mb")
-  idx <- findInterval(x, cutoffs)
+  idx <- pmax(1, findInterval(x, cutoffs))
   paste0(x/cutoffs[idx], prefixes[idx])
 }

@@ -27,7 +27,7 @@
 #'   \code{\link[ggplot2]{geom_tile}}, \code{\link[ggnomics]{geom_genemodel}}.
 #'
 #'   This positioning function was inspired by the \code{disjointBins()}
-#'   function in the \code{IRanges} package, but has adjusted such that it
+#'   function in the \code{IRanges} package, but has been written such that it
 #'   accepts any numeric input next to solely integer input.
 #'
 #' @seealso \code{\link[IRanges:inter-range-methods]{disjointBins}}
@@ -77,10 +77,12 @@ PositionDisjointRanges <- ggplot2::ggproto(
 
       ranges <- setNames(as.data.frame(ranges),
                          c("xmin", "xmax", "group"))
-    } else {
+    } else if (all(data[["group"]] == -1)){
       ranges <- cbind(data[,c("xmin", "xmax")],
                       group = row(data)[,1])
       group <- ranges$group
+    } else {
+      return(data)
     }
 
     # Extend and sort ranges
@@ -89,7 +91,7 @@ PositionDisjointRanges <- ggplot2::ggproto(
     ord <- order(ranges$xmin)
     ranges <- ranges[ord,]
 
-    # Perform disjoint bins operation Similar to IRanges::disjointBins(), but
+    # Perform disjoint bins operation similar to IRanges::disjointBins(), but
     # generalized to any ranged numeric data, not just integers.
     track_bins <- ranges$xmax[1]
     ranges$bin <- c(1, vapply(tail(seq_along(ord), -1), function(i) {
@@ -112,8 +114,8 @@ PositionDisjointRanges <- ggplot2::ggproto(
     # Transform
     map <- match(group, ranges$group)
     if (all(c("ymin", "ymax") %in% names(data))) {
-      data$ymax <- data$ymax + params$stepsize * ranges$bin[map] - 1
-      data$ymin <- data$ymin + params$stepsize * ranges$bin[map] - 1
+      data$ymax <- data$ymax + params$stepsize * (ranges$bin[map] - 1)
+      data$ymin <- data$ymin + params$stepsize * (ranges$bin[map] - 1)
     }
 
     return(data)

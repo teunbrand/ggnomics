@@ -269,10 +269,10 @@ combine_nested_vars <- function(data, env = emptyenv(), vars = NULL, drop = TRUE
   has_all <- unlist(lapply(values, length)) == length(vars)
   if (!any(has_all)) {
     missing <- lapply(values, function(x) setdiff(names(vars), names(x)))
-    missing_txt <- vapply(missing, var_list, character(1))
+    missing_txt <- vapply(missing, ggplot2:::var_list, character(1))
     name <- c("Plot", paste0("Layer ", seq_len(length(data) - 1)))
-    stop("At least one lyaer must contain all faceting variables: ",
-         var_list(names(vars)), ".\n", paste0("* ", name, " is missing",
+    stop("At least one layer must contain all faceting variables: ",
+         ggplot2:::var_list(names(vars)), ".\n", paste0("* ", name, " is missing ",
                                               missing_txt, collapse = "\n"),
          call. = FALSE)
   }

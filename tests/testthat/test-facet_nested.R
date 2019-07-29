@@ -66,6 +66,14 @@ test_that("facet_nested splits up data", {
   expect_equal(hori, vert)
 })
 
+test_that("facet_nested returns helpful error message when variables are misspelled", {
+  ctrl <- basic + facet_nested(~ nester + Species)
+  test <- basic + facet_nested(~ Nester + Species)
+
+  ctrl <- expect_silent(layer_data(ctrl))
+  test <- expect_error(layer_data(test), "Plot is missing")
+})
+
 # Strip nesting tests -----------------------------------------------------
 
 test_that("facet_nested can draw multiple panel and strips", {

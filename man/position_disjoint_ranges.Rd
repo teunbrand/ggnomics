@@ -37,7 +37,7 @@ An object is considered disjoint from a second object when the range
   \code{\link[ggplot2]{geom_tile}}, \code{\link[ggnomics]{geom_genemodel}}.
 
   This positioning function was inspired by the \code{disjointBins()}
-  function in the \code{IRanges} package, but has adjusted such that it
+  function in the \code{IRanges} package, but has been written such that it
   accepts any numeric input next to solely integer input.
 }
 \examples{

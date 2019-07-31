@@ -170,14 +170,15 @@ ggplot_add.MultiScale <- function(object, plot, object_name){
   replaced_pattern <- paste0("^", replaced_aes, "$")
 
   plot$layers <- lapply(plot$layers, function(lay){
-    if(!(names(lay$mapping) %in% object$aes)) {
+    if(!any(names(lay$mapping) %in% object$aes)) {
       return(lay)
     }
     new_aes  <- object$aes[object$aes %in% names(lay$mapping)]
+    new_aes_pattern <- paste0("^", new_aes, "$")
     old_geom <- lay$geom
     old_geom_nahandle <- old_geom$handle_na
     new_geom_nahandle <- function(self, data, params){
-      colnames(data)  <- eval(gsub(new_aes,
+      colnames(data)  <- eval(gsub(new_aes_pattern,
                               replaced_aes,
                               colnames(data)))
       old_geom_nahandle(data, params)

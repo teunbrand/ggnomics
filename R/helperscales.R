@@ -38,3 +38,31 @@ format_genco <- function(x) {
   idx <- pmax(1, findInterval(x, cutoffs))
   paste0(x/cutoffs[idx], prefixes[idx])
 }
+
+
+#' Center limits
+#'
+#' This a function factory that allows the centering of scales around a certain
+#' value while still including all values. Convenient for centering log2 fold
+#' change limits around zero.
+#'
+#' @param around A \code{numeric} of length 1 indicating around which value to
+#'   center the limits.
+#'
+#' @return A \code{function} that takes limits and returns expanded limits
+#'   centered at the \code{around} argument.
+#' @export
+#'
+#' @examples
+#' center_limits(5)(c(3,8))
+#'
+#' g <- ggplot(iris,
+#'             aes(Sepal.Width, Sepal.Length,
+#'                 colour = log2(Petal.Width / Petal.Length))) +
+#'   geom_point() +
+#'   scale_colour_gradient2(limits = center_limits())
+center_limits <- function(around = 0) {
+  function(input) {
+    c(-1, 1) * max(abs(input - around)) + around
+  }
+}

@@ -18,6 +18,8 @@
 #'   Inside a layer, the non-standard aesthetic should be part of the call to
 #'   \code{aes} mapping.
 #'
+#'   May return a warning that the plot is ignoring unknown aesthetics.
+#'
 #' @return A \code{list} of which the elements are of the class
 #'   \code{MultiScale}.
 #' @export
@@ -168,6 +170,7 @@ ggplot_add.MultiScale <- function(object, plot, object_name){
                old_geom$required_aes),
         draw_key = draw_key_new
       )
+
     lay$geom <- new_geom
     return(lay)
   })

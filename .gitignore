@@ -7,3 +7,4 @@
 README.Rmd
 .gitignore.save
 ggnomics.Rproj
+inst/doc

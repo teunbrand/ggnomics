@@ -47,3 +47,38 @@ test_that("format_logtrans can be used in ggplot as label argument", {
   labs <- tab$grobs[[2]]$children[[1]]$label
   expect_equal(labs, expression(10^`1`, 10^`3`, 10^`5`))
 })
+
+
+# center_limits -----------------------------------------------------------
+
+test_that("center_limits centers limits", {
+  n <- 100
+  lims <- rnorm(100)
+  lims <- cbind(lims, lims + runif(100, 0, 5))
+  center_vals <- runif(n, -10, 10)
+  output <- lapply(seq_len(n), function(i){
+    center_limits(center_vals[i])(lims[i,])
+  })
+  output <- do.call(rbind, output)
+  # Check indeed centered
+  expect_equal(rowMeans(output), center_vals)
+  # Check original limits are included in new range
+  # Expecting some rounding errors
+  expect_true(all(output[,1] - lims[,1] <  1e-15))
+  expect_true(all(output[,2] - lims[,2] > -1e-15))
+})
+
+test_that("center_limits can be used in ggplot as limits argument", {
+  g <- ggplot(iris,
+              aes(Sepal.Width, Sepal.Length,
+                  colour = log2(Petal.Width / Petal.Length))) +
+    geom_point() +
+    scale_colour_gradient2(limits = center_limits(0))
+  gb <- ggplot_build(g)
+  vals <- log2(iris$Petal.Width / iris$Petal.Length)
+  lims <- gb$plot$scales$scales[[1]]$get_limits()
+
+  expect_equal(mean(lims), 0)
+  expect_true(all(vals >= lims[1]))
+  expect_true(all(vals <= lims[2]))
+})

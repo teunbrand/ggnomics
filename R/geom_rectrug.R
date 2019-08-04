@@ -214,6 +214,7 @@ GeomRectRug <- ggplot2::ggproto(
 
     grid::gTree(children = do.call(grid::gList, rugs))
   },
+  optional_aes = c("x", "y", "xmin", "xmax", "ymin", "ymax"),
   default_aes = ggplot2::aes(colour = NA, fill = "grey35", size = 0.5, linetype = 1, alpha = NA),
   draw_key = ggplot2::draw_key_polygon
 )

@@ -39,36 +39,36 @@ geom_hictriangle <- function(exp, ranges, stat = "identity", position = "identit
         params = list(na.rm = na.rm, ...))
 }
 
-triangle_setup <- function(data, params){
-
-  # Assign groups and estimate resolution
-  data$group <- 1:nrow(data)
-  res <- resolution(data$x)/2
-
-  # Calculate coordinates
-  xmin <- data$x - res
-  xmax <- data$x + res
-  ymin <- data$y - res
-  ymax <- data$y + res
-  coords <- cbind(c(xmin, xmin, xmax, xmax),
-                  c(ymin, ymax, ymax, ymin))
-
-  # Rotate and scale coordinates
-  rotmat <- matrix(c(0.5, -1, 0.5, 1), ncol = 2)
-  newcoords <- t(rotmat %*% (t(coords)))
-
-  # New data
-  data <- data.frame(x = newcoords[,1], y = newcoords[,2],
-                     fill  = rep(data$fill, 4),
-                     PANEL = rep(data$PANEL, 4),
-                     group = rep(data$group, 4))
-  data <- data[order(data$group),]
-  data <- data[data$y > -1,]
-
-  data
-}
-
 #' @rdname geom_hictriangle
 #' @importFrom ggplot2 ggproto GeomPolygon
-GeomHicTriangle <- ggplot2::ggproto("GeomHicTriangle", ggplot2::GeomPolygon,
-                           setup_data = triangle_setup)
+GeomHicTriangle <- ggplot2::ggproto(
+  "GeomHicTriangle", ggplot2::GeomPolygon,
+  setup_data = function(data, params){
+
+    # Assign groups and estimate resolution
+    data$group <- 1:nrow(data)
+    res <- resolution(data$x)/2
+
+    # Calculate coordinates
+    xmin <- data$x - res
+    xmax <- data$x + res
+    ymin <- data$y - res
+    ymax <- data$y + res
+    coords <- cbind(c(xmin, xmin, xmax, xmax),
+                    c(ymin, ymax, ymax, ymin))
+
+    # Rotate and scale coordinates
+    rotmat <- matrix(c(0.5, -1, 0.5, 1), ncol = 2)
+    newcoords <- t(rotmat %*% (t(coords)))
+
+    # New data
+    data <- data.frame(x = newcoords[,1], y = newcoords[,2],
+                       fill  = rep(data$fill, 4),
+                       PANEL = rep(data$PANEL, 4),
+                       group = rep(data$group, 4))
+    data <- data[order(data$group),]
+    data <- data[data$y > -1,]
+
+    data
+  }
+)

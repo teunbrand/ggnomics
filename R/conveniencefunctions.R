@@ -119,41 +119,41 @@ NULL
 
 #' @rdname genemodel_helpers
 #' @export
-#' @importFrom AnnotationDbi mapIds
-#' @importFrom GenomeInfoDb seqnames
-#' @importFrom GenomicFeatures transcriptsByOverlaps fiveUTRsByTranscript
-#' @importFrom GenomicRanges reduce GRanges GRangesList
-#' @importFrom S4Vectors DataFrame mcols
 plottable_genemodel_from_txdb <- function(txdb, roi, group_by = "gene") {
+  try_require("AnnotationDbi", "plottable_genemodel_from_txdb")
+  try_require("GenomeInfoDb", "plottable_genemodel_from_txdb")
+  try_require("GenomicFeatures", "plottable_genemodel_from_txdb")
+  try_require("GenomicRanges", "plottable_genemodel_from_txdb")
+  try_require("S4Vectors", "plottable_genemodel_from_txdb")
   group_by <- match.arg(group_by, c("gene", "transcript"))
 
-  tx <- transcriptsByOverlaps(txdb, roi)
-  seqlevels(txdb) <- as.character(seqnames(roi)[1])
+  tx <- GenomicFeatures::transcriptsByOverlaps(txdb, roi)
+  GenomeInfoDb::seqlevels(txdb) <- as.character(GenomeInfoDb::seqnames(roi)[1])
   tx2gene <- suppressMessages(
-    mapIds(txdb, as.character(tx$tx_id),
+    AnnotationDbi::mapIds(txdb, as.character(tx$tx_id),
            column = if (group_by == "gene") "GENEID" else "TXNAME",
            keytype = "TXID")
   )
 
-  utr5 <- fiveUTRsByTranscript(txdb)
+  utr5 <- GenomicFeatures::fiveUTRsByTranscript(txdb)
   utr5 <- utr5[names(utr5) %in% tx$tx_id]
-  utr5 <- reduce(utr5)
+  utr5 <- GenomicRanges::reduce(utr5)
   utr5 <- unlist(utr5)
-  mcols(utr5) <- DataFrame(tx_id = tx2gene[as.character(names(utr5))],
-                           type = "5putr")
+  mcols(utr5) <- S4Vectors::DataFrame(tx_id = tx2gene[as.character(names(utr5))],
+                                      type = "5putr")
 
-  utr3 <- threeUTRsByTranscript(txdb)
+  utr3 <- GenomicFeatures::threeUTRsByTranscript(txdb)
   utr3 <- utr3[names(utr3) %in% tx$tx_id]
-  utr3 <- reduce(utr3)
+  utr3 <- GenomicRanges::reduce(utr3)
   utr3 <- unlist(utr3)
-  mcols(utr3) <- DataFrame(tx_id = tx2gene[as.character(names(utr3))],
-                           type = "3putr")
+  mcols(utr3) <- S4Vectors::DataFrame(tx_id = tx2gene[as.character(names(utr3))],
+                                      type = "3putr")
 
-  cds <- cdsBy(txdb, "tx")
+  cds <- GenomicFeatures::cdsBy(txdb, "tx")
   cds <- cds[names(cds) %in% tx$tx_id]
-  cds <- reduce(cds)
+  cds <- GenomicRanges::reduce(cds)
   cds <- unlist(cds)
-  mcols(cds) <- DataFrame(tx_id = tx2gene[as.character(names(cds))],
+  mcols(cds) <- S4Vectors::DataFrame(tx_id = tx2gene[as.character(names(cds))],
                           type = "cds")
 
   if (group_by == "transcript") {
@@ -174,8 +174,8 @@ plottable_genemodel_from_txdb <- function(txdb, roi, group_by = "gene") {
       }
       gr <- reduce(gr)
       gr <- unlist(gr)
-      mcols(gr) <- DataFrame(gene_id = names(gr),
-                             type = i)
+      S4Vectors::mcols(gr) <- S4Vectors::DataFrame(gene_id = names(gr),
+                                                   type = i)
       gr
     })
     dat <- c(dat[[1]], dat[[2]], dat[[3]])
@@ -189,24 +189,25 @@ plottable_genemodel_from_txdb <- function(txdb, roi, group_by = "gene") {
 
 #' @rdname genemodel_helpers
 #' @export
-#' @importFrom rtracklayer import.gff
-#' @importFrom GenomicRanges GRanges GRangesList reduce
 plottable_genemodel_from_gff <- function(gff_file, roi, group_by = "gene") {
+  try_require("rtracklayer", "plottable_genemodel_from_txdb")
+  try_require("GenomicRanges", "plottable_genemodel_from_txdb")
+  try_require("S4Vectors", "plottable_genemodel_from_txdb")
   group_by <- match.arg(group_by, c("gene", "transcript"))
   group_col <- paste0(group_by, "_id")
-  gr <- import.gff(gff_file, which = roi,
-                   colnames = c("type", group_col))
+  gr <- rtracklayer::import.gff(gff_file, which = roi,
+                                colnames = c("type", group_col))
 
   data <- list(utr = gr[grepl("utr", gr$type, ignore.case = TRUE)],
                cds = gr[grepl("cds", gr$type, ignore.case = TRUE)])
 
   data <- lapply(data, function(dat) {
     type <- droplevels(dat$type[1])
-    out <- split(dat, mcols(dat)[[group_col]])
+    out <- GenomicRanges::split(dat, S4Vectors::mcols(dat)[[group_col]])
     if (!inherits(out, "GRangesList")) {
       out <- as(out, "GRangesList")
     }
-    out <- reduce(out)
+    out <- GenomicRanges::reduce(out)
     out <- unlist(out)
     mcols(out)[[group_col]] <- names(out)
     out$type <- type

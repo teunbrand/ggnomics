@@ -79,32 +79,33 @@ check_valid_hiclayer <- function(exp1, exp2, xranges, yranges){
 #' @return A formatted \code{data.frame}
 #'
 #' @keywords internal
-#' @importFrom GenomicRanges GRanges findOverlaps start seqnames
-#' @importFrom S4Vectors to from
-#' @importFrom IRanges IRanges
 #' @import data.table
 
 extract_hicdata <- function(exp1, exp2 = NULL, xranges, yranges = NULL, triangle = FALSE){
+  try_require("GenomicRanges", "extract_hicdata")
+  try_require("S4Vectors", "extract_hicdata")
+  try_require("IRanges", "extract_hicdata")
+
   # Convert indices to GRanges
-  gr <- GRanges(exp1$ABS[,1],
-                IRanges(exp1$ABS[,2], exp1$ABS[,3]),
-                index = exp1$ABS[,4])
+  gr <- GenomicRanges::GRanges(exp1$ABS[,1],
+                               IRanges::IRanges(exp1$ABS[,2], exp1$ABS[,3]),
+                               index = exp1$ABS[,4])
 
   # Check ranges
   if(is.list(xranges)){
-    xranges <- GRanges(xranges[[1]], IRanges(xranges[[2]], xranges[[3]]))
+    xranges <- GenomicRanges::GRanges(xranges[[1]], IRanges::IRanges(xranges[[2]], xranges[[3]]))
   }
   if(is.null(yranges)){
     yranges <- xranges
   } else {
     if(is.list(yranges)){
-      yranges <- GRanges(yranges[[1]], IRanges(yranges[[2]], yranges[[3]]))
+      yranges <- GenomicRanges::GRanges(yranges[[1]], IRanges::IRanges(yranges[[2]], yranges[[3]]))
     }
   }
 
   # Convert ranges to indices
-  xidx <- gr$index[to(findOverlaps(xranges, gr))]
-  yidx <- gr$index[to(findOverlaps(yranges, gr))]
+  xidx <- gr$index[S4Vectors::to(GenomicRanges::findOverlaps(xranges, gr))]
+  yidx <- gr$index[S4Vectors::to(GenomicRanges::findOverlaps(yranges, gr))]
 
   # Grab data
   if (triangle | !is.null(exp2)){

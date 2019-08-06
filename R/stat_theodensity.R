@@ -128,7 +128,7 @@ stat_theodensity <- function(
 #' @usage NULL
 #' @format NULL
 #' @importFrom ggplot2 ggproto StatDensity
-#' @importFrom fitdistrplus fitdist
+
 #' @export
 StatTheoDensity <- ggproto(
   "StatTheoDensity",
@@ -137,6 +137,7 @@ StatTheoDensity <- ggproto(
     data, scales, distri = "norm", n = 512, distri_type = "continuous",
     fix.arg = NULL, start.arg = NULL
   ) {
+    try_require("fitdistrplus", "stat_theodensity")
     # Data to return upon failure
     nulldata <- data.frame(
       x = NA_real_,
@@ -164,7 +165,7 @@ StatTheoDensity <- ggproto(
       xseq <- seq(range[1], range[2], length.out = n)
     }
 
-    par_est <- suppressWarnings(coef(fitdist(x, distri, start = start.arg, fix.arg = fix.arg)))
+    par_est <- suppressWarnings(coef(fitdistrplus::fitdist(x, distri, start = start.arg, fix.arg = fix.arg)))
     par_est <- c(par_est, unlist(fix.arg))
 
     if (any(is.na(par_est) | is.nan(par_est) | !is.finite(par_est) | is.null(par_est))) {

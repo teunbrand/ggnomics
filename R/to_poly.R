@@ -24,7 +24,10 @@ setGeneric("to_poly", function(object, selection) standardGeneric("to_poly"))
 #' @rdname to_poly
 setMethod(
   "to_poly",
-  signature(object = "BigWigFile", selection = "GenomicRanges"),
+  as(structure(.Data = c("BigWigFile", "GenomicRanges"),
+               names = c("object", "selection"),
+               package = c("rtracklayer", "GenomicRanges")),
+     "signature"),
   function(object, selection) {
     try_require("GenomicRanges", "to_poly")
     try_require("rtracklayer", "to_poly")
@@ -36,16 +39,21 @@ setMethod(
 #' @rdname to_poly
 setMethod(
   "to_poly",
-  signature(object = "RleList", selection = "GenomicRanges"),
+  as(structure(.Data = c("RleList", "GenomicRanges"),
+               names = c("object", "selection"),
+               package = c("IRanges", "GenomicRanges")),
+     "signature"),
   function(object, selection) {
     try_require("GenomicRanges", "to_poly")
+    try_require("GenomeInfoDb", "to_poly")
     try_require("S4Vectors", "to_poly")
+    try_require("IRanges", "to_poly")
     object <- object[selection]
     object <- to_poly(object)
-    object$x <- object$x + start(selection)[object$group] - 1
+    object$x <- object$x + GenomicRanges::start(selection)[object$group] - 1
     object
-    if (length(unique(seqnames(selection))) > 1) {
-      object$seqname <- decode(seqnames(selection))[object$group]
+    if (length(unique(GenomeInfoDb::seqnames(selection))) > 1) {
+      object$seqname <- S4Vectors::decode(GenomeInfoDb::seqnames(selection))[object$group]
     }
     if (length(unique(names(selection))) > 1) {
       object$rangename <- names(selection)[object$group]
@@ -57,9 +65,12 @@ setMethod(
 #' @rdname to_poly
 setMethod(
   "to_poly",
-  signature(object = "RleList", selection = "missing"),
+  as(structure(.Data = c("RleList", "missing"),
+               names = c("object", "selection"),
+               package = c("IRanges", "")),
+     "signature"),
   function(object) {
-    try_require("S4Vectors", "to_poly")
+    try_require("IRanges", "to_poly")
     object <- lapply(object, to_poly)
     idx <- vapply(object, base::nrow, integer(1))
     object <- do.call(rbind.data.frame, c(object, make.row.names = FALSE))
@@ -74,14 +85,19 @@ setMethod(
 #' @rdname to_poly
 setMethod(
   "to_poly",
-  signature(object = "Rle", selection = "missing"),
+  as(structure(.Data = c("Rle", "missing"),
+               names = c("object", "selection"),
+               package = c("S4Vectors", "")),
+     "signature"),
   function(object) {
     try_require("S4Vectors", "to_poly")
     df <- data.frame(
-      x = c(1, base::rbind(start(object), end(object)), length(object)),
-      y = c(0, base::rbind(runValue(object), runValue(object)), 0)
+      x = c(1, base::rbind(S4Vectors::start(object),
+                           S4Vectors::end(object)), length(object)),
+      y = c(0, base::rbind(S4Vectors::runValue(object),
+                           S4Vectors::runValue(object)), 0)
     )
-    df[!duplicated(df),]
+    df[!base::duplicated(df),]
   }
 )
 
@@ -95,6 +111,22 @@ setMethod(
     df <- data.frame(
       x = c(1, base::rbind(start, end), tail(end, 1)),
       y = c(0, base::rbind(object$values, object$values), 0)
+    )
+    df[!duplicated(df),]
+  }
+)
+
+setMethod(
+  "to_poly",
+  as(structure(.Data = c("Rle", "missing"),
+               names = c("object", "selection"),
+               package = c("S4Vectors", "")),
+     "signature"),
+  function(object) {
+    requireNamespace("S4Vectors", quietly = TRUE)
+    df <- data.frame(
+      x = c(1, base::rbind(start(object), end(object)), length(object)),
+      y = c(0, base::rbind(runValue(object), runValue(object)), 0)
     )
     df[!duplicated(df),]
   }

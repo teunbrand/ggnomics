@@ -136,7 +136,6 @@ df$nester <- ifelse(df$Species == "setosa",
 ggplot(df, aes(Sepal.Length, Petal.Length)) +
   geom_point() +
   facet_nested(~ nester + Species)
-
 }
 \seealso{
 See \code{\link[ggplot2]{facet_grid}} for descriptions of the

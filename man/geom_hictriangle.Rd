@@ -9,8 +9,6 @@
 \usage{
 geom_hictriangle(exp, ranges, stat = "identity", position = "identity",
   ..., na.rm = FALSE, show.legend = NA)
-
-GeomHicTriangle
 }
 \arguments{
 \item{exp}{A \pkg{GENOVA} experiment}

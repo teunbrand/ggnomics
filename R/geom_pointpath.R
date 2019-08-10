@@ -19,9 +19,6 @@
 #'   aesthetic for \code{geom_line()}. The \code{mult} is a numeric value to
 #'   scale the proportion of gaps in the line around points.
 #'
-#' @importFrom ggplot2 layer ggproto GeomPoint aes
-#' @importFrom grid gpar pointsGrob grob unit convertX convertY
-#'
 #' @examples
 #' ggplot(pressure, aes(temperature, pressure)) +
 #'   geom_pointpath()
@@ -95,7 +92,11 @@ GeomPointPath <- ggplot2::ggproto(
 
 # Helpers ----------------------------------------
 
+#' @title Calculate broken segments for a point-interrupted path
 #' @export
+#' @usage NULL
+#' @format NULL
+#' @keywords internal
 makeContent.pointpath <- function(x){
   # Convert npcs to absolute units
   x_new <- grid::convertX(x$x, "mm", TRUE)

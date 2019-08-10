@@ -55,8 +55,6 @@
 #' ggplot(df, aes(Sepal.Length, Petal.Length)) +
 #'   geom_point() +
 #'   facet_nested(~ nester + Species)
-#'
-#' @import ggplot2
 facet_nested <- function(rows = NULL, cols = NULL, scales = "fixed", space = "fixed",
                          shrink = TRUE, labeller = "label_value", as.table = TRUE,
                          switch = NULL, drop = TRUE, margins = FALSE, facets = NULL,
@@ -335,7 +333,7 @@ merge_strips <- function(panel_table, strip, vars, switch, params, theme, orient
                   x = do.call(unit.c, lapply(splitstrip, max_height)),
                   y = do.call(unit.c, lapply(splitstrip, max_width)))
 
-  assign("panel_table", panel_table, 1)
+  # assign("panel_table", panel_table, 1) TODO: Delete This?
 
   grabwhat <- switch(orient,
                      x = grepl("strip-t|strip-b", panel_table$layout$name),

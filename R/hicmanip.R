@@ -79,8 +79,6 @@ check_valid_hiclayer <- function(exp1, exp2, xranges, yranges){
 #' @return A formatted \code{data.frame}
 #'
 #' @keywords internal
-#' @import data.table
-
 extract_hicdata <- function(exp1, exp2 = NULL, xranges, yranges = NULL, triangle = FALSE){
   try_require("GenomicRanges", "extract_hicdata")
   try_require("S4Vectors", "extract_hicdata")
@@ -132,10 +130,10 @@ extract_hicdata <- function(exp1, exp2 = NULL, xranges, yranges = NULL, triangle
 
   xmatch <- match(out$x, gr$index)
   ymatch <- match(out$y, gr$index)
-  out$x  <- start(gr)[xmatch] + 0.5 * exp1$RES
-  out$y  <- start(gr)[ymatch] + 0.5 * exp1$RES
-  attr(out, "xchr") <- seqnames(gr)[xmatch]
-  attr(out, "ychr") <- seqnames(gr)[ymatch]
+  out$x  <- GenomicRanges::start(gr)[xmatch] + 0.5 * exp1$RES
+  out$y  <- GenomicRanges::start(gr)[ymatch] + 0.5 * exp1$RES
+  attr(out, "xchr") <- GenomeInfoDb::seqnames(gr)[xmatch]
+  attr(out, "ychr") <- GenomeInfoDb::seqnames(gr)[ymatch]
 
   return(out)
 }

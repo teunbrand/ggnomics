@@ -135,10 +135,6 @@ geom_genemodel <- function(
 #' @rdname geom_genemodel
 #' @usage NULL
 #' @format NULL
-#' @importFrom ggplot2 aes ggproto GeomRect draw_key_polygon
-#' @importFrom grid gpar rectGrob grob gTree gList
-#' @importFrom rlang eval_tidy
-#' @importFrom scales alpha
 #' @export
 GeomGeneModel <- ggproto(
   "GeomGeneModel", GeomRect,
@@ -274,7 +270,6 @@ GeomGeneModel <- ggproto(
 #'
 #' @seealso \code{\link[ggnomics]{geom_genemodel}}
 #' @keywords internal
-#' @importFrom grid unit grob arrow
 style_intron_arrowline <- function(
   data, linejoin = "mitre",
   arrow.template = NULL, arrow.freq = unit(4, "mm")
@@ -311,7 +306,6 @@ style_intron_arrowline <- function(
 }
 
 #' @rdname style_intron_arrowline
-#' @importFrom grid segmentsGrob unit gpar
 #' @keywords internal
 style_intron_plainline <- function(data, linejoin) {
   data <- lapply(split(data, data$group), function(group) {
@@ -340,7 +334,6 @@ style_intron_plainline <- function(data, linejoin) {
 }
 
 #' @rdname style_intron_arrowline
-#' @importFrom grid polylineGrob gpar
 #' @keywords internal
 style_intron_chevron <- function(data, linejoin = "bevel", height = 1) {
   dropcols <- !(colnames(data) %in% c("xmin", "xmax", "ymin", "ymax", "fill"))
@@ -381,7 +374,6 @@ style_intron_chevron <- function(data, linejoin = "bevel", height = 1) {
 }
 
 #' @export
-#' @importFrom grid makeContent
 makeContent.genemodel <- function(x) {
   # Evaluate arrowline grob to fix colour mistakes
   if (inherits(x$children[[1]], 'arrowline')) {
@@ -390,7 +382,6 @@ makeContent.genemodel <- function(x) {
   x
 }
 
-#' @importFrom grid convertX unit gpar
 makeContent.arrowline <- function(x) {
 
   dat <- x$data

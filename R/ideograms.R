@@ -44,8 +44,6 @@
 #'  \code{\link[grid]{gpar}}
 #'
 #'@export
-#'@importFrom grid gpar
-#'@import ggplot2
 setup.cytobands <- function(bands, colourmap, gpars = gpar()){
 
   # Split up by chromosome
@@ -218,9 +216,6 @@ render.ideo <- function(chr, orient = "x", ranges, theme, high.col, ideodat){
 #'   indirectly by users.
 #'
 #' @keywords internal
-#' @importFrom rlang %||%
-#' @import grid
-#' @import gtable
 draw_ideo_panels_grid <- function(panels, layout, x_scales, y_scales, ranges, coord, data, theme, params, self){
   if((params$free$x || params$free$y) && !coord$is_free()){
     stop(ggplot2:::snake_class(coord), " doesn't support free scales", call. = F)
@@ -638,7 +633,7 @@ draw_ideo_panels_wrap <- function(panels, layout, x_scales, y_scales,
   chr_match <- apply(labels_df, 2, function(x){sum(grepl(chr_style, x, ignore.case = T))})
   ideovars <- if(any(chr_match > 0)) {
     as.character(labels_df[,which.max(chr_match)])
-  } else { rep(NA, nrow(col_vars))}
+  } else { rep(NA, nrow(unique(layout[names(params$cols)])))}
 
   orient <- if(params$strip.position %in% c("top", "bottom")) {
     "x"

@@ -57,7 +57,6 @@
 #'   \code{\link[ggplot2]{geom_histogram}}
 #'
 #' @export
-#' @importFrom ggplot2 layer
 #'
 #' @examples
 #' # A mixture of normal distributions where the standard deviation is
@@ -127,8 +126,6 @@ stat_theodensity <- function(
 #' @rdname stat_theodensity
 #' @usage NULL
 #' @format NULL
-#' @importFrom ggplot2 ggproto StatDensity
-
 #' @export
 StatTheoDensity <- ggproto(
   "StatTheoDensity",

@@ -32,7 +32,6 @@
 #'
 #' @seealso \code{\link[IRanges:inter-range-methods]{disjointBins}}
 #'
-#' @importFrom ggplot2 ggproto
 #' @examples
 #' # Even though geom_tile() is parametrised by middle-x values, it is
 #' # internally converted to xmin, xmax, ymin, ymax parametrisation so the
@@ -48,7 +47,6 @@ position_disjoint_ranges <- function(extend = 1, stepsize = 1) {
 
 
 #' @rdname position_disjoint_ranges
-#' @importFrom ggplot2 ggproto Position
 #' @format NULL
 #' @usage NULL
 PositionDisjointRanges <- ggplot2::ggproto(

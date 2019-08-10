@@ -41,8 +41,6 @@
 #'   facet_grid(vs ~ am) +
 #'   force_panelsizes(rows = c(2, 1),
 #'                    cols = c(2, 1))
-#'
-#' @importFrom grid is.unit unit
 force_panelsizes <- function(rows = NULL, cols = NULL, respect = NULL) {
   if (!is.null(rows) & !is.unit(rows)) {
     rows <- unit(rows, "null")
@@ -55,7 +53,7 @@ force_panelsizes <- function(rows = NULL, cols = NULL, respect = NULL) {
             class = "forcedsize")
 }
 
-#' @importFrom ggplot2 ggplot_add
+#' @usage NULL
 #' @export
 #' @rdname force_panelsizes
 ggplot_add.forcedsize <- function(object, plot, object_name)

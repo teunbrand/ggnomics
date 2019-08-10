@@ -139,26 +139,26 @@ plottable_genemodel_from_txdb <- function(txdb, roi, group_by = "gene") {
   utr5 <- utr5[names(utr5) %in% tx$tx_id]
   utr5 <- GenomicRanges::reduce(utr5)
   utr5 <- unlist(utr5)
-  mcols(utr5) <- S4Vectors::DataFrame(tx_id = tx2gene[as.character(names(utr5))],
+  S4Vectors::mcols(utr5) <- S4Vectors::DataFrame(tx_id = tx2gene[as.character(names(utr5))],
                                       type = "5putr")
 
   utr3 <- GenomicFeatures::threeUTRsByTranscript(txdb)
   utr3 <- utr3[names(utr3) %in% tx$tx_id]
   utr3 <- GenomicRanges::reduce(utr3)
   utr3 <- unlist(utr3)
-  mcols(utr3) <- S4Vectors::DataFrame(tx_id = tx2gene[as.character(names(utr3))],
+  S4Vectors::mcols(utr3) <- S4Vectors::DataFrame(tx_id = tx2gene[as.character(names(utr3))],
                                       type = "3putr")
 
   cds <- GenomicFeatures::cdsBy(txdb, "tx")
   cds <- cds[names(cds) %in% tx$tx_id]
   cds <- GenomicRanges::reduce(cds)
   cds <- unlist(cds)
-  mcols(cds) <- S4Vectors::DataFrame(tx_id = tx2gene[as.character(names(cds))],
+  S4Vectors::mcols(cds) <- S4Vectors::DataFrame(tx_id = tx2gene[as.character(names(cds))],
                           type = "cds")
 
   if (group_by == "transcript") {
     out <- c(utr5, cds, utr3)
-    mcols(out)[["tx_id"]] <- NULL
+    S4Vectors::mcols(out)[["tx_id"]] <- NULL
     out <- sort(out)
     names(out) <- NULL
     out <- as.data.frame(out)
@@ -170,9 +170,9 @@ plottable_genemodel_from_txdb <- function(txdb, roi, group_by = "gene") {
       gr <- dat[[i]]
       gr <- split(gr, gr$tx_id)
       if (!inherits(gr, "GRangesList")) {
-        gr <- as(gr, "GRangesList")
+        gr <- methods::as(gr, "GRangesList")
       }
-      gr <- reduce(gr)
+      gr <- GenomicRanges::reduce(gr)
       gr <- unlist(gr)
       S4Vectors::mcols(gr) <- S4Vectors::DataFrame(gene_id = names(gr),
                                                    type = i)
@@ -205,15 +205,15 @@ plottable_genemodel_from_gff <- function(gff_file, roi, group_by = "gene") {
     type <- droplevels(dat$type[1])
     out <- GenomicRanges::split(dat, S4Vectors::mcols(dat)[[group_col]])
     if (!inherits(out, "GRangesList")) {
-      out <- as(out, "GRangesList")
+      out <- methods::as(out, "GRangesList")
     }
     out <- GenomicRanges::reduce(out)
     out <- unlist(out)
-    mcols(out)[[group_col]] <- names(out)
+    S4Vectors::mcols(out)[[group_col]] <- names(out)
     out$type <- type
     return(out)
   })
-  data <- as(data, "GRangesList")
+  data <- methods::as(data, "GRangesList")
   data <- unlist(data)
   names(data) <- NULL
   data <- sort(data)

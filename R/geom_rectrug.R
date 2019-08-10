@@ -77,7 +77,7 @@
 #' }
 #'
 #' @seealso \code{\link[ggplot2]{geom_rug}}, \code{\link[ggplot2]{geom_rect}},
-#'   \code{\link[ggplot]{geom_tile}}
+#'   \code{\link[ggplot2]{geom_tile}}
 #'
 #' @examples
 #' # geom_rectrug() is parameterised by the four corners
@@ -135,9 +135,9 @@ geom_rectrug <- function(
                       ...))
 }
 
-
-#' @importFrom ggplot2 aes
+#' @usage NULL
 #' @export
+#' @rdname ggnomics_extensions
 GeomRectRug <- ggplot2::ggproto(
   "GeomRectRug", ggplot2::GeomRug,
   draw_panel = function(self, data, panel_params, coord, sides = "bl", outside = FALSE,
@@ -220,7 +220,6 @@ GeomRectRug <- ggplot2::ggproto(
 )
 
 #' @rdname geom_rectrug
-#' @importFrom ggplot2 layer
 #' @export
 geom_tilerug <- function(
   mapping = NULL,
@@ -247,8 +246,10 @@ geom_tilerug <- function(
                       ...))
 }
 
-#' @importFrom ggplot2 ggproto aes
+#' @usage NULL
+#' @format NULL
 #' @export
+#' @rdname ggnomics_extensions
 GeomTileRug <- ggplot2::ggproto(
   "GeomTileRug",
   GeomRectRug,

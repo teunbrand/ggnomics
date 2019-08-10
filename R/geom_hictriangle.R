@@ -40,7 +40,7 @@ geom_hictriangle <- function(exp, ranges, stat = "identity", position = "identit
 }
 
 #' @rdname geom_hictriangle
-#' @importFrom ggplot2 ggproto GeomPolygon
+#' @usage NULL
 GeomHicTriangle <- ggplot2::ggproto(
   "GeomHicTriangle", ggplot2::GeomPolygon,
   setup_data = function(data, params){

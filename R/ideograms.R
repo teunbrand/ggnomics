@@ -33,18 +33,16 @@
 #'  the \pkg{biovizBase} Bioconductor Package.
 #'
 #' @examples
-#' #cytobands <- read.delim("somewhere/cytoBand.txt", header = F)
-#' #cytobands <- droplevels(cytobands[cytobands[,1] %in% paste0("chr", c(1:22, "X", "Y")),])
-#' #colourmap <- c("red", "grey90", "black", "grey65", "grey25", "grey1", "grey51")
-#' #colourmap <- setNames(colourmap, levels(cytobands[,5]))
-#' #setup.cytobands(cytobands, colourmap)
+#' cytobands <- example_cytobands()
+#' colourmap <- example_cytoband_colours()
+#' setup_cytobands(cytobands, colourmap)
 #'
 #'@seealso \href{https://genome.ucsc.edu/}{UCSC Genome Browser}
 #'  \code{\link[biovizBase]{getBioColor}} \pkg{AnnotationHub}
 #'  \code{\link[grid]{gpar}}
 #'
 #'@export
-setup.cytobands <- function(bands, colourmap, gpars = gpar()){
+setup_cytobands <- function(bands, colourmap, gpars = gpar()){
 
   # Split up by chromosome
   bands <- split(bands, bands[,1])

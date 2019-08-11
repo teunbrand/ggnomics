@@ -40,10 +40,10 @@ facet_ideogrid <- function(rows = NULL, cols = NULL, scales = "fixed",
                            facets = NULL, ideo.size = unit(0.1, "null"), high.col = NA){
   # Error handling
   if(!exists("tbcache", mode = "environment")){
-    stop("No ideograms were found. Please call 'setup.ideograms()' first.", call. = FALSE)
+    stop("No ideograms were found. Please call 'setup_ideograms()' first.", call. = FALSE)
   }
   if(!exists("FacetIdeoGrid", envir = tbcache)){
-    stop("No ideograms were found. Please call 'setup.ideograms()' first.", call. = FALSE)
+    stop("No ideograms were found. Please call 'setup_ideograms()' first.", call. = FALSE)
   }
   if(!(class(ideo.size) == "unit")){
     stop("Invalid 'ideo.size' specification. Please use 'grid::unit()' to set an appropriate size")

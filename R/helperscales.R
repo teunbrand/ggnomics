@@ -14,7 +14,7 @@
 #' y <- format_logtrans(10^c(1:3))
 format_logtrans <- function(x){
   x <- log10(x)
-  lapply(x, function(i) do.call("substitute", list(expr(10^.x), list(.x = as.name(i)))))
+  lapply(x, function(i) do.call("substitute", list(expr(10^x), list(x = as.name(i)))))
 }
 
 #' Formatter for genomic coordinates

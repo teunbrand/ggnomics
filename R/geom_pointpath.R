@@ -31,10 +31,9 @@ geom_pointpath <- function(mapping = NULL, data = NULL, stat = "identity",
         params = list(na.rm = na.rm, ...))
 }
 
-#' @rdname geom_pointpath
-#' @format NULL
 #' @usage NULL
 #' @export
+#' @rdname ggnomics_extensions
 GeomPointPath <- ggplot2::ggproto(
   "GeomPointPath", ggplot2::GeomPoint,
   draw_panel = function(data, panel_params, coord, na.rm = FALSE){

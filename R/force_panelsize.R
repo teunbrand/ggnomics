@@ -54,8 +54,10 @@ force_panelsizes <- function(rows = NULL, cols = NULL, respect = NULL) {
 }
 
 #' @usage NULL
+#' @format NULL
+#' @noRd
 #' @export
-#' @rdname force_panelsizes
+#' @keywords internal
 ggplot_add.forcedsize <- function(object, plot, object_name)
 {
   # Simply return plot if no changes are needed

@@ -110,10 +110,9 @@ facet_nested <- function(rows = NULL, cols = NULL, scales = "fixed", space = "fi
           ))
 }
 
-#' @rdname facet_nested
-#' @format NULL
 #' @usage NULL
 #' @export
+#' @rdname ggnomics_extensions
 FacetNested <- ggplot2::ggproto(
   "FacetNested", ggplot2::
     FacetGrid,

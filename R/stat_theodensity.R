@@ -123,10 +123,9 @@ stat_theodensity <- function(
 
 # ggproto -----------------------------------------------------------------
 
-#' @rdname stat_theodensity
 #' @usage NULL
-#' @format NULL
 #' @export
+#' @rdname ggnomics_extensions
 StatTheoDensity <- ggproto(
   "StatTheoDensity",
   StatDensity,

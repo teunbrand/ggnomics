@@ -2,7 +2,6 @@
 % Please edit documentation in R/force_panelsize.R
 \name{force_panelsizes}
 \alias{force_panelsizes}
-\alias{ggplot_add.forcedsize}
 \title{Force a facetted plot to have specified panel sizes}
 \usage{
 force_panelsizes(rows = NULL, cols = NULL, respect = NULL)

@@ -46,9 +46,9 @@ position_disjoint_ranges <- function(extend = 1, stepsize = 1) {
 }
 
 
-#' @rdname position_disjoint_ranges
-#' @format NULL
 #' @usage NULL
+#' @export
+#' @rdname ggnomics_extensions
 PositionDisjointRanges <- ggplot2::ggproto(
   "PositionDisjointRanges",
   ggplot2::Position,

@@ -33,21 +33,22 @@ geom_hictriangle <- function(exp, ranges, stat = "identity", position = "identit
   }
   data <- extract_hicdata(exp, exp2 = NULL, xranges = ranges, yranges = NULL, triangle = TRUE)
   rm(exp, ranges)
-  mapping <- aes(x = x, y = y, fill = contacts)
+  mapping <- aes_string(x = "x", y = "y", fill = "contacts")
   layer(data = data, mapping = mapping, stat = stat, geom = GeomHicTriangle,
         position = position, show.legend = show.legend, inherit.aes = FALSE,
         params = list(na.rm = na.rm, ...))
 }
 
-#' @rdname geom_hictriangle
 #' @usage NULL
+#' @export
+#' @rdname ggnomics_extensions
 GeomHicTriangle <- ggplot2::ggproto(
   "GeomHicTriangle", ggplot2::GeomPolygon,
   setup_data = function(data, params){
 
     # Assign groups and estimate resolution
     data$group <- 1:nrow(data)
-    res <- resolution(data$x)/2
+    res <- resolution(data$x, zero = FALSE)/2
 
     # Calculate coordinates
     xmin <- data$x - res

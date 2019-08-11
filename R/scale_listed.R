@@ -112,7 +112,11 @@ scale_listed <- function(scalelist, replaces = NULL) {
   return(out)
 }
 
+#' @usage NULL
+#' @format NULL
+#' @noRd
 #' @export
+#' @keywords internal
 ggplot_add.MultiScale <- function(object, plot, object_name){
   for(i in object$scales){
     plot$scales$add(i)

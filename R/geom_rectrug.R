@@ -247,7 +247,6 @@ geom_tilerug <- function(
 }
 
 #' @usage NULL
-#' @format NULL
 #' @export
 #' @rdname ggnomics_extensions
 GeomTileRug <- ggplot2::ggproto(

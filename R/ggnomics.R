@@ -1,9 +1,9 @@
-#' @importFrom methods as getMethods
+#' @importFrom methods as getMethod
 #' @importFrom stats setNames
 #' @importFrom utils head tail
 #' @import ggplot2
 #' @import scales
-#' @import rlang
 #' @import grid
 #' @import gtable
+#' @import data.table
 NULL

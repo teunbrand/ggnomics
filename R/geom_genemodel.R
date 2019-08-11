@@ -132,10 +132,9 @@ geom_genemodel <- function(
   )
 }
 
-#' @rdname geom_genemodel
 #' @usage NULL
-#' @format NULL
 #' @export
+#' @rdname ggnomics_extensions
 GeomGeneModel <- ggproto(
   "GeomGeneModel", GeomRect,
   default_aes = aes(colour = "grey35", fill = "grey35",

@@ -77,7 +77,7 @@ GeomPointPath <- ggplot2::ggproto(
     )
 
     ## Combine grobs
-    ggplot2:::ggname(
+    .int$ggname(
       "geom_pointpath",
       grid::grobTree(my_path, my_points)
     )

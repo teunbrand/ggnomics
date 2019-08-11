@@ -68,11 +68,12 @@ ggplot_add.forcedsize <- function(object, plot, object_name)
   # Grab old facet stuffs
   old.facet <- plot$facet
   old.draw_panels <- old.facet$draw_panels
-  old.args <- ggplot2:::ggproto_formals(old.draw_panels)
+  old.args <- formals(environment(old.draw_panels)$f)
+  # old.args <- .int$ggproto_formals(old.draw_panels)
   old.params <- old.facet$params
 
   # Make new panel drawing function
-  new.fun <- function(){
+  new.fun <- function(params){
     # Format old function arguments
     pass_args <- names(formals())
     pass_args <- pass_args[pass_args != "self"]

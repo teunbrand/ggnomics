@@ -52,7 +52,7 @@ scale_listed <- function(scalelist, replaces = NULL) {
          call. = FALSE)
   }
   replaces <- standardise_aes_names(replaces)
-  if (!(all(replaces %in% ggplot2:::.all_aesthetics))) {
+  if (!(all(replaces %in% .int$.all_aesthetics))) {
     stop("The aesthetics in 'replaces' were not recognised as valid aesthetics.",
          call. = FALSE)
   }

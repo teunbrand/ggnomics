@@ -19,7 +19,8 @@ Suggests:
     GenomicRanges,
     IRanges,
     rtracklayer,
-    fitdistrplus
+    fitdistrplus,
+    rlang
 biocViews: Visualization
 VignetteBuilder: knitr
 Imports: 

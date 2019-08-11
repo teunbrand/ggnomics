@@ -161,7 +161,7 @@ GeomRectRug <- ggplot2::ggproto(
     gp <- grid::gpar(col = alpha(coords$colour, coords$alpha),
                      fill = alpha(coords$fill, coords$alpha),
                      linejoin = linejoin,
-                     lty = coords$linetype, lwd = coords$size * ggplot2:::.pt,
+                     lty = coords$linetype, lwd = coords$size * .int$.pt,
                      lineend = if (identical(linejoin, "round")) "round" else "square")
 
     if (!is.null(coords$xmin)) {

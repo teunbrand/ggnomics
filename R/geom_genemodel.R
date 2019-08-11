@@ -242,15 +242,15 @@ GeomGeneModel <- ggproto(
     data_cols <- c(names(data), "y", "thickness", "type")
     missing_aes  <- setdiff(names(self$default_aes), data_cols)
     missing_eval <- lapply(self$default_aes[missing_aes], rlang::eval_tidy)
-    missing_eval <- ggplot2:::compact(missing_eval)
-    if (ggplot2:::empty(data)) {
-      data <- ggplot2:::as_gg_data_frame(missing_eval)
+    missing_eval <- .int$compact(missing_eval)
+    if (.int$empty(data)) {
+      data <- .int$as_gg_data_frame(missing_eval)
     }
     else {
       data[names(missing_eval)] <- missing_eval
     }
     aes_params <- intersect(self$aesthetics(), names(params))
-    ggplot2:::check_aesthetics(params[aes_params], nrow(data))
+    .int$check_aesthetics(params[aes_params], nrow(data))
     data[aes_params] <- params[aes_params]
     data
   },

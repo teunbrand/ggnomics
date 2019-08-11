@@ -79,7 +79,7 @@ facet_nested <- function(rows = NULL, cols = NULL, scales = "fixed", space = "fi
     stop("switch must be either 'both', 'x', or 'y'", call. = FALSE)
   }
 
-  facets_list <- ggplot2:::grid_as_facets_list(rows, cols)
+  facets_list <- .int$grid_as_facets_list(rows, cols)
   n <- length(facets_list)
   if (n > 2L) {
     stop("A grid facet specification can't have more than two dimensions",
@@ -92,7 +92,7 @@ facet_nested <- function(rows = NULL, cols = NULL, scales = "fixed", space = "fi
     rows <- facets_list[[1]]
     cols <- facets_list[[2]]
   }
-  labeller <- ggplot2:::check_labeller(labeller)
+  labeller <- .int$check_labeller(labeller)
   ggproto(NULL, FacetNested, shrink = shrink,
           params = list(
             rows = rows,
@@ -118,7 +118,7 @@ FacetNested <- ggplot2::ggproto(
     FacetGrid,
   map_data = function(data, layout, params) {
     # Handle empty data
-    if (ggplot2:::empty(data)) {
+    if (.int$empty(data)) {
       return(cbind(data, PANEL = integer(0)))
     }
     # Setup variables
@@ -131,7 +131,7 @@ FacetNested <- ggplot2::ggproto(
 
     # Add variables
     data <- reshape2::add_margins(data, margin_vars, params$margins)
-    facet_vals <- ggplot2:::eval_facets(c(rows, cols), data, params$plot$env)
+    facet_vals <- .int$eval_facets(c(rows, cols), data, params$plot$env)
 
     # Only set as missing if it has no variable in that direction
     missing_facets <- character(0)
@@ -147,11 +147,11 @@ FacetNested <- ggplot2::ggproto(
       to_add <- unique(layout[missing_facets])
       data_rep <- rep.int(1:nrow(data), nrow(to_add))
       facet_rep <- rep(1:nrow(to_add), each = nrow(data))
-      data <- plyr::unrowname(data[data_rep, , drop = FALSE])
-      facet_vals <- plyr::unrowname(
-        cbind(facet_vals[data_rep, , drop = FALSE],
-              to_add[facet_rep, , drop = FALSE])
-      )
+      data <- data[data_rep, , drop = FALSE]
+      rownames(data) <- NULL
+      facet_vals <- cbind(facet_vals[data_rep, , drop = FALSE],
+                          to_add[facet_rep, , drop = FALSE])
+      rownames(facet_vals) <- NULL
     }
 
     # Match columns to facets
@@ -176,10 +176,10 @@ FacetNested <- ggplot2::ggproto(
     }
     base_rows <- combine_nested_vars(data, params$plot_env, rows, drop = params$drop)
     if (!params$as.table) {
-      rev_order <- function(x) factor(x, levels = rev(ggplot2:::ulevels(x)))
+      rev_order <- function(x) factor(x, levels = rev(.int$ulevels(x)))
     }
     base_cols <- combine_nested_vars(data, params$plot_env, cols, drop = params$drop)
-    base <- ggplot2:::df.grid(base_rows, base_cols)
+    base <- .int$df.grid(base_rows, base_cols)
     base <- reshape2::add_margins(base, list(names(rows), names(cols)), params$margins)
     base <- unique(base)
     panel <- plyr::id(base, drop = TRUE)
@@ -261,34 +261,34 @@ FacetNested <- ggplot2::ggproto(
 combine_nested_vars <- function(data, env = emptyenv(), vars = NULL, drop = TRUE) {
   if (length(vars) == 0)
     return(data.frame())
-  values <- ggplot2:::compact(plyr::llply(data, ggplot2:::eval_facets, facets = vars,
+  values <- .int$compact(plyr::llply(data, .int$eval_facets, facets = vars,
                                           env = env))
   has_all <- unlist(lapply(values, length)) == length(vars)
   if (!any(has_all)) {
     missing <- lapply(values, function(x) setdiff(names(vars), names(x)))
-    missing_txt <- vapply(missing, ggplot2:::var_list, character(1))
+    missing_txt <- vapply(missing, .int$var_list, character(1))
     name <- c("Plot", paste0("Layer ", seq_len(length(data) - 1)))
     stop("At least one layer must contain all faceting variables: ",
-         ggplot2:::var_list(names(vars)), ".\n", paste0("* ", name, " is missing ",
+         .int$var_list(names(vars)), ".\n", paste0("* ", name, " is missing ",
                                               missing_txt, collapse = "\n"),
          call. = FALSE)
   }
   base <- unique(plyr::ldply(values[has_all]))
   if (!drop) {
-    base <- ggplot2:::unique_combs(base)
+    base <- .int$unique_combs(base)
   }
   for (value in values[!has_all]) {
-    if (ggplot2:::empty(value))
+    if (.int$empty(value))
       next
     old <- base[setdiff(names(base), names(value))]
     new <- unique(value[intersect(names(base), names(value))])
     if (drop) {
-      new <- ggplot2:::unique_combs(new)
+      new <- .int$unique_combs(new)
     }
     old[setdiff(names(base), names(value))] <- rep("", nrow(old))
-    base <- rbind(base, ggplot2:::df.grid(old, new))
+    base <- rbind(base, .int$df.grid(old, new))
   }
-  if (ggplot2:::empty(base)) {
+  if (.int$empty(base)) {
     stop("Facetting variables must have at least one value",
          call. = FALSE)
   }

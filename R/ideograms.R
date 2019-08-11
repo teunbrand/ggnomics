@@ -218,7 +218,7 @@ render.ideo <- function(chr, orient = "x", ranges, theme, high.col, ideodat){
 #' @keywords internal
 draw_ideo_panels_grid <- function(panels, layout, x_scales, y_scales, ranges, coord, data, theme, params, self){
   if((params$free$x || params$free$y) && !coord$is_free()){
-    stop(ggplot2:::snake_class(coord), " doesn't support free scales", call. = F)
+    stop(.int$snake_class(coord), " doesn't support free scales", call. = F)
   }
   ideo.size <- params$ideo.size
   cols <- which(layout$ROW == 1)
@@ -496,7 +496,7 @@ draw_ideo_panels_grid <- function(panels, layout, x_scales, y_scales, ranges, co
 draw_ideo_panels_wrap <- function(panels, layout, x_scales, y_scales,
                                   ranges, coord, data, theme, params, self){
   if ((params$free$x || params$free$y) && !coord$is_free()) {
-    stop(ggplot2:::snake_class(coord), " doesn't support free scales", call. = FALSE)
+    stop(.int$snake_class(coord), " doesn't support free scales", call. = FALSE)
   }
   if (inherits(coord, "CoordFlip")) {
     if (params$free$x) {
@@ -520,7 +520,7 @@ draw_ideo_panels_wrap <- function(panels, layout, x_scales, y_scales,
   panel_order <- order(layout$ROW, layout$COL)
   layout <- layout[panel_order, ]
   panels <- panels[panel_order]
-  panel_pos <- ggplot2:::convertInd(layout$ROW, layout$COL, nrow)
+  panel_pos <- .int$convertInd(layout$ROW, layout$COL, nrow)
 
   axes <- ggplot2::render_axes(ranges, ranges, coord, theme, transpose = TRUE)
   labels_df <- layout[names(params$facets)]
@@ -543,7 +543,7 @@ draw_ideo_panels_wrap <- function(panels, layout, x_scales, y_scales,
   empty_table <- matrix(list(zeroGrob()), nrow = nrow, ncol = ncol)
   panel_table <- empty_table
   panel_table[panel_pos] <- panels
-  empties <- apply(panel_table, c(1,2), function(x) ggplot2:::is.zero(x[[1]]))
+  empties <- apply(panel_table, c(1,2), function(x) .int$is.zero(x[[1]]))
   panel_table <- gtable_matrix("layout", panel_table,
                                widths = unit(rep(1, ncol), "null"),
                                heights = unit(rep(aspect_ratio, nrow), "null"),
@@ -582,15 +582,15 @@ draw_ideo_panels_wrap <- function(panels, layout, x_scales, y_scales,
     first_col <- which(apply(empties, 2, any))[1] - 1
 
     row_panels <- which(layout$ROW == first_row & layout$COL > first_col)
-    row_pos <- ggplot2:::convertInd(layout$ROW[row_panels], layout$COL[row_panels], nrow)
+    row_pos <- .int$convertInd(layout$ROW[row_panels], layout$COL[row_panels], nrow)
     row_axes <- axes$x$bottom[layout$SCALE_X[row_panels]]
 
     col_panels <- which(layout$ROW > first_row & layout$COL == first_col)
-    col_pos <- ggplot2:::convertInd(layout$ROW[col_panels], layout$COL[col_panels], nrow)
+    col_pos <- .int$convertInd(layout$ROW[col_panels], layout$COL[col_panels], nrow)
     col_axes <- axes$y$right[layout$SCALE_Y[col_panels]]
 
     if (params$strip.position == "bottom" && theme$strip.placement != "inside" &&
-        any(!vapply(row_axes, ggplot2:::is.zero, logical(1))) && !params$free$x) {
+        any(!vapply(row_axes, .int$is.zero, logical(1))) && !params$free$x) {
       warning("Suppressing axis rendering when strip.position = 'bottom' and strip.placement == 'outside'",
               call. = FALSE)
     }
@@ -608,13 +608,13 @@ draw_ideo_panels_wrap <- function(panels, layout, x_scales, y_scales,
   }
 
   # Build out gtables
-  panel_table <- ggplot2:::weave_tables_row(panel_table, axis_mat_x_top,
+  panel_table <- .int$weave_tables_row(panel_table, axis_mat_x_top,
                                             -1, axis_height_top, "axis-t", 3)
-  panel_table <- ggplot2:::weave_tables_row(panel_table, axis_mat_x_bottom,
+  panel_table <- .int$weave_tables_row(panel_table, axis_mat_x_bottom,
                                             0, axis_height_bottom, "axis-b", 3)
-  panel_table <- ggplot2:::weave_tables_col(panel_table, axis_mat_y_left,
+  panel_table <- .int$weave_tables_col(panel_table, axis_mat_y_left,
                                             -1, axis_width_left, "axis-l", 3)
-  panel_table <- ggplot2:::weave_tables_col(panel_table, axis_mat_y_right,
+  panel_table <- .int$weave_tables_col(panel_table, axis_mat_y_right,
                                             0, axis_width_right, "axis-r", 3)
 
   # Do strips
@@ -669,17 +669,17 @@ draw_ideo_panels_wrap <- function(panels, layout, x_scales, y_scales,
       strip_pad <- axis_height_bottom
     }
     strip_height <- unit(apply(strip_mat, 1, max_height), "cm")
-    panel_table <- ggplot2:::weave_tables_row(panel_table, strip_mat, placement,
+    panel_table <- .int$weave_tables_row(panel_table, strip_mat, placement,
                                               strip_height, strip_name, 2, coord$clip)
     if (add_ideo) {
       ideo_height <- rep(params$ideo.size, length(strip_height))
-      panel_table <- ggplot2:::weave_tables_row(panel_table, ideo_mat, placement,
+      panel_table <- .int$weave_tables_row(panel_table, ideo_mat, placement,
                                                 ideo_height, "ideo", 2, coord$clip)
     }
     if (!inside) {
       # Padding
       strip_pad[unclass(strip_pad) != 0] <- strip_padding
-      panel_table <- ggplot2:::weave_tables_row(panel_table, row_shift = placement,
+      panel_table <- .int$weave_tables_row(panel_table, row_shift = placement,
                                                 row_height = strip_pad)
     }
   }
@@ -699,17 +699,17 @@ draw_ideo_panels_wrap <- function(panels, layout, x_scales, y_scales,
     }
     strip_pad[unclass(strip_pad) != 0] <- strip_padding
     strip_width <- unit(apply(strip_mat, 2, max_width), "cm")
-    panel_table <- ggplot2:::weave_tables_col(panel_table, strip_mat,
+    panel_table <- .int$weave_tables_col(panel_table, strip_mat,
                                               placement, strip_width, strip_name, 2, coord$clip)
     if (add_ideo) {
       ideo_width <- rep(params$ideo.size, length(strip_width))
-      panel_table <- ggplot2:::weave_tables_col(panel_table, ideo_mat, placement,
+      panel_table <- .int$weave_tables_col(panel_table, ideo_mat, placement,
                                                 ideo_width,
                                                 "ideo", 2, coord$clip)
     }
     if (!inside) {
       strip_pad[unclass(strip_pad) != 0] <- strip_padding
-      panel_table <- ggplot2:::weave_tables_col(panel_table, col_shift = placement, col_width = strip_pad)
+      panel_table <- .int$weave_tables_col(panel_table, col_shift = placement, col_width = strip_pad)
     }
   }
   panel_table

@@ -1,6 +1,6 @@
 #' @importFrom methods as getMethod
 #' @importFrom stats setNames
-#' @importFrom utils head tail
+#' @importFrom utils head tail getFromNamespace
 #' @import ggplot2
 #' @import scales
 #' @import grid

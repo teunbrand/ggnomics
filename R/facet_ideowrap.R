@@ -62,14 +62,14 @@ facet_ideowrap <- function(facets, nrow = NULL, ncol = NULL, scales = "fixed",
   if (identical(dir, "v")){
     nrow_swap <- ncol
     ncol_swap <- nrow
-    nrow <- ggplot2:::sanitise_dim(nrow_swap)
-    ncol <- ggplot2:::sanitise_dim(ncol_swap)
+    nrow <- .int$sanitise_dim(nrow_swap)
+    ncol <- .int$sanitise_dim(ncol_swap)
   } else {
-    nrow <- ggplot2:::sanitise_dim(nrow)
-    ncol <- ggplot2:::sanitise_dim(ncol)
+    nrow <- .int$sanitise_dim(nrow)
+    ncol <- .int$sanitise_dim(ncol)
   }
-  labeller <- ggplot2:::check_labeller(labeller)
-  facets_list <- ggplot2:::as_facets_list(facets)
+  labeller <- .int$check_labeller(labeller)
+  facets_list <- .int$as_facets_list(facets)
   facets <- rlang::flatten_if(facets_list, rlang::is_list)
   ggproto(NULL, get("FacetIdeoWrap", envir = tbcache), shrink = shrink,
           params = list(facets = facets, free = free, as.table = as.table,

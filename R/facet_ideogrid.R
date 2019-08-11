@@ -66,7 +66,7 @@ facet_ideogrid <- function(rows = NULL, cols = NULL, scales = "fixed",
   if (!is.null(switch) && !switch %in% c("both", "x", "y")) {
     stop("switch must be either 'both', 'x', or 'y'", call. = FALSE)
   }
-  facets_list <- ggplot2:::grid_as_facets_list(rows, cols)
+  facets_list <- .int$grid_as_facets_list(rows, cols)
   n <- length(facets_list)
   if (n > 2L) {
     stop("A grid facet specification can't have more than two dimensions", call. = FALSE)
@@ -79,7 +79,7 @@ facet_ideogrid <- function(rows = NULL, cols = NULL, scales = "fixed",
     rows <- facets_list[[1]]
     cols <- facets_list[[2]]
   }
-  labeller <- ggplot2:::check_labeller(labeller)
+  labeller <- .int$check_labeller(labeller)
 
   ggproto(NULL, get("FacetIdeoGrid", envir = tbcache), shrink = shrink,
           params = list(rows = rows, cols = cols, margins = margins, free = free,

@@ -1,6 +1,10 @@
 
 <!-- README.md is generated from README.Rmd. Please edit that file -->
 
+# Note
+
+This branch of the repository exists, such that a standalone version of facet_nested() is preserved for people who would like to use  that piece of code without downloading the entire package.
+
 # ggnomics <img src="man/figures/icon.png" align = "right" width = "120" />
 
 This package was written to extend `ggplot2` in the following way:

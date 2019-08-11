@@ -92,10 +92,15 @@ setMethod(
   function(object) {
     try_require("S4Vectors", "to_poly")
     df <- data.frame(
-      x = c(1, base::rbind(S4Vectors::start(object),
-                           S4Vectors::end(object)), length(object)),
-      y = c(0, base::rbind(S4Vectors::runValue(object),
-                           S4Vectors::runValue(object)), 0)
+      x = c(
+        1,
+        base::rbind(
+          getMethod("start", "Rle")(object),
+          getMethod("end",   "Rle")(object)),
+        length(object)
+      ),
+      y = c(0, base::rbind(object@values,
+                           object@values), 0),
     )
     df[!base::duplicated(df),]
   }
@@ -106,27 +111,11 @@ setMethod(
   "to_poly",
   signature(object = "rle", selection = "missing"),
   function(object) {
-    end <- cumsum(object$lengths)
+    end   <- cumsum(object$lengths)
     start <- end - object$lengths + 1
     df <- data.frame(
       x = c(1, base::rbind(start, end), tail(end, 1)),
       y = c(0, base::rbind(object$values, object$values), 0)
-    )
-    df[!duplicated(df),]
-  }
-)
-
-setMethod(
-  "to_poly",
-  as(structure(.Data = c("Rle", "missing"),
-               names = c("object", "selection"),
-               package = c("S4Vectors", "")),
-     "signature"),
-  function(object) {
-    requireNamespace("S4Vectors", quietly = TRUE)
-    df <- data.frame(
-      x = c(1, base::rbind(start(object), end(object)), length(object)),
-      y = c(0, base::rbind(runValue(object), runValue(object)), 0)
     )
     df[!duplicated(df),]
   }

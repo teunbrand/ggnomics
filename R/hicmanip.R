@@ -83,6 +83,7 @@ extract_hicdata <- function(exp1, exp2 = NULL, xranges, yranges = NULL, triangle
   try_require("GenomicRanges", "extract_hicdata")
   try_require("S4Vectors", "extract_hicdata")
   try_require("IRanges", "extract_hicdata")
+  try_require("data.table", "extract_hicdata")
 
   # Convert indices to GRanges
   gr <- GenomicRanges::GRanges(exp1$ABS[,1],
@@ -104,19 +105,20 @@ extract_hicdata <- function(exp1, exp2 = NULL, xranges, yranges = NULL, triangle
   # Convert ranges to indices
   xidx <- gr$index[S4Vectors::to(GenomicRanges::findOverlaps(xranges, gr))]
   yidx <- gr$index[S4Vectors::to(GenomicRanges::findOverlaps(yranges, gr))]
+  gidx <- expand.grid(xidx, yidx, KEEP.OUT.ATTRS = FALSE)
 
   # Grab data
   if (triangle | !is.null(exp2)){
-    data1 <- as.data.frame(exp1$ICE[expand.grid(xidx, yidx, KEEP.OUT.ATTRS = FALSE)])
+    data1 <- as.data.frame(exp1$ICE[i = gidx])
     data1 <- data1[!is.na(data1[, 3]), ]
     if (triangle) {
       data2 <- data.frame(V1 = integer(0), V2 = integer(0), V3 = numeric(0))
     } else {
-      data2 <- as.data.frame(exp2$ICE[expand.grid(xidx, yidx, KEEP.OUT.ATTRS = FALSE)])
+      data2 <- as.data.frame(exp2$ICE[i = gidx])
       data2 <- data2[!is.na(data2[, 3]), ]
     }
   } else {
-    data1 <- as.data.frame(exp1$ICE[expand.grid(xidx, yidx, KEEP.OUT.ATTRS = FALSE)])
+    data1 <- as.data.frame(exp1$ICE[i = gidx])
     data1 <- data1[!is.na(data1[, 3]), ]
     data2 <- as.data.frame(exp1$ICE[expand.grid(yidx, xidx, KEEP.OUT.ATTRS = FALSE)])
     data2 <- data2[!is.na(data2[, 3]), ]

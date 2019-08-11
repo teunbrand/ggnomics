@@ -23,9 +23,9 @@ Suggests:
 biocViews: Visualization
 VignetteBuilder: knitr
 Imports: 
-    rlang,
     scales,
     gtable,
-    methods
+    methods,
+    data.table
 Depends: 
     ggplot2

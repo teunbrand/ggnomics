@@ -17,5 +17,5 @@ Generates some toy cytoband data to plot ideograms with.
 cyto <- example_cytobands()
 }
 \seealso{
-\code{\link[ggnomics]{example_cytobands_colours}}
+\code{\link[ggnomics]{example_cytoband_colours}}
 }

@@ -50,6 +50,13 @@ The triangle is calculated such that it is rotated by 45 degrees
   A recommendation for this geom is to use a \code{coord_fixed(ratio = 0.5)}
   to get neat 45 degree angles.
 }
+\examples{
+require(GenomicRanges)
+exp <- example_HiC()
+gr <- GRanges("chr1", IRanges(20e6, 100e6))
+ggplot() +
+  geom_hictriangle(exp, gr)
+}
 \seealso{
 \code{\link[GENOVA]{construct.experiment}} on how to construct a
   \pkg{GENOVA} experiment object. \code{\link[GenomicRanges]{GRanges}} on how to

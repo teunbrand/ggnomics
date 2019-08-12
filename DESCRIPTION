@@ -20,7 +20,9 @@ Suggests:
     IRanges,
     rtracklayer,
     fitdistrplus,
-    rlang
+    rlang,
+    reshape2,
+    MASS
 biocViews: Visualization
 VignetteBuilder: knitr
 Imports: 

@@ -60,3 +60,60 @@ example_cytoband_colours <- function() {
            c("acen",   "gneg",   "gpos100", "gpos25",
              "gpos50", "gpos75", "gvar",    "stalk"))
 }
+
+#' Generate fake Hi-C experiment
+#'
+#' Randomly generate data in the format of a GENOVA Hi-C experiment.
+#'
+#' @return A \code{list} with the skeleton of a GENOVA Hi-C experiment.
+#'
+#' @details The data is formatted as the first 120 Mb of 'chr1' at 1 Mb
+#'   resolution. Since data is randomly generated, use \code{set.seed()} for
+#'   reproducibility. Qualifies as the bare minimum requirement for the
+#'   \code{\link[ggnomics]{geom_hictriangle}}'s \code{exp} argument.
+#'
+#' @export
+#'
+#' @examples
+#' exp <- example_HiC()
+example_HiC <- function() {
+  try_require("MASS", "example_HiC")
+  try_require("reshape2", "example_HiC")
+  try_require("data.table", "example_HiC")
+  ev <- cbind(cumsum(rt(120, 3)),
+              cumsum(rt(120, 3)),
+              cumsum(rt(120, 3)),
+              cumsum(rt(120, 3)))
+  ev <- ev %*% diag(c(300, 150, 75, 35)) %*% MASS::ginv(ev)
+  ev <- ev + abs(min(ev))
+  ev <- ev^2
+
+  # Add a diagonal
+  max <- max(ev)
+  for(i in seq.int(0, ncol(ev) - 1, by = 1)) {
+    test <- row(ev)  + i == col(ev)
+    ev[test] <- (ev[test] + sqrt(dcauchy(i, 0, 5)) * max * 3)
+  }
+  ev <- ev - min(ev)
+
+  # Format as symmetric matrix in triplet form as data.table
+  ev[lower.tri(ev)] <- NA
+  ev <- reshape2::melt(ev)
+  ev <- ev[!is.na(ev$value),]
+  rownames(ev) <- NULL
+  ev <- data.table::data.table(
+    V1 = ev$Var1,
+    V2 = ev$Var2,
+    V3 = ev$value
+  )
+  data.table::setkey(ev, "V1", "V2")
+
+  # Setup genomic coordinates
+  coords <- data.frame(V1 = "chr1",
+                       V2 = as.integer(seq.int(0, 119e6, by = 1e6)),
+                       V3 = as.integer(seq.int(1e6, 120e6, by = 1e6)),
+                       V4 = 1:120)
+  exp <- list(ICE = ev,
+              ABS = coords,
+              RES = 1e6)
+}

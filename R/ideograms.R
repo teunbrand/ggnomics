@@ -520,12 +520,21 @@ draw_ideo_panels_wrap <- function(panels, layout, x_scales, y_scales,
   panels <- panels[panel_order]
   panel_pos <- .int$convertInd(layout$ROW, layout$COL, nrow)
 
-  axes <- ggplot2::render_axes(ranges, ranges, coord, theme, transpose = TRUE)
-  labels_df <- layout[names(params$facets)]
+  axes <- render_axes(ranges, ranges, coord, theme, transpose = TRUE)
+
+  if (length(params$facets) == 0) {
+    labels_df <- data.frame(x= "(all)")
+    names(labels_df) <- "(all)"
+  } else {
+    labels_df <- layout[names(params$facets)]
+  }
+
   attr(labels_df, "facet") <- "wrap"
-  strips <- ggplot2::render_strips(structure(labels_df, type = "rows"),
-                                   structure(labels_df, type = "cols"),
-                                   params$labeller, theme)
+  strips <- render_strips(
+    structure(labels_df, type = "rows"),
+    structure(labels_df, type = "cols"),
+    params$labeller, theme
+  )
   aspect_ratio <- theme$aspect.ratio
   if (is.null(aspect_ratio) && !params$free$x && !params$free$y) {
     aspect_ratio <- coord$aspect(ranges[[1]])
@@ -542,13 +551,15 @@ draw_ideo_panels_wrap <- function(panels, layout, x_scales, y_scales,
   panel_table <- empty_table
   panel_table[panel_pos] <- panels
   empties <- apply(panel_table, c(1,2), function(x) .int$is.zero(x[[1]]))
-  panel_table <- gtable_matrix("layout", panel_table,
-                               widths = unit(rep(1, ncol), "null"),
-                               heights = unit(rep(aspect_ratio, nrow), "null"),
-                               respect = respect, clip = coord$clip,
-                               z = matrix(1, ncol = ncol, nrow = nrow))
+  panel_table <- gtable_matrix(
+    "layout", panel_table,
+    widths  = unit(rep(1, ncol), "null"),
+    heights = unit(rep(aspect_ratio, nrow), "null"),
+    respect = respect, clip = coord$clip,
+    z = matrix(1, ncol = ncol, nrow = nrow)
+  )
   panel_table$layout$name <-paste0("panel-", rep(seq_len(ncol), nrow), "-",
-                                   rep(seq_len(nrow), each = nrow))
+                                   rep(seq_len(nrow), each = ncol))
   panel_table <- gtable_add_col_space(panel_table, theme$panel.spacing.x %||% theme$panel.spacing)
   panel_table <- gtable_add_row_space(panel_table, theme$panel.spacing.y %||% theme$panel.spacing)
 
@@ -639,6 +650,11 @@ draw_ideo_panels_wrap <- function(panels, layout, x_scales, y_scales,
     "y"
   }
 
+
+# Here --------------------------------------------------------------------
+
+
+
   ideos <- lapply(seq_along(ideovars), function(i){
     chr <- ideovars[[i]]
     ran <- ranges[[which(as.numeric(layout$PANEL) == i)]]
@@ -650,8 +666,11 @@ draw_ideo_panels_wrap <- function(panels, layout, x_scales, y_scales,
 
   add_ideo <- !all(is.na(ideovars))
 
-  ideo_mat <- empty_table
-  ideo_mat[panel_pos] <- ideos
+  if (add_ideo) {
+    ideo_mat <- empty_table
+    ideo_mat[panel_pos] <- ideos
+  }
+
   if (params$strip.position %in% c("top", "bottom")) {
     inside <- (theme$strip.placement.x %||% theme$strip.placement %||% "inside") == "inside"
     if (params$strip.position == "top") {

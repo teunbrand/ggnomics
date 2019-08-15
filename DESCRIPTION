@@ -22,8 +22,11 @@ Suggests:
     fitdistrplus,
     rlang,
     reshape2,
-    MASS
-biocViews: Visualization
+    MASS,
+    AnnotationDbi,
+    GenomeInfoDb,
+    GenomicFeatures,
+    plyr
 VignetteBuilder: knitr
 Imports: 
     scales,

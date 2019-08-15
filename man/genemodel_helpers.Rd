@@ -62,6 +62,7 @@ These functions were not tested exhaustively, please report bugs as an
   issue on the GitHub page.
 }
 \examples{
+\dontrun{
 roi <- GRanges("chr17", IRanges(63e6, 64e6))
 
 # For plottable_genemodel_from_txdb()
@@ -88,4 +89,5 @@ ggplot(df) +
     strand = strand, type = type,
     colour = strand, fill = strand)
   )
+}
 }

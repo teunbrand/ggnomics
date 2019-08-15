@@ -91,6 +91,9 @@ In absence of chromosome names in variables will result in default
   \code{\link[grDevices]{palette}} (with zero being taken as transparent).
 }
 \examples{
+setup_cytobands(example_cytobands(),
+                example_cytoband_colours())
+
 p <- ggplot(mpg, aes(displ, cty)) +
    geom_point() +
    facet_wrap(~ "chr1")

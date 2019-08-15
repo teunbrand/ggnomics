@@ -128,7 +128,7 @@ test_that("facet_nested can draw nesting lines horizontally", {
   g <- ggplotGrob(g)
 
   # Grab metrics
-  is_indicator <- grepl("nesting-indicator", g$layout$name)
+  is_indicator <- grepl("nestline", g$layout$name)
   panel_xpos <- panel_cols(g)$l
   nestr_xpos <- g$layout[is_indicator, c("l", "r")]
 
@@ -144,7 +144,7 @@ test_that("facet_nested can draw nesting lines vertically", {
   g <- ggplotGrob(g)
 
   # Grab metrics
-  is_indicator <- grepl("nesting-indicator", g$layout$name)
+  is_indicator <- grepl("nestline", g$layout$name)
   panel_ypos <- panel_rows(g)$t
   nestr_ypos <- g$layout[is_indicator, c("t", "b")]
 
@@ -166,8 +166,8 @@ test_that("facet_nested line resection works", {
   ctrl <- ggplotGrob(ctrl)
 
   # Grab metrics
-  test <- test$grobs[[grep("nesting-indicator", test$layout$name)]]
-  ctrl <- ctrl$grobs[[grep("nesting-indicator", ctrl$layout$name)]]
+  test <- test$grobs[[grep("nestline", test$layout$name)]]
+  ctrl <- ctrl$grobs[[grep("nestline", ctrl$layout$name)]]
 
   test_width <- grid::convertWidth(test$x, "mm", valueOnly = TRUE)
   ctrl_width <- grid::convertWidth(ctrl$x, "mm", valueOnly = TRUE)

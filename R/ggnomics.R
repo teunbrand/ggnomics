@@ -1,5 +1,5 @@
 #' @importFrom methods as getMethod
-#' @importFrom stats setNames
+#' @importFrom stats setNames rt dcauchy
 #' @importFrom utils head tail getFromNamespace
 #' @import ggplot2
 #' @import scales

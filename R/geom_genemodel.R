@@ -80,21 +80,15 @@
 #' @export
 #'
 #' @examples
-#' # Two arbitrary gene models
-#' df <- data.frame(
-#'   start = c(0, 1, 3, 7, 2, 7, 8),
-#'   end   = c(1, 2, 5, 8, 6, 8, 11),
-#'   type  = c("UTR", rep("CDS", 5), "UTR"),
-#'   gene  =  gl(2, 4, 7, c("A", "B")),
-#'   strand = gl(2, 4, 7, c("+", "-"))
-#' )
+#' df <- example_genemodels()
 #'
-#' # Even though genes overlap they are seperated
 #' ggplot(df) +
-#'   geom_genemodel(aes(
-#'     xmin = start, xmax = end, group = gene, # Required aes
-#'     strand = strand, type = type # Optional aes
-#'   ))
+#'   geom_genemodel(
+#'     aes(xmin = start, xmax = end,
+#'         strand = strand, type = type,
+#'         group = name)
+#'   )
+
 geom_genemodel <- function(
   mapping = NULL,
   data = NULL,
@@ -154,7 +148,7 @@ GeomGeneModel <- ggproto(
     coords$fill <- scales::alpha(coords$fill, coords$alpha)
 
     # Build exons
-    rect <- grid::rectGrob(
+    exons <- grid::rectGrob(
       coords$xmin, coords$ymin,
       width  = coords$xmax - coords$xmin,
       height = coords$ymax - coords$ymin,
@@ -169,22 +163,33 @@ GeomGeneModel <- ggproto(
         lineend = if (identical(linejoin, "round")) "round" else "square"
       )
     )
+    exons$name <- grid::grobName(exons, "exons")
+
 
     # Distribute intron styling
     if (intron.style == "line" || !any(c("+", "-") %in% coords$strand)) {
-      intronlines <- style_intron_plainline(coords, linejoin)
-      return(grid::gTree(children = grid::gList(intronlines, rect)))
+      introns <- style_intron_plainline(coords, linejoin)
+      introns$name <- grid::grobName(introns, "introns")
+      genemodel <- grid::gTree(children = grid::gList(introns, exons))
+      genemodel$name <- grobName(genemodel, "genemodel")
+      return(genemodel)
     }
 
     if (intron.style == "chevron") {
-      intronlines <- style_intron_chevron(coords, linejoin, chevron.height)
-      return(grid::gTree(children = grid::gList(intronlines, rect)))
+      introns <- style_intron_chevron(coords, linejoin, chevron.height)
+      introns$name <- grid::grobName(introns, "introns")
+      genemodel <- grid::gTree(children = grid::gList(introns, exons))
+      genemodel$name <- grobName(genemodel, "genemodel")
+      return(genemodel)
     }
 
     if (intron.style == "arrowline") {
-      intronlines <- style_intron_arrowline(coords, linejoin, arrow, arrow.freq)
-      return(grid::gTree(children = grid::gList(intronlines, rect),
-                         cl = 'genemodel'))
+      introns <- style_intron_arrowline(coords, linejoin, arrow, arrow.freq)
+      introns$name <- grid::grobName(introns, "introns")
+      genemodel <- grid::gTree(children = grid::gList(introns, exons),
+                               cl = 'genemodel')
+      genemodel$name <- grobName(genemodel, "genemodel")
+      return(genemodel)
     }
 
   },

@@ -161,10 +161,13 @@ StatTheoDensity <- ggproto(
       xseq <- seq(range[1], range[2], length.out = n)
     }
 
-    par_est <- suppressWarnings(coef(fitdistrplus::fitdist(x, distri, start = start.arg, fix.arg = fix.arg)))
+    par_est <- suppressWarnings(coef(fitdistrplus::fitdist(x, distri,
+                                                           start = start.arg,
+                                                           fix.arg = fix.arg)))
     par_est <- c(par_est, unlist(fix.arg))
 
-    if (any(is.na(par_est) | is.nan(par_est) | !is.finite(par_est) | is.null(par_est))) {
+    if (any(is.na(par_est) | is.nan(par_est) |
+            !is.finite(par_est) | is.null(par_est))) {
       warning("Failed to estimate parameters.", call. = FALSE)
       return(nulldata)
     }

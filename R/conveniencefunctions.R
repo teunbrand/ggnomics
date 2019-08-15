@@ -89,6 +89,7 @@ ggsubset <- function(rowtest = NULL, omit = NULL) {
 #' @name genemodel_helpers
 #' @rdname genemodel_helpers
 #' @examples
+#' \dontrun{
 #' roi <- GRanges("chr17", IRanges(63e6, 64e6))
 #'
 #' # For plottable_genemodel_from_txdb()
@@ -115,6 +116,7 @@ ggsubset <- function(rowtest = NULL, omit = NULL) {
 #'     strand = strand, type = type,
 #'     colour = strand, fill = strand)
 #'   )
+#' }
 NULL
 
 #' @rdname genemodel_helpers

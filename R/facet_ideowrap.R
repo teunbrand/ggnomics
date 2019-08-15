@@ -31,6 +31,9 @@
 #' @export
 #'
 #' @examples
+#' setup_cytobands(example_cytobands(),
+#'                 example_cytoband_colours())
+#'
 #' p <- ggplot(mpg, aes(displ, cty)) +
 #'    geom_point() +
 #'    facet_wrap(~ "chr1")

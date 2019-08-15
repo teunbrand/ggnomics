@@ -124,21 +124,14 @@ The expected input format is that every exon has its own row. The
 }
 
 \examples{
-# Two arbitrary gene models
-df <- data.frame(
-  start = c(0, 1, 3, 7, 2, 7, 8),
-  end   = c(1, 2, 5, 8, 6, 8, 11),
-  type  = c("UTR", rep("CDS", 5), "UTR"),
-  gene  =  gl(2, 4, 7, c("A", "B")),
-  strand = gl(2, 4, 7, c("+", "-"))
-)
+df <- example_genemodels()
 
-# Even though genes overlap they are seperated
 ggplot(df) +
-  geom_genemodel(aes(
-    xmin = start, xmax = end, group = gene, # Required aes
-    strand = strand, type = type # Optional aes
-  ))
+  geom_genemodel(
+    aes(xmin = start, xmax = end,
+        strand = strand, type = type,
+        group = name)
+  )
 }
 \seealso{
 \code{\link[ggnomics]{position_disjoint_ranges}}

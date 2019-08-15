@@ -400,7 +400,7 @@ merge_strips <- function(panel_table, strip, vars, switch, params, theme, orient
           r = switch(orient, x = pos_x[ends[insert_here]],
                      y = pos_x + i + nudge),
           z = 3, clip = "on",
-          name = "nesting-indicator"
+          name = "nestline"
         )
       }
     }

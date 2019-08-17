@@ -53,3 +53,20 @@ test_that("geom_genemodel propogates arrows", {
   g <- layer_grob(g)[[1]]$children[[1]]
   expect_identical(g$arrow.template, arrow)
 })
+
+test_that("geom_genemodel makeContent works", {
+  g <- base + geom_genemodel(intron.style = "arrow")
+  grob <- layer_grob(g)[[1]]
+  expect_is(grob, "genemodel")
+  expect_is(grob$children[[2]], "rect")
+
+  input <- grob$children[[1]]
+  output <- grid::makeContent(input)
+  expect_is(input, "arrowline")
+  expect_is(output, "segments")
+
+  input <- grob
+  output <- grid::makeContent(input)
+  expect_is(input$children[[1]], "arrowline")
+  expect_is(output$children[[1]], "segments")
+})

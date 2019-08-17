@@ -2,6 +2,7 @@
 
 language: R
 cache: packages
+warnings_are_errors: false
 bioc_packages:
   - S4Vectors
   - GenomicRanges

@@ -198,7 +198,7 @@ StatTheoDensity <- ggproto(
       if (is.null(params$fix.arg)) {
         params$fix.arg <- list(rate = 0.5)
       } else {
-        params$fix.arg <- list(shape = params$fix.arg$df/2, rate = 0.5)
+        params$fix.arg <- list(shape = params$fix.arg$df / 2, rate = 0.5)
       }
     }
     # Binom does not operate without size
@@ -233,9 +233,14 @@ class_distri <- function(distri) {
 
   # Empirical test for functions outside the stats package
   rfun <- get(paste0("r", distri), mode = "function")
-  routput <- tryCatch({do.call(rfun, as.list(c(100, rep(1, length(formals(rfun)) - 1))))},
-                      warning = function(cond) {},
-                      error = function(cond) {return(NULL)})
+  routput <- tryCatch({
+    do.call(rfun, as.list(c(100, rep(1, length(formals(rfun)) - 1))))
+  },
+  warning = function(cond) {
+  },
+  error = function(cond) {
+    return(NULL)
+  })
   if (is.integer(routput) | sum(routput %% 1) == 0) {
     return("discrete")
   } else if (is.numeric(routput)) {

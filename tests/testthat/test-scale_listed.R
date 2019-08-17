@@ -189,12 +189,12 @@ test_that("scale_listed can mix discrete and continuous fills", {
 
 test_that("scale_listed throws error if scalelist and replaces unequal length", {
   expect_error(scale_listed(scalelist[1:3], replaces),
-               "argument parallel and of the same length as")
+               "argument parallel and")
 })
 
 test_that("scale_listed throws error when replaces has invalid aes", {
   expect_error(scale_listed(scalelist, c(replaces[1:3], "nonsense")),
-               "not recognised as valid aesthetics")
+               "recognised as valid aesthetics")
 })
 
 test_that("scale_listed throws error when non-scales are supplied as scalelist", {

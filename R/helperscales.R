@@ -14,7 +14,9 @@
 #' y <- format_logtrans(10^c(1:3))
 format_logtrans <- function(x){
   x <- log10(x)
-  lapply(x, function(i) do.call("substitute", list(expr(10^x), list(x = as.name(i)))))
+  lapply(x, function(i) do.call("substitute",
+                                list(expr(10 ^ x),
+                                     list(x = as.name(i)))))
 }
 
 #' Formatter for genomic coordinates
@@ -33,10 +35,10 @@ format_logtrans <- function(x){
 #' @examples
 #' format_genco(10^seq(0, 7, by = 1))
 format_genco <- function(x) {
-  cutoffs  <- 10^seq(0, 6, by = 3)
+  cutoffs  <- 10 ^ seq(0, 6, by = 3)
   prefixes <- c(" bp", " kb", " Mb")
   idx <- pmax(1, findInterval(x, cutoffs))
-  paste0(x/cutoffs[idx], prefixes[idx])
+  paste0(x / cutoffs[idx], prefixes[idx])
 }
 
 

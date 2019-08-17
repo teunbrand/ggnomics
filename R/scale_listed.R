@@ -48,12 +48,14 @@
 scale_listed <- function(scalelist, replaces = NULL) {
   # Check replaces validity
   if (length(scalelist) != length(replaces)) {
-    stop("Please provide a 'replaces' argument parallel and of the same length as 'scalelist'",
+    stop("Please provide a 'replaces' argument parallel and
+         of the same length as 'scalelist'",
          call. = FALSE)
   }
   replaces <- standardise_aes_names(replaces)
   if (!(all(replaces %in% .int$.all_aesthetics))) {
-    stop("The aesthetics in 'replaces' were not recognised as valid aesthetics.",
+    stop("The aesthetics in 'replaces' were not
+         recognised as valid aesthetics.",
          call. = FALSE)
   }
 
@@ -118,7 +120,7 @@ scale_listed <- function(scalelist, replaces = NULL) {
 #' @export
 #' @keywords internal
 ggplot_add.MultiScale <- function(object, plot, object_name){
-  for(i in object$scales){
+  for (i in object$scales){
     plot$scales$add(i)
   }
 
@@ -126,7 +128,7 @@ ggplot_add.MultiScale <- function(object, plot, object_name){
   replaced_pattern <- paste0("^", replaced_aes, "$")
 
   plot$layers <- lapply(plot$layers, function(lay){
-    if(!any(names(lay$mapping) %in% object$aes)) {
+    if (!any(names(lay$mapping) %in% object$aes)) {
       return(lay)
     }
     new_aes  <- object$aes[object$aes %in% names(lay$mapping)]
@@ -179,4 +181,3 @@ ggplot_add.MultiScale <- function(object, plot, object_name){
   })
   return(plot)
 }
-

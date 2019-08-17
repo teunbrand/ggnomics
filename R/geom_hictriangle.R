@@ -32,13 +32,16 @@
 #' gr <- GRanges("chr1", IRanges(20e6, 100e6))
 #' ggplot() +
 #'   geom_hictriangle(exp, gr)
-geom_hictriangle <- function(exp, ranges, stat = "identity", position = "identity", ...,
-                             na.rm = FALSE, show.legend = NA)
-{
-  if(!check_valid_hiclayer(exp1 = exp, exp2 = NULL, xranges = ranges, yranges = NULL)){
+geom_hictriangle <- function(
+  exp, ranges, stat = "identity", position = "identity", ...,
+  na.rm = FALSE, show.legend = NA
+) {
+  if (!check_valid_hiclayer(exp1 = exp, exp2 = NULL,
+                            xranges = ranges, yranges = NULL)){
     stop("Invalid Hi-C Layer")
   }
-  data <- extract_hicdata(exp, exp2 = NULL, xranges = ranges, yranges = NULL, triangle = TRUE)
+  data <- extract_hicdata(exp, exp2 = NULL,
+                          xranges = ranges, yranges = NULL, triangle = TRUE)
   rm(exp, ranges)
   mapping <- aes_string(x = "x", y = "y", fill = "contacts")
   layer(data = data, mapping = mapping, stat = stat, geom = GeomHicTriangle,
@@ -55,7 +58,7 @@ GeomHicTriangle <- ggplot2::ggproto(
 
     # Assign groups and estimate resolution
     data$group <- 1:nrow(data)
-    res <- resolution(data$x, zero = FALSE)/2
+    res <- resolution(data$x, zero = FALSE) / 2
 
     # Calculate coordinates
     xmin <- data$x - res
@@ -70,12 +73,12 @@ GeomHicTriangle <- ggplot2::ggproto(
     newcoords <- t(rotmat %*% (t(coords)))
 
     # New data
-    data <- data.frame(x = newcoords[,1], y = newcoords[,2],
+    data <- data.frame(x = newcoords[, 1], y = newcoords[, 2],
                        fill  = rep(data$fill, 4),
                        PANEL = rep(data$PANEL, 4),
                        group = rep(data$group, 4))
-    data <- data[order(data$group),]
-    data <- data[data$y > -1,]
+    data <- data[order(data$group), ]
+    data <- data[data$y > -1, ]
 
     data
   }

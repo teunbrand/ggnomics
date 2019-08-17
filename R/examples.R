@@ -36,7 +36,8 @@ example_cytobands <- function() {
         2, 2, 5, 2, 6, 2, 6, 2, 4, 2, 6, 2, 5, 2, 3, 2, 3, 2, 5, 2, 5,
         2, 3, 2, 1, 1, 2, 5, 2, 4, 2, 5, 2, 5, 2, 4, 2, 3, 2, 3, 2, 4,
         2, 6, 2, 6, 2, 5, 2, 6, 2, 6, 2, 5, 2, 3, 2, 6, 2, 3, 2, 5, 2),
-      labels = c("acen", "gneg", "gpos100", "gpos25", "gpos50", "gpos75", "gvar")
+      labels = c("acen", "gneg", "gpos100", "gpos25",
+                 "gpos50", "gpos75", "gvar")
     ),
     stringsAsFactors = FALSE
   )
@@ -86,11 +87,11 @@ example_HiC <- function() {
               cumsum(rt(120, 3)))
   ev <- ev %*% diag(c(300, 150, 75, 35)) %*% MASS::ginv(ev)
   ev <- ev + abs(min(ev))
-  ev <- ev^2
+  ev <- ev ^ 2
 
   # Add a diagonal
   max <- max(ev)
-  for(i in seq.int(0, ncol(ev) - 1, by = 1)) {
+  for (i in seq.int(0, ncol(ev) - 1, by = 1)) {
     test <- row(ev)  + i == col(ev)
     ev[test] <- (ev[test] + sqrt(dcauchy(i, 0, 5)) * max * 3)
   }
@@ -99,7 +100,7 @@ example_HiC <- function() {
   # Format as symmetric matrix in triplet form as data.table
   ev[lower.tri(ev)] <- NA
   ev <- reshape2::melt(ev)
-  ev <- ev[!is.na(ev$value),]
+  ev <- ev[!is.na(ev$value), ]
   rownames(ev) <- NULL
   ev <- data.table::data.table(
     V1 = ev$Var1,
@@ -189,17 +190,17 @@ example_genemodels <- function() {
             63314669L, 63319090L, 63340332L, 63351416L, 63355390L, 63379826L,
             63389544L, 63395928L, 63399039L, 63406277L, 63415674L, 63421952L,
             63009559L, 63399286L, 63427699L),
-    strand = factor(rep(c(2,1,2,1,2,1,2,1,2,1),
-                        c(8,13,28,17,10,9,3,22,28,27)),
+    strand = factor(rep(c(2, 1, 2, 1, 2, 1, 2, 1, 2, 1),
+                        c(8, 13, 28, 17, 10, 9, 3, 22, 28, 27)),
                     labels = c("+", "-")),
     type = factor(rep(c(1L, 2L, 1L, 2L, 1L, 2L, 1L, 2L, 1L, 2L, 1L, 2L, 1L,
-                        2L, 1L, 2L, 1L, 2L, 1L, 2L, 1L, 2L, 1L, 2L, 1L, 2L, 1L, 2L, 1L,
-                        2L, 1L, 2L, 1L, 2L, 1L, 2L, 1L, 2L, 1L, 2L, 1L, 2L, 1L, 2L, 1L,
-                        2L, 1L, 2L),
-                      c(2L, 6L, 3L, 4L, 2L, 4L, 4L, 6L, 1L, 2L, 1L, 2L, 1L, 2L, 2L,
-                        3L, 1L, 3L, 4L, 2L, 5L, 6L, 1L, 3L, 1L, 2L, 1L, 2L, 4L, 5L, 1L,
-                        2L, 9L, 8L, 1L, 1L, 1L, 2L, 4L, 2L, 2L, 3L, 6L, 11L, 2L, 2L,
-                        20L, 3L)),
+                        2L, 1L, 2L, 1L, 2L, 1L, 2L, 1L, 2L, 1L, 2L, 1L, 2L,
+                        1L, 2L, 1L, 2L, 1L, 2L, 1L, 2L, 1L, 2L, 1L, 2L, 1L,
+                        2L, 1L, 2L, 1L, 2L, 1L, 2L, 1L, 2L),
+                      c(2L, 6L, 3L, 4L, 2L, 4L, 4L, 6L, 1L, 2L, 1L, 2L, 1L,
+                        2L, 2L, 3L, 1L, 3L, 4L, 2L, 5L, 6L, 1L, 3L, 1L, 2L,
+                        1L, 2L, 4L, 5L, 1L, 2L, 9L, 8L, 1L, 1L, 1L, 2L, 4L,
+                        2L, 2L, 3L, 6L, 11L, 2L, 2L, 20L, 3L)),
                   labels = c("CDS", "UTR")),
     name = rep(c("AC046185.1", "AC113554.1", "ACE", "CCDC47", "CD79B", "CSH1",
                  "CSH2", "CSHL1", "CYB561", "DCAF7", "DDX42", "FTSJ3", "GH1",

@@ -187,7 +187,7 @@ GeomGeneModel <- ggproto(
       introns <- style_intron_arrowline(coords, linejoin, arrow, arrow.freq)
       introns$name <- grid::grobName(introns, "introns")
       genemodel <- grid::gTree(children = grid::gList(introns, exons),
-                               cl = 'genemodel')
+                               cl = "genemodel")
       genemodel$name <- grobName(genemodel, "genemodel")
       return(genemodel)
     }
@@ -208,7 +208,7 @@ GeomGeneModel <- ggproto(
 
     data <- lapply(data, function(df){
 
-      df <- df[order(df$xmin, df$xmax),]
+      df <- df[order(df$xmin, df$xmax), ]
 
       merge <- tail(df$xmin, -1) <= head(df$xmax, -1)
       if (!any(merge)) {
@@ -219,16 +219,16 @@ GeomGeneModel <- ggproto(
       start <- end - rle$lengths[rle$values] + 1
 
       df$xmax[start] <- df$xmax[end + 1]
-      df <- df[-(which(merge) + 1),]
+      df <- df[-(which(merge) + 1), ]
       return(df)
     })
     data <- do.call(rbind.data.frame, data)
-    data <- data[order(data$PANEL, data$group, data$xmin, data$xmax),]
+    data <- data[order(data$PANEL, data$group, data$xmin, data$xmax), ]
     rownames(data) <- NULL
 
     # Interpret and drop optional aes
     data$thickness <- ifelse(
-      grepl("utr", data$type ,ignore.case = TRUE),
+      grepl("utr", data$type, ignore.case = TRUE),
       0.5, 1) * data$thickness
 
     data <- transform(data,
@@ -279,7 +279,7 @@ style_intron_arrowline <- function(
   arrow.template = NULL, arrow.freq = unit(4, "mm")
 ) {
   data <- lapply(split(data, data$group), function(group) {
-    extremes <- group[which.max(group$xmax),]
+    extremes <- group[which.max(group$xmax), ]
     extremes$xmin <- min(group$xmin)
     extremes$y <- (extremes$ymax + extremes$ymin) / 2
     extremes
@@ -295,8 +295,8 @@ style_intron_arrowline <- function(
   grid::grob(
     data = data,
     arrow.template = arrow.template,
-    arrow.freq.number = as.numeric(arrow.freq),
-    arrow.freq.unit = attr(arrow.freq, "unit"),
+    arrow_freq_number = as.numeric(arrow.freq),
+    arrow_freq_unit = attr(arrow.freq, "unit"),
     gp = grid::gpar(
       col  = data$colour,
       fill = data$fill,
@@ -313,7 +313,7 @@ style_intron_arrowline <- function(
 #' @keywords internal
 style_intron_plainline <- function(data, linejoin) {
   data <- lapply(split(data, data$group), function(group) {
-    extremes <- group[which.max(group$xmax),]
+    extremes <- group[which.max(group$xmax), ]
     extremes$xmin <- min(group$xmin)
     extremes$y <- (extremes$ymax + extremes$ymin) / 2
     extremes
@@ -348,18 +348,18 @@ style_intron_chevron <- function(data, linejoin = "bevel", height = 1) {
     if (n == 1) {
       return(NULL)
     }
-    ymid <- (group$ymin[1] + group$ymax[1])/2
+    ymid <- (group$ymin[1] + group$ymax[1]) / 2
     ymax <- if (group$strand[1] == "+") max(group$ymax) else min(group$ymin)
     ymax <- ymid + diff(c(ymid, ymax)) * height
     out <- data.frame(
       x = c(head(group$xmax, -1), tail(group$xmin, -1),
-            (head(group$xmax, -1) + tail(group$xmin, -1))/2),
+            (head(group$xmax, -1) + tail(group$xmin, -1)) / 2),
       y = rep(c(ymid, ymax),
               c(2 * n - 2, n - 1)),
       id = i,
       row.names = NULL
     )
-    out <- out[order(out$x),]
+    out <- out[order(out$x), ]
     data.frame(out, group[1, dropcols], row.names = NULL)
   })
   data <- do.call(rbind, data)
@@ -380,7 +380,7 @@ style_intron_chevron <- function(data, linejoin = "bevel", height = 1) {
 #' @export
 makeContent.genemodel <- function(x) {
   # Evaluate arrowline grob to fix colour mistakes
-  if (inherits(x$children[[1]], 'arrowline')) {
+  if (inherits(x$children[[1]], "arrowline")) {
     x$children[[1]] <- grid::makeContent(x$children[[1]])
   }
   x
@@ -392,22 +392,22 @@ makeContent.arrowline <- function(x) {
   x$data <- NULL
 
   # Convert coordinates to absolute
-  dat$xmin <- grid::convertX(dat$xmin, x$arrow.freq.unit, TRUE)
-  dat$xmax <- grid::convertX(dat$xmax, x$arrow.freq.unit, TRUE)
+  dat$xmin <- grid::convertX(dat$xmin, x$arrow_freq_unit, TRUE)
+  dat$xmax <- grid::convertX(dat$xmax, x$arrow_freq_unit, TRUE)
 
   dat <- split(dat, dat$group)
   dat <- lapply(dat, function(s){
     # Split up lines into parts
     munched <- if (s$strand == "+") {
-      c(seq(min(s$xmin), max(s$xmax), by = x$arrow.freq.number), max(s$xmax))
+      c(seq(min(s$xmin), max(s$xmax), by = x$arrow_freq_number), max(s$xmax))
     } else {
-      c(seq(max(s$xmax), min(s$xmin), by = -x$arrow.freq.number), min(s$xmin))
+      c(seq(max(s$xmax), min(s$xmin), by = -x$arrow_freq_number), min(s$xmin))
     }
-    offset <- if(length(munched) > 1) -1 else length(munched)
+    offset <- if (length(munched) > 1) -1 else length(munched)
     trans <- data.frame(
       xmin = head(munched, offset),
       xmax = tail(munched, offset),
-      s[1,!(colnames(s) %in% c("xmin", "xmax"))],
+      s[1, !(colnames(s) %in% c("xmin", "xmax"))],
       arrow_length = c(rep(1, length(munched) - 2), 0),
       row.names = NULL,
       stringsAsFactors = FALSE
@@ -420,7 +420,7 @@ makeContent.arrowline <- function(x) {
                        attr(arrow$length, "unit"))
 
   # Update grob
-  x$gp = grid::gpar(
+  x$gp <- grid::gpar(
     col  = dat$colour,
     fill = dat$fill,
     lwd = dat$size * .pt,
@@ -436,7 +436,7 @@ makeContent.arrowline <- function(x) {
   x$arrow <- arrow
 
   # Re-class grob
-  x$cl <- 'segments'
-  class(x)[1] <- 'segments'
+  x$cl <- "segments"
+  class(x)[1] <- "segments"
   x
 }

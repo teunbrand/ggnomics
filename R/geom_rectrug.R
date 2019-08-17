@@ -140,8 +140,10 @@ geom_rectrug <- function(
 #' @rdname ggnomics_extensions
 GeomRectRug <- ggplot2::ggproto(
   "GeomRectRug", ggplot2::GeomRug,
-  draw_panel = function(self, data, panel_params, coord, sides = "bl", outside = FALSE,
-                        length = unit(0.03, "npc"), linejoin = "mitre") {
+  draw_panel = function(
+    self, data, panel_params, coord, sides = "bl", outside = FALSE,
+    length = unit(0.03, "npc"), linejoin = "mitre"
+  ) {
 
     if (!inherits(length, "unit")) {
       stop("'length' must be a 'unit' object.", call. = FALSE)
@@ -149,7 +151,7 @@ GeomRectRug <- ggplot2::ggproto(
     rugs <- list()
     coords <- coord$transform(data, panel_params)
     if (inherits(coord, "CoordFlip")) {
-      sides <- chartr('tblr', 'rlbt', sides)
+      sides <- chartr("tblr", "rlbt", sides)
     }
 
     rug_length <- if (!outside) {
@@ -158,11 +160,13 @@ GeomRectRug <- ggplot2::ggproto(
       list(min = -1 * length, max = unit(1, "npc") + length)
     }
 
-    gp <- grid::gpar(col = alpha(coords$colour, coords$alpha),
-                     fill = alpha(coords$fill, coords$alpha),
-                     linejoin = linejoin,
-                     lty = coords$linetype, lwd = coords$size * .int$.pt,
-                     lineend = if (identical(linejoin, "round")) "round" else "square")
+    gp <- grid::gpar(
+      col = alpha(coords$colour, coords$alpha),
+      fill = alpha(coords$fill, coords$alpha),
+      linejoin = linejoin,
+      lty = coords$linetype, lwd = coords$size * .int$.pt,
+      lineend = if (identical(linejoin, "round")) "round" else "square"
+    )
 
     if (!is.null(coords$xmin)) {
       if (grepl("b", sides)) {
@@ -215,7 +219,8 @@ GeomRectRug <- ggplot2::ggproto(
     grid::gTree(children = do.call(grid::gList, rugs))
   },
   optional_aes = c("x", "y", "xmin", "xmax", "ymin", "ymax"),
-  default_aes = ggplot2::aes(colour = NA, fill = "grey35", size = 0.5, linetype = 1, alpha = NA),
+  default_aes = ggplot2::aes(colour = NA, fill = "grey35",
+                             size = 0.5, linetype = 1, alpha = NA),
   draw_key = ggplot2::draw_key_polygon
 )
 
@@ -262,7 +267,8 @@ GeomTileRug <- ggplot2::ggproto(
               ymin = y - height / 2, ymax = y + height / 2, height = NULL
     )
   },
-  default_aes = ggplot2::aes(fill = "grey20", colour = NA, size = 0.1, linetype = 1,
-                    alpha = NA, width = NA, height = NA),
+  default_aes = ggplot2::aes(fill = "grey20", colour = NA,
+                             size = 0.1, linetype = 1,
+                             alpha = NA, width = NA, height = NA),
   draw_key = ggplot2::draw_key_polygon
 )

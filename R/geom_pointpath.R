@@ -27,13 +27,16 @@
 #' @examples
 #' ggplot(pressure, aes(temperature, pressure)) +
 #'   geom_pointpath()
-geom_pointpath <- function(mapping = NULL, data = NULL, stat = "identity",
-                           position = "identity", ..., na.rm = FALSE, show.legend = NA,
-                           inherit.aes = TRUE)
-{
-  layer(data = data, mapping = mapping, stat = stat, geom = GeomPointPath,
-        position = position, show.legend = show.legend, inherit.aes = inherit.aes,
-        params = list(na.rm = na.rm, ...))
+geom_pointpath <- function(
+  mapping = NULL, data = NULL, stat = "identity",
+  position = "identity", ..., na.rm = FALSE, show.legend = NA,
+  inherit.aes = TRUE
+) {
+  layer(
+    data = data, mapping = mapping, stat = stat, geom = GeomPointPath,
+    position = position, show.legend = show.legend, inherit.aes = inherit.aes,
+    params = list(na.rm = na.rm, ...)
+  )
 }
 
 #' @usage NULL
@@ -52,10 +55,12 @@ GeomPointPath <- ggplot2::ggproto(
       coords$x,
       coords$y,
       pch = coords$shape,
-      gp = grid::gpar(col = alpha(coords$colour, coords$alpha),
-                      fill = alpha(coords$fill, coords$alpha),
-                      fontsize = coords$size * .pt + coords$stroke * .stroke/2,
-                      lwd = coords$stroke * .stroke/2))
+      gp = grid::gpar(
+        col = alpha(coords$colour, coords$alpha),
+        fill = alpha(coords$fill, coords$alpha),
+        fontsize = coords$size * .pt + coords$stroke * .stroke / 2,
+        lwd = coords$stroke * .stroke / 2)
+    )
 
     # New behaviour
     ## Convert x and y to units
@@ -66,7 +71,7 @@ GeomPointPath <- ggplot2::ggproto(
     my_path <- grid::grob(
       x = x,
       y = y,
-      mult = (coords$size * .pt + coords$stroke * .stroke/2) * coords$mult,
+      mult = (coords$size * .pt + coords$stroke * .stroke / 2) * coords$mult,
       name = "pointpath",
       gp = grid::gpar(
         col = alpha(coords$colour, coords$alpha),
@@ -78,7 +83,7 @@ GeomPointPath <- ggplot2::ggproto(
       ),
       vp = NULL,
       ### Now this is the important bit:
-      cl = 'pointpath'
+      cl = "pointpath"
     )
 
     ## Combine grobs
@@ -89,8 +94,8 @@ GeomPointPath <- ggplot2::ggproto(
   },
   # Adding some defaults for lines and mult
   default_aes = ggplot2::aes(
-    shape = 19, colour = "black", size = 1.5, fill = NA, alpha = NA, stroke = 0.5,
-    linesize = 0.5, linetype = 1, mult = 0.5
+    shape = 19, colour = "black", size = 1.5, fill = NA, alpha = NA,
+    stroke = 0.5, linesize = 0.5, linetype = 1, mult = 0.5
   )
 )
 
@@ -107,7 +112,7 @@ makeContent.pointpath <- function(x){
   y_new <- grid::convertY(x$y, "mm", TRUE)
 
   # Do trigonometry stuff
-  hyp <- sqrt(diff(x_new)^2 + diff(y_new)^2)
+  hyp <- sqrt(diff(x_new) ^ 2 + diff(y_new) ^ 2)
   sin_plot <- diff(y_new) / hyp
   cos_plot <- diff(x_new) / hyp
 
@@ -116,10 +121,10 @@ makeContent.pointpath <- function(x){
   diff_y0_seg <- head(x$mult, -1) * sin_plot
   diff_y1_seg <- (hyp - head(x$mult, -1)) * sin_plot
 
-  x0 = head(x_new, -1) + diff_x0_seg
-  x1 = head(x_new, -1) + diff_x1_seg
-  y0 = head(y_new, -1) + diff_y0_seg
-  y1 = head(y_new, -1) + diff_y1_seg
+  x0 <- head(x_new, -1) + diff_x0_seg
+  x1 <- head(x_new, -1) + diff_x1_seg
+  y0 <- head(y_new, -1) + diff_y0_seg
+  y1 <- head(y_new, -1) + diff_y1_seg
   keep <- unclass(x0) < unclass(x1)
 
   # Remove old xy coordinates
@@ -133,6 +138,6 @@ makeContent.pointpath <- function(x){
   x$y1 <- grid::unit(y1, "mm")[keep]
 
   # Set to segments class
-  class(x)[1] <- 'segments'
+  class(x)[1] <- "segments"
   x
 }

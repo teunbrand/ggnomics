@@ -141,22 +141,28 @@ plottable_genemodel_from_txdb <- function(txdb, roi, group_by = "gene") {
   utr5 <- utr5[names(utr5) %in% tx$tx_id]
   utr5 <- GenomicRanges::reduce(utr5)
   utr5 <- unlist(utr5)
-  S4Vectors::mcols(utr5) <- S4Vectors::DataFrame(tx_id = tx2gene[as.character(names(utr5))],
-                                      type = "5putr")
+  S4Vectors::mcols(utr5) <- S4Vectors::DataFrame(
+    tx_id = tx2gene[as.character(names(utr5))],
+    type = "5putr"
+  )
 
   utr3 <- GenomicFeatures::threeUTRsByTranscript(txdb)
   utr3 <- utr3[names(utr3) %in% tx$tx_id]
   utr3 <- GenomicRanges::reduce(utr3)
   utr3 <- unlist(utr3)
-  S4Vectors::mcols(utr3) <- S4Vectors::DataFrame(tx_id = tx2gene[as.character(names(utr3))],
-                                      type = "3putr")
+  S4Vectors::mcols(utr3) <- S4Vectors::DataFrame(
+    tx_id = tx2gene[as.character(names(utr3))],
+    type = "3putr"
+  )
 
   cds <- GenomicFeatures::cdsBy(txdb, "tx")
   cds <- cds[names(cds) %in% tx$tx_id]
   cds <- GenomicRanges::reduce(cds)
   cds <- unlist(cds)
-  S4Vectors::mcols(cds) <- S4Vectors::DataFrame(tx_id = tx2gene[as.character(names(cds))],
-                          type = "cds")
+  S4Vectors::mcols(cds) <- S4Vectors::DataFrame(
+    tx_id = tx2gene[as.character(names(cds))],
+    type = "cds"
+  )
 
   if (group_by == "transcript") {
     out <- c(utr5, cds, utr3)

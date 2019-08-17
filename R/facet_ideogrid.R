@@ -37,19 +37,24 @@
 #' p <- ggplot(mpg, aes(displ, cty)) +
 #'    geom_point() +
 #'    facet_ideogrid(~ "chr1")
-facet_ideogrid <- function(rows = NULL, cols = NULL, scales = "fixed",
-                           space = "fixed", shrink = TRUE, labeller = "label_value",
-                           as.table = TRUE, switch = NULL, drop = TRUE, margins = FALSE,
-                           facets = NULL, ideo.size = unit(0.1, "null"), high.col = NA){
+facet_ideogrid <- function(
+  rows = NULL, cols = NULL, scales = "fixed",
+  space = "fixed", shrink = TRUE, labeller = "label_value",
+  as.table = TRUE, switch = NULL, drop = TRUE, margins = FALSE,
+  facets = NULL, ideo.size = unit(0.1, "null"), high.col = NA
+) {
   # Error handling
-  if(!exists("tbcache", mode = "environment")){
-    stop("No ideograms were found. Please call 'setup_ideograms()' first.", call. = FALSE)
+  if (!exists("tbcache", mode = "environment")) {
+    stop("No ideograms were found.
+         Please call 'setup_ideograms()' first.", call. = FALSE)
   }
-  if(!exists("FacetIdeoGrid", envir = tbcache)){
-    stop("No ideograms were found. Please call 'setup_ideograms()' first.", call. = FALSE)
+  if (!exists("FacetIdeoGrid", envir = tbcache)) {
+    stop("No ideograms were found.
+         Please call 'setup_ideograms()' first.", call. = FALSE)
   }
-  if(!(class(ideo.size) == "unit")){
-    stop("Invalid 'ideo.size' specification. Please use 'grid::unit()' to set an appropriate size")
+  if (!(class(ideo.size) == "unit")) {
+    stop("Invalid 'ideo.size' specification.
+         Please use 'grid::unit()' to set an appropriate size")
   }
 
   if (!is.null(facets)) {
@@ -61,10 +66,12 @@ facet_ideogrid <- function(rows = NULL, cols = NULL, scales = "fixed",
   }
   # Scales
   scales <- match.arg(scales, c("fixed", "free_x", "free_y", "free"))
-  free <- list(x = any(scales %in% c("free_x", "free")), y = any(scales %in% c("free_y", "free")))
+  free <- list(x = any(scales %in% c("free_x", "free")),
+               y = any(scales %in% c("free_y", "free")))
   # Space
   space <- match.arg(space, c("fixed", "free_x", "free_y", "free"))
-  space_free <- list(x = any(space %in% c("free_x", "free")), y = any(space %in% c("free_y", "free")))
+  space_free <- list(x = any(space %in% c("free_x", "free")),
+                     y = any(space %in% c("free_y", "free")))
 
   if (!is.null(switch) && !switch %in% c("both", "x", "y")) {
     stop("switch must be either 'both', 'x', or 'y'", call. = FALSE)
@@ -72,7 +79,8 @@ facet_ideogrid <- function(rows = NULL, cols = NULL, scales = "fixed",
   facets_list <- .int$grid_as_facets_list(rows, cols)
   n <- length(facets_list)
   if (n > 2L) {
-    stop("A grid facet specification can't have more than two dimensions", call. = FALSE)
+    stop("A grid facet specification can't have more than two dimensions",
+         call. = FALSE)
   }
   if (n == 1L) {
     rows <- quos()
@@ -84,8 +92,12 @@ facet_ideogrid <- function(rows = NULL, cols = NULL, scales = "fixed",
   }
   labeller <- .int$check_labeller(labeller)
 
-  ggproto(NULL, get("FacetIdeoGrid", envir = tbcache), shrink = shrink,
-          params = list(rows = rows, cols = cols, margins = margins, free = free,
-                        space_free = space_free, labeller = labeller, as.table = as.table,
-                        switch = switch, drop = drop, ideo.size = ideo.size, high.col = high.col))
+  ggproto(
+    NULL, get("FacetIdeoGrid", envir = tbcache), shrink = shrink,
+    params = list(
+      rows = rows, cols = cols, margins = margins, free = free,
+      space_free = space_free, labeller = labeller, as.table = as.table,
+      switch = switch, drop = drop, ideo.size = ideo.size, high.col = high.col
+    )
+  )
 }

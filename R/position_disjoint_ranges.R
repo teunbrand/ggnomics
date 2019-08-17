@@ -57,7 +57,8 @@ PositionDisjointRanges <- ggplot2::ggproto(
   required_aes = c("xmin", "xmax", "ymin", "ymax"),
   setup_params = function(self, data) {
     if (is.null(data$xmin) || is.null(data$xmax)) {
-      warning("Undefined ranges in the x-direction. Please supply 'xmin' and 'xmax'",
+      warning("Undefined ranges in the x-direction.
+              Please supply 'xmin' and 'xmax'",
               call. = FALSE)
     }
     list(extend = self$extend,
@@ -76,8 +77,8 @@ PositionDisjointRanges <- ggplot2::ggproto(
       ranges <- setNames(as.data.frame(ranges),
                          c("xmin", "xmax", "group"))
     } else if (all(data[["group"]] == -1)){
-      ranges <- cbind(data[,c("xmin", "xmax")],
-                      group = row(data)[,1])
+      ranges <- cbind(data[, c("xmin", "xmax")],
+                      group = row(data)[, 1])
       group <- ranges$group
     } else {
       return(data)
@@ -87,13 +88,13 @@ PositionDisjointRanges <- ggplot2::ggproto(
     ranges$xmin <- ranges$xmin - 0.5 * params$extend
     ranges$xmax <- ranges$xmax + 0.5 * params$extend
     ord <- order(ranges$xmin)
-    ranges <- ranges[ord,]
+    ranges <- ranges[ord, ]
 
     # Perform disjoint bins operation similar to IRanges::disjointBins(), but
     # generalized to any ranged numeric data, not just integers.
     track_bins <- ranges$xmax[1]
     ranges$bin <- c(1, vapply(tail(seq_along(ord), -1), function(i) {
-      dat <- ranges[i,]
+      dat <- ranges[i, ]
       j <- which(track_bins < dat$xmin)
       if (length(j) > 0) {
         ans  <- j[1]

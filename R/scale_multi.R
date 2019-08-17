@@ -43,8 +43,10 @@
 #'                    colours = list(c("white", "red"),
 #'                                   c("black", "blue"),
 #'                                   c("grey50", "green")))
-scale_fill_multi <- function(..., colours, values = NULL, na.value = "transparent",
-                             guide = "colourbar", aesthetics = "fill", colors){
+scale_fill_multi <- function(
+  ..., colours, values = NULL, na.value = "transparent",
+  guide = "colourbar", aesthetics = "fill", colors
+) {
 
   # Convert to proper spelling of colour
   colours <- if (missing(colours)){
@@ -73,8 +75,10 @@ scale_fill_multi <- function(..., colours, values = NULL, na.value = "transparen
 
 #' @rdname  scale_fill_multi
 #' @export
-scale_colour_multi <- function(..., colours, values = NULL, na.value = "transparent",
-                             guide = "colourbar", aesthetics = "colour", colors){
+scale_colour_multi <- function(
+  ..., colours, values = NULL, na.value = "transparent",
+  guide = "colourbar", aesthetics = "colour", colors
+) {
 
   # Convert to proper spelling of colour
   colours <- if (missing(colours)){
@@ -103,8 +107,9 @@ scale_colour_multi <- function(..., colours, values = NULL, na.value = "transpar
             class = "MultiScale")
 }
 
-distribute_scale_multi <- function(aesthetics, colours, values, na.value, guide, ...)
-{
+distribute_scale_multi <- function(
+  aesthetics, colours, values, na.value, guide, ...
+) {
   # Interpret extra arguments
   extra_args <- lapply(seq(aesthetics), function(i){
     lapply(list(...), pickvalue, i)
@@ -114,7 +119,8 @@ distribute_scale_multi <- function(aesthetics, colours, values, na.value, guide,
   guide <- lapply(seq(aesthetics), function(i){
     this_guide <- pickvalue(guide, i)
     if (all(class(this_guide) == "character") && length(this_guide) == 1) {
-      if(standardise_aes_names(this_guide) == standardise_aes_names("colourbar")){
+      if (standardise_aes_names(this_guide) ==
+          standardise_aes_names("colourbar")) {
         this_guide <- guide_colourbar()
       } else if (this_guide == "legend") {
         this_guide <- guide_legend()
@@ -123,7 +129,8 @@ distribute_scale_multi <- function(aesthetics, colours, values, na.value, guide,
     if (any(class(this_guide) == "guide")) {
       this_guide$available_aes <- aesthetics[[i]]
     } else {
-      stop("I haven't programmed this path yet.\nChoose a legend or colourbar guide", call. = FALSE)
+      stop("I haven't programmed this path yet.\n
+           Choose a legend or colourbar guide", call. = FALSE)
     }
     return(this_guide)
   })
@@ -131,7 +138,7 @@ distribute_scale_multi <- function(aesthetics, colours, values, na.value, guide,
   # Interpret scales
   scales <- lapply(seq(aesthetics), function(i){
     aes <- aesthetics[[i]]
-    pass_args = list(
+    pass_args <- list(
       aesthetics = aes,
       scale_name = paste0("MultiScale_", aes),
       palette = scales::gradient_n_pal(colours = pickvalue(colours, i),
@@ -151,7 +158,6 @@ pickvalue <- function(x, i){
   if (class(x)[[1]] != "list"){
     return(x)
   } else {
-    len <- length(x)
     i <- if (i > length(x))
       1
     else i

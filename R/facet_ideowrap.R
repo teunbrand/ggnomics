@@ -37,19 +37,24 @@
 #' p <- ggplot(mpg, aes(displ, cty)) +
 #'    geom_point() +
 #'    facet_wrap(~ "chr1")
-facet_ideowrap <- function(facets, nrow = NULL, ncol = NULL, scales = "fixed",
-                           shrink = TRUE, labeller = "label_value", as.table = TRUE,
-                           switch = NULL, drop = TRUE, dir = "h", strip.position = "top",
-                           ideo.size = unit(0.1, "null"), high.col = NA){
+facet_ideowrap <- function(
+  facets, nrow = NULL, ncol = NULL, scales = "fixed",
+  shrink = TRUE, labeller = "label_value", as.table = TRUE,
+  switch = NULL, drop = TRUE, dir = "h", strip.position = "top",
+  ideo.size = unit(0.1, "null"), high.col = NA
+) {
   # Error handling
-  if(!exists("tbcache", mode = "environment")){
-    stop("No ideograms were found. Please call 'setup_ideograms()' first.", call. = FALSE)
+  if (!exists("tbcache", mode = "environment")) {
+    stop("No ideograms were found. Please call 'setup_ideograms()' first.",
+         call. = FALSE)
   }
-  if(!exists("FacetIdeoGrid", envir = tbcache)){
-    stop("No ideograms were found. Please call 'setup_ideograms()' first.", call. = FALSE)
+  if (!exists("FacetIdeoGrid", envir = tbcache)) {
+    stop("No ideograms were found. Please call 'setup_ideograms()' first.",
+         call. = FALSE)
   }
-  if(!(class(ideo.size) == "unit")){
-    stop("Invalid 'ideo.size' specification. Please use 'grid::unit()' to set an appropriate size")
+  if (!(class(ideo.size) == "unit")) {
+    stop("Invalid 'ideo.size' specification.
+         Please use 'grid::unit()' to set an appropriate size")
   }
   scales <- match.arg(scales, c("fixed", "free_x", "free_y", "free"))
   dir <- match.arg(dir, c("h", "v"))
@@ -57,11 +62,12 @@ facet_ideowrap <- function(facets, nrow = NULL, ncol = NULL, scales = "fixed",
                y = any(scales %in% c("free_y", "free")))
   if (!is.null(switch)) {
     .Deprecated("strip.position", old = "switch")
-    strip.position <- if(switch == "x")
+    strip.position <- if (switch == "x")
       "bottom"
     else "left"
   }
-  strip.position <- match.arg(strip.position, c("top", "bottom", "left", "right"))
+  strip.position <- match.arg(strip.position,
+                              c("top", "bottom", "left", "right"))
   if (identical(dir, "v")){
     nrow_swap <- ncol
     ncol_swap <- nrow
@@ -74,9 +80,13 @@ facet_ideowrap <- function(facets, nrow = NULL, ncol = NULL, scales = "fixed",
   labeller <- .int$check_labeller(labeller)
   facets_list <- .int$as_facets_list(facets)
   facets <- rlang::flatten_if(facets_list, rlang::is_list)
-  ggproto(NULL, get("FacetIdeoWrap", envir = tbcache), shrink = shrink,
-          params = list(facets = facets, free = free, as.table = as.table,
-                        strip.position = strip.position, drop = drop, ncol = ncol,
-                        nrow = nrow, labeller = labeller, dir = dir, high.col = high.col,
-                        ideo.size = ideo.size, high.col = high.col))
+  ggproto(
+    NULL, get("FacetIdeoWrap", envir = tbcache), shrink = shrink,
+    params = list(
+      facets = facets, free = free, as.table = as.table,
+      strip.position = strip.position, drop = drop, ncol = ncol,
+      nrow = nrow, labeller = labeller, dir = dir, high.col = high.col,
+      ideo.size = ideo.size, high.col = high.col
+    )
+  )
 }

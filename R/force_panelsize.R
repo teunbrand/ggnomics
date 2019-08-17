@@ -58,10 +58,9 @@ force_panelsizes <- function(rows = NULL, cols = NULL, respect = NULL) {
 #' @noRd
 #' @export
 #' @keywords internal
-ggplot_add.forcedsize <- function(object, plot, object_name)
-{
+ggplot_add.forcedsize <- function(object, plot, object_name) {
   # Simply return plot if no changes are needed
-  if(is.null(object$rows) & is.null(object$cols) & is.null(object$respect)){
+  if (is.null(object$rows) & is.null(object$cols) & is.null(object$respect)){
     return(plot)
   }
 
@@ -69,7 +68,6 @@ ggplot_add.forcedsize <- function(object, plot, object_name)
   old.facet <- plot$facet
   old.draw_panels <- old.facet$draw_panels
   old.args <- formals(environment(old.draw_panels)$f)
-  # old.args <- .int$ggproto_formals(old.draw_panels)
   old.params <- old.facet$params
 
   # Make new panel drawing function
@@ -97,7 +95,7 @@ ggplot_add.forcedsize <- function(object, plot, object_name)
       panel_table$widths[pcols$l] <- colwidths
     }
     # Override respect
-    if(!is.null(params$force.respect)) {
+    if (!is.null(params$force.respect)) {
       panel_table$respect <- params$force.respect
     }
 
@@ -119,4 +117,3 @@ ggplot_add.forcedsize <- function(object, plot, object_name)
   plot$facet <- new_facet
   return(plot)
 }
-

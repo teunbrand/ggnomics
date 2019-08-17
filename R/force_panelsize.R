@@ -41,8 +41,6 @@
 #'   facet_grid(vs ~ am) +
 #'   force_panelsizes(rows = c(2, 1),
 #'                    cols = c(2, 1))
-#'
-#' @importFrom grid is.unit unit
 force_panelsizes <- function(rows = NULL, cols = NULL, respect = NULL) {
   if (!is.null(rows) & !is.unit(rows)) {
     rows <- unit(rows, "null")
@@ -55,24 +53,25 @@ force_panelsizes <- function(rows = NULL, cols = NULL, respect = NULL) {
             class = "forcedsize")
 }
 
+#' @usage NULL
+#' @format NULL
+#' @noRd
 #' @export
-#' @rdname force_panelsizes
-#' @importFrom ggplot2 ggplot_add
-ggplot_add.forcedsize <- function(object, plot, object_name)
-{
+#' @keywords internal
+ggplot_add.forcedsize <- function(object, plot, object_name) {
   # Simply return plot if no changes are needed
-  if(is.null(object$rows) & is.null(object$cols) & is.null(object$respect)){
+  if (is.null(object$rows) & is.null(object$cols) & is.null(object$respect)){
     return(plot)
   }
 
   # Grab old facet stuffs
   old.facet <- plot$facet
   old.draw_panels <- old.facet$draw_panels
-  old.args <- ggplot2:::ggproto_formals(old.draw_panels)
+  old.args <- formals(environment(old.draw_panels)$f)
   old.params <- old.facet$params
 
   # Make new panel drawing function
-  new.fun <- function(){
+  new.fun <- function(params){
     # Format old function arguments
     pass_args <- names(formals())
     pass_args <- pass_args[pass_args != "self"]
@@ -96,7 +95,7 @@ ggplot_add.forcedsize <- function(object, plot, object_name)
       panel_table$widths[pcols$l] <- colwidths
     }
     # Override respect
-    if(!is.null(params$force.respect)) {
+    if (!is.null(params$force.respect)) {
       panel_table$respect <- params$force.respect
     }
 
@@ -118,4 +117,3 @@ ggplot_add.forcedsize <- function(object, plot, object_name)
   plot$facet <- new_facet
   return(plot)
 }
-

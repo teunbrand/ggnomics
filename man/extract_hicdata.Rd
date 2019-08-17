@@ -10,12 +10,14 @@ extract_hicdata(exp1, exp2 = NULL, xranges, yranges = NULL,
 \arguments{
 \item{exp1, exp2}{A GENOVA experiment object.}
 
-\item{xranges, yranges}{A GRanges object. Alternatively,a \code{list} of at least length 3 with the
-following elements: \describe{\item{\code{character}}{ vector of chromosome
+\item{xranges, yranges}{A GRanges object. Alternatively,a \code{list} of at
+least length 3 with the following elements:
+\describe{\item{\code{character}}{ vector of chromosome
 names}\item{\code{integer}}{ vector of start
 positions}\item{\code{integer}}{ vector of end positions}}}
 
-\item{triangle}{A \code{logical} of length 1. If \code{TRUE}, only return half a Hi-C matrix.}
+\item{triangle}{A \code{logical} of length 1. If \code{TRUE}, only return
+half a Hi-C matrix.}
 }
 \value{
 A formatted \code{data.frame}
@@ -23,3 +25,4 @@ A formatted \code{data.frame}
 \description{
 Extractor function for Hi-C GENOVA experiment objects.
 }
+\keyword{internal}

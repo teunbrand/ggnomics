@@ -2,12 +2,9 @@
 % Please edit documentation in R/force_panelsize.R
 \name{force_panelsizes}
 \alias{force_panelsizes}
-\alias{ggplot_add.forcedsize}
 \title{Force a facetted plot to have specified panel sizes}
 \usage{
 force_panelsizes(rows = NULL, cols = NULL, respect = NULL)
-
-ggplot_add.forcedsize(object, plot, object_name)
 }
 \arguments{
 \item{rows}{a \code{numeric} or \code{unit} vector for setting panel heights.}
@@ -51,7 +48,6 @@ ggplot(mtcars, aes(disp, mpg)) +
   facet_grid(vs ~ am) +
   force_panelsizes(rows = c(2, 1),
                    cols = c(2, 1))
-
 }
 \seealso{
 \code{\link[ggplot2]{facet_grid}} \code{\link[ggplot2]{facet_wrap}}

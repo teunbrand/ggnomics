@@ -33,29 +33,26 @@
 #'  the \pkg{biovizBase} Bioconductor Package.
 #'
 #' @examples
-#' #cytobands <- read.delim("somewhere/cytoBand.txt", header = F)
-#' #cytobands <- droplevels(cytobands[cytobands[,1] %in% paste0("chr", c(1:22, "X", "Y")),])
-#' #colourmap <- c("red", "grey90", "black", "grey65", "grey25", "grey1", "grey51")
-#' #colourmap <- setNames(colourmap, levels(cytobands[,5]))
-#' #setup.cytobands(cytobands, colourmap)
+#' cytobands <- example_cytobands()
+#' colourmap <- example_cytoband_colours()
+#' setup_cytobands(cytobands, colourmap)
 #'
 #'@seealso \href{https://genome.ucsc.edu/}{UCSC Genome Browser}
-#'  \code{\link[biovizBase]{getBioColor}} \pkg{AnnotationHub}
+#'  \code{\link[biovizBase]{getBioColor}}
+#'  \code{\link[AnnotationHub]{AnnotationHub-package}}
 #'  \code{\link[grid]{gpar}}
 #'
 #'@export
-#'@importFrom grid gpar
-#'@import ggplot2
-setup.cytobands <- function(bands, colourmap, gpars = gpar()){
+setup_cytobands <- function(bands, colourmap, gpars = gpar()){
 
   # Split up by chromosome
-  bands <- split(bands, bands[,1])
+  bands <- split(bands, bands[, 1])
 
   # Loop over chromosomes
   ideograms <- lapply(bands, function(ideo){
 
     nbands <- nrow(ideo)
-    is.centro <- range(which(ideo[,5] == "acen"))
+    is.centro <- range(which(ideo[, 5] == "acen"))
 
     # Format ideogram outline as polygon
     poly <- c(ideo[c(1, is.centro[1]), 2],
@@ -66,7 +63,7 @@ setup.cytobands <- function(bands, colourmap, gpars = gpar()){
     # Setup bands as rectangles
     rects <- data.frame(x = rowMeans(ideo[-is.centro, 2:3]),
                         y = 0.5,
-                        width = (ideo[,3] - ideo[,2])[-is.centro],
+                        width = (ideo[, 3] - ideo[, 2])[-is.centro],
                         height = 1,
                         fill = colourmap[as.character(ideo[-is.centro, 5])],
                         stringsAsFactors = F)
@@ -76,7 +73,7 @@ setup.cytobands <- function(bands, colourmap, gpars = gpar()){
 
   # Save additional variables as attributes
   attr(ideograms, "gpars") <- gpars
-  if("acen" %in% names(colourmap)){
+  if ("acen" %in% names(colourmap)){
     attr(ideograms, "centro.col") <- colourmap[["acen"]]
   } else {
     attr(ideograms, "centro.col") <- "red"
@@ -117,7 +114,7 @@ tbcache <- new.env()
 #' @param ideodat the data for ideograms.
 #'
 #' @return a grob with an ideogram
-#'
+#' @keywords internal
 render.ideo <- function(chr, orient = "x", ranges, theme, high.col, ideodat){
 
   # Return empty grob on absense of proper chr
@@ -126,7 +123,7 @@ render.ideo <- function(chr, orient = "x", ranges, theme, high.col, ideodat){
   }
 
   # Retrieve data
-  i <- which(grepl(paste0(chr,"$"), names(ideodat), ignore.case = T))
+  i <- which(grepl(paste0(chr, "$"), names(ideodat), ignore.case = T))
   if (length(i) == 0){
     return(nullGrob())
   }
@@ -134,8 +131,19 @@ render.ideo <- function(chr, orient = "x", ranges, theme, high.col, ideodat){
 
   # Format ranges
   this.range <- ranges[[paste0(orient, ".range")]]
-  maxlim <- max(dat$polygon$x, dat$rectangles$x + 0.5 * dat$rectangles$width, this.range)
-  minlim <- min(dat$polygon$x, dat$rectangles$x - 0.5 * dat$rectangles$width, this.range)
+  if (is.unsorted(abs(this.range))) {
+    this.range <- abs(this.range)
+    reversed <- TRUE
+  } else {
+    reversed <- FALSE
+  }
+
+  maxlim <- max(dat$polygon$x,
+                dat$rectangles$x + 0.5 * dat$rectangles$width,
+                this.range)
+  minlim <- min(dat$polygon$x,
+                dat$rectangles$x - 0.5 * dat$rectangles$width,
+                this.range)
 
   # Ratio adjustments for highlights
   if (!is.na(high.col)){
@@ -145,16 +153,29 @@ render.ideo <- function(chr, orient = "x", ranges, theme, high.col, ideodat){
   }
 
   # Format data coordinates
-  poly <- data.frame(x = (dat$polygon$x - minlim) / (maxlim - minlim),
-                     y = (dat$polygon$y - 0.5) * ratio + 0.5)
-  rect <- data.frame(x = (dat$rectangles$x - minlim) / (maxlim - minlim),
-                     y = dat$rectangles$y,
-                     width  = dat$rectangles$width / (maxlim - minlim),
-                     height = dat$rectangles$height * ratio)
-  hi.light <- data.frame(x = (mean(this.range[1:2]) - minlim) / (maxlim - minlim),
-                         y = 0.5,
-                         width  = diff(this.range[1:2]) / (maxlim - minlim),
-                         height = 1)
+  poly <- data.frame(
+    x = (dat$polygon$x - minlim) / (maxlim - minlim),
+    y = (dat$polygon$y - 0.5) * ratio + 0.5
+  )
+  rect <- data.frame(
+    x = (dat$rectangles$x - minlim) / (maxlim - minlim),
+    y = dat$rectangles$y,
+    width  = dat$rectangles$width / (maxlim - minlim),
+    height = dat$rectangles$height * ratio
+  )
+  hi.light <- data.frame(
+    x = (mean(this.range[1:2]) - minlim) / (maxlim - minlim),
+    y = 0.5,
+    width  = diff(this.range[1:2]) / (maxlim - minlim),
+    height = 1
+  )
+
+  # Reverse x if scale is reversed
+  if (reversed) {
+    poly$x <- 1 - poly$x
+    rect$x <- 1 - rect$x
+    hi.light$x <- 1 - hi.light$x
+  }
 
   # Switch x/y when orientation is y
   if (orient == "y") {
@@ -164,8 +185,10 @@ render.ideo <- function(chr, orient = "x", ranges, theme, high.col, ideodat){
   }
 
   # Setup graphical parameters
-  rect.gp <- centro.gp <- outline.gp <- hifill.gp <- hiline.gp <- attr(ideodat, "gpar")
-  rect.gp$col <- centro.gp$col <- outline.gp$fill <- hifill.gp$col <- hiline.gp$fill <- NA
+  rect.gp <- centro.gp <- outline.gp <- hifill.gp <- hiline.gp <-
+    attr(ideodat, "gpar")
+  rect.gp$col <- centro.gp$col <- outline.gp$fill <-
+    hifill.gp$col <- hiline.gp$fill <- NA
   rect.gp$fill <- dat$rectangles$fill
   centro.gp$fill <- attr(ideodat, "centro.col")
   outline.gp$col <- theme$line$colour
@@ -203,12 +226,12 @@ render.ideo <- function(chr, orient = "x", ranges, theme, high.col, ideodat){
 #' @details Since this is a method of a class, this function should only be used
 #'   indirectly by users.
 #'
-#' @importFrom rlang %||%
-#' @import grid
-#' @import gtable
-draw_ideo_panels_grid <- function(panels, layout, x_scales, y_scales, ranges, coord, data, theme, params, self){
-  if((params$free$x || params$free$y) && !coord$is_free()){
-    stop(ggplot2:::snake_class(coord), " doesn't support free scales", call. = F)
+#' @keywords internal
+draw_ideo_panels_grid <- function(
+  panels, layout, x_scales, y_scales, ranges, coord, data, theme, params, self
+){
+  if ( (params$free$x || params$free$y) && !coord$is_free()){
+    stop(.int$snake_class(coord), " doesn't support free scales", call. = F)
   }
   ideo.size <- params$ideo.size
   cols <- which(layout$ROW == 1)
@@ -243,7 +266,7 @@ draw_ideo_panels_grid <- function(panels, layout, x_scales, y_scales, ranges, co
   } else {
     panel_widths <- rep(unit(1, "null"), ncol)
   }
-  if(params$space_free$y){
+  if (params$space_free$y) {
     ps <- layout$PANEL[layout$COL == 1]
     heights <- vapply(ps, function(i) diff(ranges[[i]]$y.range),
                       numeric(1))
@@ -252,13 +275,19 @@ draw_ideo_panels_grid <- function(panels, layout, x_scales, y_scales, ranges, co
     panel_heights <- rep(unit(1 * aspect_ratio, "null"),
                          nrow)
   }
-  panel_table <- gtable_matrix("layout", panel_table, panel_widths,
-                               panel_heights, respect = respect, clip = coord$clip,
-                               z = matrix(1, ncol = ncol, nrow = nrow))
+  panel_table <- gtable_matrix(
+    "layout", panel_table, panel_widths,
+    panel_heights, respect = respect, clip = coord$clip,
+    z = matrix(1, ncol = ncol, nrow = nrow)
+  )
   panel_table$layout$name <- paste0("panel-", rep(seq_len(ncol), nrow),
                                     "-", rep(seq_len(nrow), each = ncol))
-  panel_table <- gtable_add_col_space(panel_table, theme$panel.spacing.x %||% theme$panel.spacing)
-  panel_table <- gtable_add_row_space(panel_table, theme$panel.spacing.y %||% theme$panel.spacing)
+  panel_table <- gtable_add_col_space(panel_table,
+                                      theme$panel.spacing.x %||%
+                                        theme$panel.spacing)
+  panel_table <- gtable_add_row_space(panel_table,
+                                      theme$panel.spacing.y %||%
+                                        theme$panel.spacing)
   # Reserve space for axes
   panel_table <- gtable_add_rows(panel_table, max_height(axes$x$top), 0)
   panel_table <- gtable_add_rows(panel_table, max_height(axes$x$bottom), -1)
@@ -268,30 +297,40 @@ draw_ideo_panels_grid <- function(panels, layout, x_scales, y_scales, ranges, co
   panel_pos_col  <- panel_cols(panel_table)
   panel_pos_rows <- panel_rows(panel_table)
   # Add top X axes
-  panel_table <- gtable_add_grob(panel_table, axes$x$top, 1,
-                                 panel_pos_col$l, clip = "off",
-                                 name = paste0("axis-t-", seq_along(axes$x$top)),
-                                 z = 3)
+  panel_table <- gtable_add_grob(
+    panel_table, axes$x$top, 1,
+    panel_pos_col$l, clip = "off",
+    name = paste0("axis-t-", seq_along(axes$x$top)),
+    z = 3
+  )
   # Add bottom X axes
-  panel_table <- gtable_add_grob(panel_table, axes$x$bottom, -1,
-                                 panel_pos_col$l, clip = "off",
-                                 name = paste0("axis-b-", seq_along(axes$x$bottom)),
-                                 z = 3)
+  panel_table <- gtable_add_grob(
+    panel_table, axes$x$bottom, -1,
+    panel_pos_col$l, clip = "off",
+    name = paste0("axis-b-", seq_along(axes$x$bottom)),
+    z = 3
+  )
   # Add left Y axes
-  panel_table <- gtable_add_grob(panel_table, axes$y$left,
-                                 panel_pos_rows$t, 1, clip = "off",
-                                 name = paste0("axis-l-", seq_along(axes$y$left)),
-                                 z = 3)
+  panel_table <- gtable_add_grob(
+    panel_table, axes$y$left,
+    panel_pos_rows$t, 1, clip = "off",
+    name = paste0("axis-l-", seq_along(axes$y$left)),
+    z = 3
+  )
   # Add right Y axes
-  panel_table <- gtable_add_grob(panel_table, axes$y$right,
-                                 panel_pos_rows$t, -1, clip = "off",
-                                 name = paste0("axis-r-", seq_along(axes$y$right)),
-                                 z = 3)
+  panel_table <- gtable_add_grob(
+    panel_table, axes$y$right,
+    panel_pos_rows$t, -1, clip = "off",
+    name = paste0("axis-r-", seq_along(axes$y$right)),
+    z = 3
+  )
   # Strip placement
   switch_x <- !is.null(params$switch) && params$switch %in% c("both", "x")
   switch_y <- !is.null(params$switch) && params$switch %in% c("both", "y")
-  inside_x <- (theme$strip.placement.x %||% theme$strip.placement %||% "inside") == "inside"
-  inside_y <- (theme$strip.placement.y %||% theme$strip.placement %||% "inside") == "inside"
+  inside_x <- (theme$strip.placement.x %||%
+                 theme$strip.placement %||% "inside") == "inside"
+  inside_y <- (theme$strip.placement.y %||%
+                 theme$strip.placement %||% "inside") == "inside"
   strip_padding <- convertUnit(theme$strip.switch.pad.grid, "cm")
   panel_pos_col <- panel_cols(panel_table)
 
@@ -302,15 +341,23 @@ draw_ideo_panels_grid <- function(panels, layout, x_scales, y_scales, ranges, co
   chr_style <- gsub("[0-9]{1,}X|Y|M", replacement = "", names(ideodat))
   chr_style <- names(sort(table(chr_style), decreasing = T))[1]
 
-  chr_match_x <- apply(col_vars, 2, function(x){sum(grepl(chr_style, x, ignore.case = T))})
+  chr_match_x <- apply(col_vars, 2, function(x) {
+    sum(grepl(chr_style, x, ignore.case = T))
+  })
   x_ideovars <- if (any(chr_match_x > 0)) {
-    as.character(col_vars[,which.max(chr_match_x)])
-  } else { rep(NA, nrow(col_vars))}
+    as.character(col_vars[, which.max(chr_match_x)])
+  } else {
+    rep(NA, nrow(col_vars))
+  }
 
-  chr_match_y <- apply(row_vars, 2, function(x){sum(grepl(chr_style, x, ignore.case = T))})
+  chr_match_y <- apply(row_vars, 2, function(x) {
+    sum(grepl(chr_style, x, ignore.case = T))
+  })
   y_ideovars <- if (any(chr_match_y > 0)) {
-    as.character(row_vars[,which.max(chr_match_y)])
-  } else { rep(NA, nrow(row_vars))}
+    as.character(row_vars[, which.max(chr_match_y)])
+  } else {
+    rep(NA, nrow(row_vars))
+  }
 
   x_ideos <- lapply(seq_along(x_ideovars), function(i){
     chr <- x_ideovars[[i]]
@@ -330,35 +377,45 @@ draw_ideo_panels_grid <- function(panels, layout, x_scales, y_scales, ranges, co
 
   # Add X strips and ideos
   if (switch_x) {
-    if(!is.null(strips$x$bottom)){
+    if (!is.null(strips$x$bottom)){
       if (inside_x) {
         if (add_x_ideo) {
           panel_table <- gtable_add_rows(panel_table, ideo.size, -2)
-          panel_table <- gtable_add_grob(panel_table, x_ideos, -2,
-                                         panel_pos_col$l, clip = "on",
-                                         name = paste0("ideo-b-", seq_along(strips$x$bottom)),
-                                         z = 3)
+          panel_table <- gtable_add_grob(
+            panel_table, x_ideos, -2,
+            panel_pos_col$l, clip = "on",
+            name = paste0("ideo-b-", seq_along(strips$x$bottom)),
+            z = 3
+          )
         }
-        panel_table <- gtable_add_rows(panel_table, max_height(strips$x$bottom), -2)
-        panel_table <- gtable_add_grob(panel_table, strips$x$bottom, -2,
-                                       panel_pos_col$l, clip = "on",
-                                       name = paste0("strip-b-", seq_along(strips$x$bottom)),
-                                       z = 2)
+        panel_table <- gtable_add_rows(panel_table,
+                                       max_height(strips$x$bottom), -2)
+        panel_table <- gtable_add_grob(
+          panel_table, strips$x$bottom, -2,
+          panel_pos_col$l, clip = "on",
+          name = paste0("strip-b-", seq_along(strips$x$bottom)),
+          z = 2
+        )
       }
       else {
         panel_table <- gtable_add_rows(panel_table, strip_padding, -1)
         if (add_x_ideo) {
           panel_table <- gtable_add_rows(panel_table, ideo.size, -1)
-          panel_table <- gtable_add_grob(panel_table, x_ideos, -1,
-                                         panel_pos_col$l, clip = "on",
-                                         name = paste0("ideo-b-", seq_along(strips$x$bottom)),
-                                         z = 3)
+          panel_table <- gtable_add_grob(
+            panel_table, x_ideos, -1,
+            panel_pos_col$l, clip = "on",
+            name = paste0("ideo-b-", seq_along(strips$x$bottom)),
+            z = 3
+          )
         }
-        panel_table <- gtable_add_rows(panel_table, max_height(strips$x$bottom), -1)
-        panel_table <- gtable_add_grob(panel_table, strips$x$bottom, -1,
-                                       panel_pos_col$l, clip = "on",
-                                       name = paste0("strip-b-", seq_along(strips$x$bottom)),
-                                       z = 2)
+        panel_table <- gtable_add_rows(panel_table,
+                                       max_height(strips$x$bottom), -1)
+        panel_table <- gtable_add_grob(
+          panel_table, strips$x$bottom, -1,
+          panel_pos_col$l, clip = "on",
+          name = paste0("strip-b-", seq_along(strips$x$bottom)),
+          z = 2
+        )
       }
     }
   }
@@ -367,31 +424,39 @@ draw_ideo_panels_grid <- function(panels, layout, x_scales, y_scales, ranges, co
       if (inside_x) {
         if (add_x_ideo) {
           panel_table <- gtable_add_rows(panel_table, ideo.size, 1)
-          panel_table <- gtable_add_grob(panel_table, x_ideos, 2,
-                                         panel_pos_col$l, clip = "on",
-                                         name = paste0("ideo-t-", seq_along(strips$x$top)),
-                                         z = 3)
+          panel_table <- gtable_add_grob(
+            panel_table, x_ideos, 2,
+            panel_pos_col$l, clip = "on",
+            name = paste0("ideo-t-", seq_along(strips$x$top)),
+            z = 3
+          )
         }
         panel_table <- gtable_add_rows(panel_table, max_height(strips$x$top), 1)
-        panel_table <- gtable_add_grob(panel_table, strips$x$top,  2,
-                                       panel_pos_col$l, clip = "on",
-                                       name = paste0("strip-t-", seq_along(strips$x$top)),
-                                       z = 2)
+        panel_table <- gtable_add_grob(
+          panel_table, strips$x$top,  2,
+          panel_pos_col$l, clip = "on",
+          name = paste0("strip-t-", seq_along(strips$x$top)),
+          z = 2
+        )
       }
       else {
         panel_table <- gtable_add_rows(panel_table, strip_padding, 0)
         if (add_x_ideo) {
           panel_table <- gtable_add_rows(panel_table, ideo.size, 0)
-          panel_table <- gtable_add_grob(panel_table, x_ideos, 1,
-                                         panel_pos_col$l, clip = "on",
-                                         name = paste0("ideo-t-", seq_along(strips$x$top)),
-                                         z = 3)
+          panel_table <- gtable_add_grob(
+            panel_table, x_ideos, 1,
+            panel_pos_col$l, clip = "on",
+            name = paste0("ideo-t-", seq_along(strips$x$top)),
+            z = 3
+          )
         }
         panel_table <- gtable_add_rows(panel_table, max_height(strips$x$top), 0)
-        panel_table <- gtable_add_grob(panel_table, strips$x$top, 1,
-                                       panel_pos_col$l, clip = "on",
-                                       name = paste0("strip-t-", seq_along(strips$x$top)),
-                                       z = 2)
+        panel_table <- gtable_add_grob(
+          panel_table, strips$x$top, 1,
+          panel_pos_col$l, clip = "on",
+          name = paste0("strip-t-", seq_along(strips$x$top)),
+          z = 2
+        )
       }
     }
   }
@@ -405,64 +470,82 @@ draw_ideo_panels_grid <- function(panels, layout, x_scales, y_scales, ranges, co
       if (inside_y) {
         if (add_y_ideo) {
           panel_table <- gtable_add_cols(panel_table, ideo.size, 1)
-          panel_table <- gtable_add_grob(panel_table, y_ideos,
-                                         panel_pos_rows$t, 2, clip = "on",
-                                         name = paste0("ideo-l-", seq_along(strips$y$left)),
-                                         z = 3)
+          panel_table <- gtable_add_grob(
+            panel_table, y_ideos,
+            panel_pos_rows$t, 2, clip = "on",
+            name = paste0("ideo-l-", seq_along(strips$y$left)),
+            z = 3
+          )
         }
         panel_table <- gtable_add_cols(panel_table, max_width(strips$y$left), 1)
-        panel_table <- gtable_add_grob(panel_table, strips$y$left,
-                                       panel_pos_rows$t, 2, clip = "on",
-                                       name = paste0("strip-l-", seq_along(strips$y$left)),
-                                       z = 2)
+        panel_table <- gtable_add_grob(
+          panel_table, strips$y$left,
+          panel_pos_rows$t, 2, clip = "on",
+          name = paste0("strip-l-", seq_along(strips$y$left)),
+          z = 2
+        )
       }
       else {
         panel_table <- gtable_add_cols(panel_table, strip_padding, 0)
         if (add_y_ideo) {
           panel_table <- gtable_add_cols(panel_table, ideo.size, 0)
-          panel_table <- gtable_add_grob(panel_table, y_ideos,
-                                         panel_pos_rows$t, 1, clip = "on",
-                                         name = paste0("ideo-l-", seq_along(strips$y$left)),
-                                         z = 3)
+          panel_table <- gtable_add_grob(
+            panel_table, y_ideos,
+            panel_pos_rows$t, 1, clip = "on",
+            name = paste0("ideo-l-", seq_along(strips$y$left)),
+            z = 3
+          )
         }
         panel_table <- gtable_add_cols(panel_table, max_width(strips$y$left), 0)
-        panel_table <- gtable_add_grob(panel_table, strips$y$left,
-                                       panel_pos_rows$t, 1, clip = "on",
-                                       name = paste0("strip-l-", seq_along(strips$y$left)),
-                                       z = 2)
+        panel_table <- gtable_add_grob(
+          panel_table, strips$y$left,
+          panel_pos_rows$t, 1, clip = "on",
+          name = paste0("strip-l-", seq_along(strips$y$left)),
+          z = 2
+        )
       }
     }
   }
   else {
-    if(!is.null(strips$y$right)) {
-      if(inside_y) {
+    if (!is.null(strips$y$right)) {
+      if (inside_y) {
         if (add_y_ideo) {
           panel_table <- gtable_add_cols(panel_table, ideo.size, -2)
-          panel_table <- gtable_add_grob(panel_table, y_ideos,
-                                         panel_pos_rows$t, -2, clip = "on",
-                                         name = paste0("ideo-r-", seq_along(strips$y$right)),
-                                         z = 3)
+          panel_table <- gtable_add_grob(
+            panel_table, y_ideos,
+            panel_pos_rows$t, -2, clip = "on",
+            name = paste0("ideo-r-", seq_along(strips$y$right)),
+            z = 3
+          )
         }
-        panel_table <- gtable_add_cols(panel_table, max_width(strips$y$right), -2)
-        panel_table <- gtable_add_grob(panel_table, strips$y$right,
-                                       panel_pos_rows$t, -2, clip = "on",
-                                       name = paste0("strip-r-", seq_along(strips$y$right)),
-                                       z = 2)
+        panel_table <- gtable_add_cols(panel_table,
+                                       max_width(strips$y$right), -2)
+        panel_table <- gtable_add_grob(
+          panel_table, strips$y$right,
+          panel_pos_rows$t, -2, clip = "on",
+          name = paste0("strip-r-", seq_along(strips$y$right)),
+          z = 2
+        )
       }
       else {
         panel_table <- gtable_add_cols(panel_table, strip_padding, -1)
         if (add_y_ideo) {
           panel_table <- gtable_add_cols(panel_table, ideo.size, -1)
-          panel_table <- gtable_add_grob(panel_table, y_ideos,
-                                         panel_pos_rows$t, -1, clip = "on",
-                                         name = paste0("ideo-r-", seq_along(strips$y$right)),
-                                         z = 3)
+          panel_table <- gtable_add_grob(
+            panel_table, y_ideos,
+            panel_pos_rows$t, -1, clip = "on",
+            name = paste0("ideo-r-", seq_along(strips$y$right)),
+            z = 3
+          )
         }
-        panel_table <- gtable_add_cols(panel_table, max_width(strips$y$right), -1)
-        panel_table <- gtable_add_grob(panel_table, strips$y$right,
-                                       panel_pos_rows$t, -1, clip = "on",
-                                       name = paste0("strip-r-", seq_along(strips$y$right)),
-                                       z = 2)
+        panel_table <- gtable_add_cols(panel_table,
+                                       max_width(strips$y$right), -1)
+        panel_table <- gtable_add_grob(
+          panel_table, strips$y$right,
+          panel_pos_rows$t, -1, clip = "on",
+          name = paste0("strip-r-", seq_along(strips$y$right)),
+          z = 2
+        )
       }
     }
   }
@@ -479,13 +562,14 @@ draw_ideo_panels_grid <- function(panels, layout, x_scales, y_scales, ranges, co
 #' axes, strips and ideograms and positioning these together in a gtable.
 #'
 #' @return A gtable object
+#' @keywords internal
 #'
 #' @details Since this is a method of a class, this function should only be used
 #'   indirectly by users.
 draw_ideo_panels_wrap <- function(panels, layout, x_scales, y_scales,
-                                  ranges, coord, data, theme, params, self){
-  if ((params$free$x || params$free$y) && !coord$is_free()) {
-    stop(ggplot2:::snake_class(coord), " doesn't support free scales", call. = FALSE)
+                                  ranges, coord, data, theme, params, self) {
+  if ( (params$free$x || params$free$y) && !coord$is_free()) {
+    stop(.int$snake_class(coord), " doesn't support free scales", call. = FALSE)
   }
   if (inherits(coord, "CoordFlip")) {
     if (params$free$x) {
@@ -509,14 +593,23 @@ draw_ideo_panels_wrap <- function(panels, layout, x_scales, y_scales,
   panel_order <- order(layout$ROW, layout$COL)
   layout <- layout[panel_order, ]
   panels <- panels[panel_order]
-  panel_pos <- ggplot2:::convertInd(layout$ROW, layout$COL, nrow)
+  panel_pos <- .int$convertInd(layout$ROW, layout$COL, nrow)
 
-  axes <- ggplot2::render_axes(ranges, ranges, coord, theme, transpose = TRUE)
-  labels_df <- layout[names(params$facets)]
+  axes <- render_axes(ranges, ranges, coord, theme, transpose = TRUE)
+
+  if (length(params$facets) == 0) {
+    labels_df <- data.frame(x = "(all)")
+    names(labels_df) <- "(all)"
+  } else {
+    labels_df <- layout[names(params$facets)]
+  }
+
   attr(labels_df, "facet") <- "wrap"
-  strips <- ggplot2::render_strips(structure(labels_df, type = "rows"),
-                                   structure(labels_df, type = "cols"),
-                                   params$labeller, theme)
+  strips <- render_strips(
+    structure(labels_df, type = "rows"),
+    structure(labels_df, type = "cols"),
+    params$labeller, theme
+  )
   aspect_ratio <- theme$aspect.ratio
   if (is.null(aspect_ratio) && !params$free$x && !params$free$y) {
     aspect_ratio <- coord$aspect(ranges[[1]])
@@ -532,16 +625,22 @@ draw_ideo_panels_wrap <- function(panels, layout, x_scales, y_scales,
   empty_table <- matrix(list(zeroGrob()), nrow = nrow, ncol = ncol)
   panel_table <- empty_table
   panel_table[panel_pos] <- panels
-  empties <- apply(panel_table, c(1,2), function(x) ggplot2:::is.zero(x[[1]]))
-  panel_table <- gtable_matrix("layout", panel_table,
-                               widths = unit(rep(1, ncol), "null"),
-                               heights = unit(rep(aspect_ratio, nrow), "null"),
-                               respect = respect, clip = coord$clip,
-                               z = matrix(1, ncol = ncol, nrow = nrow))
-  panel_table$layout$name <-paste0("panel-", rep(seq_len(ncol), nrow), "-",
-                                   rep(seq_len(nrow), each = nrow))
-  panel_table <- gtable_add_col_space(panel_table, theme$panel.spacing.x %||% theme$panel.spacing)
-  panel_table <- gtable_add_row_space(panel_table, theme$panel.spacing.y %||% theme$panel.spacing)
+  empties <- apply(panel_table, c(1, 2), function(x) .int$is.zero(x[[1]]))
+  panel_table <- gtable_matrix(
+    "layout", panel_table,
+    widths  = unit(rep(1, ncol), "null"),
+    heights = unit(rep(aspect_ratio, nrow), "null"),
+    respect = respect, clip = coord$clip,
+    z = matrix(1, ncol = ncol, nrow = nrow)
+  )
+  panel_table$layout$name <- paste0("panel-", rep(seq_len(ncol), nrow), "-",
+                                   rep(seq_len(nrow), each = ncol))
+  panel_table <- gtable_add_col_space(panel_table,
+                                      theme$panel.spacing.x %||%
+                                        theme$panel.spacing)
+  panel_table <- gtable_add_row_space(panel_table,
+                                      theme$panel.spacing.y %||%
+                                        theme$panel.spacing)
 
   # Setup axes
   axis_mat_x_top <- empty_table
@@ -571,16 +670,20 @@ draw_ideo_panels_wrap <- function(panels, layout, x_scales, y_scales,
     first_col <- which(apply(empties, 2, any))[1] - 1
 
     row_panels <- which(layout$ROW == first_row & layout$COL > first_col)
-    row_pos <- ggplot2:::convertInd(layout$ROW[row_panels], layout$COL[row_panels], nrow)
+    row_pos <- .int$convertInd(layout$ROW[row_panels],
+                               layout$COL[row_panels], nrow)
     row_axes <- axes$x$bottom[layout$SCALE_X[row_panels]]
 
     col_panels <- which(layout$ROW > first_row & layout$COL == first_col)
-    col_pos <- ggplot2:::convertInd(layout$ROW[col_panels], layout$COL[col_panels], nrow)
+    col_pos <- .int$convertInd(layout$ROW[col_panels],
+                               layout$COL[col_panels], nrow)
     col_axes <- axes$y$right[layout$SCALE_Y[col_panels]]
 
-    if (params$strip.position == "bottom" && theme$strip.placement != "inside" &&
-        any(!vapply(row_axes, ggplot2:::is.zero, logical(1))) && !params$free$x) {
-      warning("Suppressing axis rendering when strip.position = 'bottom' and strip.placement == 'outside'",
+    if (params$strip.position == "bottom" &&
+        theme$strip.placement != "inside" &&
+        any(!vapply(row_axes, .int$is.zero, logical(1))) && !params$free$x) {
+      warning("Suppressing axis rendering when strip.position = 'bottom'
+              and strip.placement == 'outside'",
               call. = FALSE)
     }
     else {
@@ -588,7 +691,8 @@ draw_ideo_panels_wrap <- function(panels, layout, x_scales, y_scales,
     }
     if (params$strip.position == "right" && theme$strip.placement != "inside" &&
         !params$free$y){
-      warning("Suppressing axis rendering when strip.position = 'right' and strip.placement == 'outside'",
+      warning("Suppressing axis rendering when strip.position = 'right'
+              and strip.placement == 'outside'",
               call. = FALSE)
     }
     else {
@@ -597,20 +701,21 @@ draw_ideo_panels_wrap <- function(panels, layout, x_scales, y_scales,
   }
 
   # Build out gtables
-  panel_table <- ggplot2:::weave_tables_row(panel_table, axis_mat_x_top,
+  panel_table <- .int$weave_tables_row(panel_table, axis_mat_x_top,
                                             -1, axis_height_top, "axis-t", 3)
-  panel_table <- ggplot2:::weave_tables_row(panel_table, axis_mat_x_bottom,
+  panel_table <- .int$weave_tables_row(panel_table, axis_mat_x_bottom,
                                             0, axis_height_bottom, "axis-b", 3)
-  panel_table <- ggplot2:::weave_tables_col(panel_table, axis_mat_y_left,
+  panel_table <- .int$weave_tables_col(panel_table, axis_mat_y_left,
                                             -1, axis_width_left, "axis-l", 3)
-  panel_table <- ggplot2:::weave_tables_col(panel_table, axis_mat_y_right,
+  panel_table <- .int$weave_tables_col(panel_table, axis_mat_y_right,
                                             0, axis_width_right, "axis-r", 3)
 
   # Do strips
   strip_padding <- convertUnit(theme$strip.switch.pad.wrap, "cm")
   strip_name <- paste0("strip-", substr(params$strip.position, 1, 1))
   strip_mat <- empty_table
-  strip_mat[panel_pos] <- unlist(unname(strips), recursive = FALSE)[[params$strip.position]]
+  strip_mat[panel_pos] <- unlist(unname(strips),
+                                 recursive = FALSE)[[params$strip.position]]
 
   # Do ideograms
   ideodat <- self$ideograms
@@ -619,32 +724,48 @@ draw_ideo_panels_wrap <- function(panels, layout, x_scales, y_scales,
   chr_style <- gsub("[0-9]{1,}X|Y|M", replacement = "", names(ideodat))
   chr_style <- names(sort(table(chr_style), decreasing = T))[1]
 
-  chr_match <- apply(labels_df, 2, function(x){sum(grepl(chr_style, x, ignore.case = T))})
-  ideovars <- if(any(chr_match > 0)) {
-    as.character(labels_df[,which.max(chr_match)])
-  } else { rep(NA, nrow(col_vars))}
+  chr_match <- apply(labels_df, 2, function(x) {
+    sum(grepl(chr_style, x, ignore.case = T))
+  })
+  ideovars <- if (any(chr_match > 0)) {
+    as.character(labels_df[, which.max(chr_match)])
+  } else {
+    rep(NA, nrow(unique(layout[names(params$cols)])))
+  }
 
-  orient <- if(params$strip.position %in% c("top", "bottom")) {
+  orient <- if (params$strip.position %in% c("top", "bottom")) {
     "x"
   } else {
     "y"
   }
 
+
+# Here --------------------------------------------------------------------
+
+
+
   ideos <- lapply(seq_along(ideovars), function(i){
     chr <- ideovars[[i]]
     ran <- ranges[[which(as.numeric(layout$PANEL) == i)]]
     grob <- render.ideo(chr, orient = orient, ranges = ran,
-                        theme = theme, high.col = params$high.col, ideodat = ideodat)
-    gtable_matrix("ideo", matrix(list(grob)), widths = unit(1, "null"), heights = unit(1, "null"))
+                        theme = theme, high.col = params$high.col,
+                        ideodat = ideodat)
+    gtable_matrix("ideo", matrix(list(grob)),
+                  widths = unit(1, "null"),
+                  heights = unit(1, "null"))
   })
   ideonames <- paste0("ideo-", seq_along(ideovars))
 
   add_ideo <- !all(is.na(ideovars))
 
-  ideo_mat <- empty_table
-  ideo_mat[panel_pos] <- ideos
+  if (add_ideo) {
+    ideo_mat <- empty_table
+    ideo_mat[panel_pos] <- ideos
+  }
+
   if (params$strip.position %in% c("top", "bottom")) {
-    inside <- (theme$strip.placement.x %||% theme$strip.placement %||% "inside") == "inside"
+    inside <- (theme$strip.placement.x %||%
+                 theme$strip.placement %||% "inside") == "inside"
     if (params$strip.position == "top") {
       placement <- if (inside)
         -1
@@ -658,22 +779,27 @@ draw_ideo_panels_wrap <- function(panels, layout, x_scales, y_scales,
       strip_pad <- axis_height_bottom
     }
     strip_height <- unit(apply(strip_mat, 1, max_height), "cm")
-    panel_table <- ggplot2:::weave_tables_row(panel_table, strip_mat, placement,
-                                              strip_height, strip_name, 2, coord$clip)
+    panel_table <- .int$weave_tables_row(
+      panel_table, strip_mat, placement,
+      strip_height, strip_name, 2, coord$clip
+    )
     if (add_ideo) {
       ideo_height <- rep(params$ideo.size, length(strip_height))
-      panel_table <- ggplot2:::weave_tables_row(panel_table, ideo_mat, placement,
-                                                ideo_height, "ideo", 2, coord$clip)
+      panel_table <- .int$weave_tables_row(
+        panel_table, ideo_mat, placement,
+        ideo_height, "ideo", 2, coord$clip
+      )
     }
     if (!inside) {
       # Padding
       strip_pad[unclass(strip_pad) != 0] <- strip_padding
-      panel_table <- ggplot2:::weave_tables_row(panel_table, row_shift = placement,
+      panel_table <- .int$weave_tables_row(panel_table, row_shift = placement,
                                                 row_height = strip_pad)
     }
   }
   else {
-    inside <- (theme$strip.placement.y %||% theme$strip.placement %||% "inside") == "inside"
+    inside <- (theme$strip.placement.y %||%
+                 theme$strip.placement %||% "inside") == "inside"
     if (params$strip.position == "left") {
       placement <- if (inside)
         -1
@@ -688,17 +814,21 @@ draw_ideo_panels_wrap <- function(panels, layout, x_scales, y_scales,
     }
     strip_pad[unclass(strip_pad) != 0] <- strip_padding
     strip_width <- unit(apply(strip_mat, 2, max_width), "cm")
-    panel_table <- ggplot2:::weave_tables_col(panel_table, strip_mat,
-                                              placement, strip_width, strip_name, 2, coord$clip)
+    panel_table <- .int$weave_tables_col(
+      panel_table, strip_mat,
+      placement, strip_width, strip_name, 2, coord$clip
+    )
     if (add_ideo) {
       ideo_width <- rep(params$ideo.size, length(strip_width))
-      panel_table <- ggplot2:::weave_tables_col(panel_table, ideo_mat, placement,
+      panel_table <- .int$weave_tables_col(panel_table, ideo_mat, placement,
                                                 ideo_width,
                                                 "ideo", 2, coord$clip)
     }
     if (!inside) {
       strip_pad[unclass(strip_pad) != 0] <- strip_padding
-      panel_table <- ggplot2:::weave_tables_col(panel_table, col_shift = placement, col_width = strip_pad)
+      panel_table <- .int$weave_tables_col(
+        panel_table, col_shift = placement, col_width = strip_pad
+      )
     }
   }
   panel_table

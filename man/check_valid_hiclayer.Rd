@@ -9,8 +9,9 @@ check_valid_hiclayer(exp1, exp2, xranges, yranges)
 \arguments{
 \item{exp1, exp2}{A GENOVA experiment object.}
 
-\item{xranges, yranges}{A GRanges object. Alternatively,a \code{list} of at least length 3 with the
-following elements: \describe{\item{\code{character}}{ vector of chromosome
+\item{xranges, yranges}{A GRanges object. Alternatively,a \code{list} of at
+least length 3 with the following elements:
+\describe{\item{\code{character}}{ vector of chromosome
 names}\item{\code{integer}}{ vector of start
 positions}\item{\code{integer}}{ vector of end positions}}}
 }
@@ -20,3 +21,4 @@ A \code{logical} of length 1.
 \description{
 Checks for validity of a Hi-C layer
 }
+\keyword{internal}

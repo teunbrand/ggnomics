@@ -25,3 +25,4 @@ a grob with an ideogram
 \description{
 Ideogram renderer
 }
+\keyword{internal}

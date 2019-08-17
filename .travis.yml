@@ -1,0 +1,18 @@
+# R for travis: see documentation at https://docs.travis-ci.com/user/languages/r
+
+language: R
+cache: packages
+warnings_are_errors: false
+bioc_packages:
+  - S4Vectors
+  - GenomicRanges
+  - IRanges
+  - rtracklayer
+  - AnnotationDbi
+  - GenomeInfoDb
+  - GenomicFeatures
+r_packages:
+  - extraDistr
+
+after_success:
+  - Rscript -e 'covr::codecov()'

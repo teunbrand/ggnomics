@@ -2,14 +2,18 @@
 % Please edit documentation in R/scale_multi.R
 \name{scale_fill_multi}
 \alias{scale_fill_multi}
+\alias{scale_colour_multi}
 \title{Multiple gradient colour scales}
 \usage{
-scale_fill_multi(..., colours, values = NULL, space = "Lab",
-  na.value = "transparent", guide = "colourbar", aesthetics = "fill",
-  colors)
+scale_fill_multi(..., colours, values = NULL, na.value = "transparent",
+  guide = "colourbar", aesthetics = "fill", colors)
+
+scale_colour_multi(..., colours, values = NULL,
+  na.value = "transparent", guide = "colourbar",
+  aesthetics = "colour", colors)
 }
 \arguments{
-\item{..., colours, values, space, na.value, guide, colors}{listed arguments in
+\item{..., colours, values, na.value, guide, colors}{listed arguments in
 \code{\link[ggplot2]{scale_colour_gradientn}} (e.g. \code{colours =
 list(c("white", "red"), c("black", "blue"))}).}
 
@@ -49,7 +53,7 @@ df <- rbind(data.frame(x = 1:3, y = 1, v = NA, w = 1:3, z = NA),
 ggplot(df, aes(x, y)) +
   geom_raster(aes(fill1 = v)) +
   geom_raster(aes(fill2 = w)) +
-  geom_raster(aes(fill3 = z))
+  geom_raster(aes(fill3 = z)) +
   scale_fill_multi(aesthetics = c("fill1", "fill2", "fill3"),
                    colours = list(c("white", "red"),
                                   c("black", "blue"),

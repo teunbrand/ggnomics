@@ -22,3 +22,4 @@ axes, strips and ideograms and positioning these together in a gtable.
 Since this is a method of a class, this function should only be used
   indirectly by users.
 }
+\keyword{internal}

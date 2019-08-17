@@ -39,8 +39,8 @@ There are still a few things I’m not mentioning here, but feel free to
 take a look at the examples below.
 
 Please keep in mind that this package is highly experimental, may be
-unstable and is subject to changes in the future. Since, this is my
-first package out in the wild, constructive feedback is appreciated.
+unstable and is subject to changes in the future. Since this is my first
+package out in the wild, constructive feedback is appreciated.
 
 ## Installation
 

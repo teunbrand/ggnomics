@@ -1,0 +1,5 @@
+# R for travis: see documentation at https://docs.travis-ci.com/user/languages/r
+
+language: R
+cache: packages
+bioc_packages: S4Vectors, GenomicRanges, IRanges, rtracklayer, AnnotationDbi, GenomeInfoDb, GenomicFeatures

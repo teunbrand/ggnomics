@@ -3,6 +3,14 @@
 
 # ggnomics <img src="man/figures/icon.png" align = "right" width = "120" />
 
+<!-- badges: start -->
+
+[![Travis build
+status](https://travis-ci.org/teunbrand/ggnomics.svg?branch=master)](https://travis-ci.org/teunbrand/ggnomics)
+[![Codecov test
+coverage](https://codecov.io/gh/teunbrand/ggnomics/branch/master/graph/badge.svg)](https://codecov.io/gh/teunbrand/ggnomics?branch=master)
+<!-- badges: end -->
+
 This package was written to extend `ggplot2` with the following
 philosophy:
 

@@ -31,7 +31,8 @@ setMethod(
   function(object, selection) {
     try_require("GenomicRanges", "to_poly")
     try_require("rtracklayer", "to_poly")
-    object <- rtracklayer::import.bw(object, selection = selection, as = "RleList")
+    object <- rtracklayer::import.bw(object, selection = selection,
+                                     as = "RleList")
     to_poly(object, selection)
   }
 )
@@ -53,7 +54,9 @@ setMethod(
     object$x <- object$x + GenomicRanges::start(selection)[object$group] - 1
     object
     if (length(unique(GenomeInfoDb::seqnames(selection))) > 1) {
-      object$seqname <- S4Vectors::decode(GenomeInfoDb::seqnames(selection))[object$group]
+      object$seqname <- S4Vectors::decode(
+        GenomeInfoDb::seqnames(selection)
+      )[object$group]
     }
     if (length(unique(names(selection))) > 1) {
       object$rangename <- names(selection)[object$group]
@@ -100,9 +103,9 @@ setMethod(
         length(object)
       ),
       y = c(0, base::rbind(object@values,
-                           object@values), 0),
+                           object@values), 0)
     )
-    df[!base::duplicated(df),]
+    df[!base::duplicated(df), ]
   }
 )
 
@@ -117,6 +120,6 @@ setMethod(
       x = c(1, base::rbind(start, end), tail(end, 1)),
       y = c(0, base::rbind(object$values, object$values), 0)
     )
-    df[!duplicated(df),]
+    df[!duplicated(df), ]
   }
 )

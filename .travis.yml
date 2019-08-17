@@ -2,4 +2,11 @@
 
 language: R
 cache: packages
-bioc_packages: S4Vectors, GenomicRanges, IRanges, rtracklayer, AnnotationDbi, GenomeInfoDb, GenomicFeatures
+bioc_packages:
+  - S4Vectors
+  - GenomicRanges
+  - IRanges
+  - rtracklayer
+  - AnnotationDbi
+  - GenomeInfoDb
+  - GenomicFeatures

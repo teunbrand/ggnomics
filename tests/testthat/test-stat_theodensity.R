@@ -1,7 +1,5 @@
 context("test-stat_theodensity")
 
-library(extraDistr)
-
 # Distribution classifier -------------------------------------------------
 
 test_that("class_distri classifies discrete distributions from the stats package", {
@@ -16,24 +14,6 @@ test_that("class_distri classifies discrete distributions from the stats package
 test_that("class_distri classifies continuous distributions from the stats package", {
   distis <- c("beta", "cauchy", "chisq", "exp", "f", "gamma",
               "lnorm", "norm", "t", "unif", "weibull", "logis")
-  classes <- character(0)
-  for (i in distis) {
-    classes <- c(classes, class_distri(i))
-  }
-  expect_true(all(classes == "continuous"))
-})
-
-test_that("class_distri classifies discrete distributions outside the stats package", {
-  distis <- c("dnorm", "zinb", "tbinom")
-  classes <- character(0)
-  for (i in distis) {
-    classes <- c(classes, class_distri(i))
-  }
-  expect_true(all(classes == "discrete"))
-})
-
-test_that("class_distri classifies continuous distributions outside the stats package", {
-  distis <- c("invgamma", "pareto", "lst")
   classes <- character(0)
   for (i in distis) {
     classes <- c(classes, class_distri(i))
@@ -272,21 +252,6 @@ test_that("stat_theodensity fits logistic", {
   d <- data.frame(x = rlogis(500, 2, 2))
   g <- ggplot(d, aes(x = x)) +
     stat_theodensity(distri = "logis")
-  ld <- layer_data(g)
-  expect_equal(nrow(ld), 512)
-  max <- which.max(ld$y)
-  expect_lt(abs(median(d$x) - ld$x[max]), 0.5)
-  expect_true(all(diff(ld$y[max:512]) < 0))
-  expect_true(all(diff(ld$y[1:max]) > 0))
-})
-
-# Distribution outside stats ----------------------------------------------
-
-test_that("stat_theodensity fits inverse gamma", {
-  set.seed(1)
-  d <- data.frame(x = rinvgamma(500, 2, 1))
-  g <- ggplot(d, aes(x = x)) +
-    stat_theodensity(distri = "invgamma", start.arg = list(alpha = 20, beta = 10))
   ld <- layer_data(g)
   expect_equal(nrow(ld), 512)
   max <- which.max(ld$y)

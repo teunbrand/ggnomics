@@ -10,3 +10,6 @@ bioc_packages:
   - AnnotationDbi
   - GenomeInfoDb
   - GenomicFeatures
+
+after_success:
+  - Rscript -e 'covr::codecov()'

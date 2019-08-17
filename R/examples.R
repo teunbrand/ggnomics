@@ -2,11 +2,17 @@
 #'
 #' Generates some toy cytoband data to plot ideograms with.
 #'
-#' @return A \code{data.frame} containing cytoband data for the first two
-#'   chromosomes of the hg38 human genome.
+#' @return A \code{data.frame} containing cytoband data.
 #' @export
 #'
+#' @details Returns the cytoband data for the first two chromosomes of the human
+#'   genome (build hg38). Full data is available as the \code{cytobands.txt.gz}
+#'   file from the
+#'   \href{http://hgdownload.cse.ucsc.edu/goldenpath/hg38/database/}{UCSC
+#'   database}.
+#'
 #' @seealso \code{\link[ggnomics]{example_cytoband_colours}}
+#'   \code{\link[ggnomics]{setup_cytobands}}
 #'
 #' @examples
 #' cyto <- example_cytobands()
@@ -73,6 +79,9 @@ example_cytoband_colours <- function() {
 #'   reproducibility. Qualifies as the bare minimum requirement for the
 #'   \code{\link[ggnomics]{geom_hictriangle}}'s \code{exp} argument.
 #'
+#' @seealso \code{\link[GENOVA]{construct.experiment}} for how to construct
+#'   proper Hi-C experiment objects.
+#'
 #' @export
 #'
 #' @examples
@@ -121,13 +130,19 @@ example_HiC <- function() {
 
 #' Example gene models
 #'
-#' Generates a \code{data.frame} compatible with \code{geom_genemodel}
-#' containing about one megabase's worth of genes on human chromosome 17. Data
-#' was taken from GRCh38.92 (hg38) gene models from
-#' \href{https://www.ensembl.org/}{Ensembl} and slightly simplified.
+#' Generates a \code{data.frame} compatible with \code{geom_genemodel}.
 #'
 #' @return A \code{data.frame}
 #' @export
+#'
+#' @details The result contains about one megabase's worth of genes on human
+#'   chromosome 17. Data was taken from GRCh38.92 (hg38) gene models from
+#'   \href{https://www.ensembl.org/}{Ensembl} and was edited to somewhat
+#'   simplify data. Original \code{.gtf} file is available at the
+#'   \href{ftp://ftp.ensembl.org/pub/release-97/gtf/homo_sapiens/}{Ensembl
+#'   database}.
+#'
+#' @seealso \code{\link[ggnomics]{geom_genemodel}}
 #'
 #' @examples
 #' gm <- example_genemodels()

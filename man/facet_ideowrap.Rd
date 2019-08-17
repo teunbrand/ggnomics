@@ -90,6 +90,10 @@ In absence of chromosome names in variables will result in default
   or as non-negative integer index into the current
   \code{\link[grDevices]{palette}} (with zero being taken as transparent).
 }
+\note{
+\code{\link[ggnomics]{setup_cytobands}} needs to be run to populate
+  ideogram data before calling \code{facet_ideogrid}.
+}
 \examples{
 setup_cytobands(example_cytobands(),
                 example_cytoband_colours())

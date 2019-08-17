@@ -38,7 +38,8 @@
 #' setup_cytobands(cytobands, colourmap)
 #'
 #'@seealso \href{https://genome.ucsc.edu/}{UCSC Genome Browser}
-#'  \code{\link[biovizBase]{getBioColor}} \pkg{AnnotationHub}
+#'  \code{\link[biovizBase]{getBioColor}}
+#'  \code{\link[AnnotationHub]{AnnotationHub-package}}
 #'  \code{\link[grid]{gpar}}
 #'
 #'@export

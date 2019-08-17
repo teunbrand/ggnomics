@@ -10,11 +10,19 @@ example_genemodels()
 A \code{data.frame}
 }
 \description{
-Generates a \code{data.frame} compatible with \code{geom_genemodel}
-containing about one megabase's worth of genes on human chromosome 17. Data
-was taken from GRCh38.92 (hg38) gene models from
-\href{https://www.ensembl.org/}{Ensembl} and slightly simplified.
+Generates a \code{data.frame} compatible with \code{geom_genemodel}.
+}
+\details{
+The result contains about one megabase's worth of genes on human
+  chromosome 17. Data was taken from GRCh38.92 (hg38) gene models from
+  \href{https://www.ensembl.org/}{Ensembl} and was edited to somewhat
+  simplify data. Original \code{.gtf} file is available at the
+  \href{ftp://ftp.ensembl.org/pub/release-97/gtf/homo_sapiens/}{Ensembl
+  database}.
 }
 \examples{
 gm <- example_genemodels()
+}
+\seealso{
+\code{\link[ggnomics]{geom_genemodel}}
 }

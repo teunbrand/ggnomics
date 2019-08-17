@@ -21,3 +21,7 @@ The data is formatted as the first 120 Mb of 'chr1' at 1 Mb
 \examples{
 exp <- example_HiC()
 }
+\seealso{
+\code{\link[GENOVA]{construct.experiment}} for how to construct
+  proper Hi-C experiment objects.
+}

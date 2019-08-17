@@ -18,8 +18,8 @@
 #'
 #'   By default, this function will not highlight the panel axis range. To
 #'   highlight the plotted region on the ideogram, set \code{high.col} to a
-#'   colour. If highlights occur, region to be highlighted will be computed from the
-#'   relevant axis limits of the corresponding panels.
+#'   colour. If highlights occur, region to be highlighted will be computed from
+#'   the relevant axis limits of the corresponding panels.
 #'
 #'   Colours can be specified in one of the forms returned by
 #'   \code{\link[grDevices]{rgb}}, as name (see \code{\link[grDevices]{colors}})
@@ -27,6 +27,9 @@
 #'   \code{\link[grDevices]{palette}} (with zero being taken as transparent).
 #'
 #' @seealso \code{\link[ggplot2]{facet_grid}} \code{\link[grid]{unit}}
+#'
+#' @note \code{\link[ggnomics]{setup_cytobands}} needs to be run to populate
+#'   ideogram data before calling \code{facet_ideogrid}.
 #'
 #' @export
 #'

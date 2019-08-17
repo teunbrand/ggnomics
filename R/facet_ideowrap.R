@@ -28,6 +28,9 @@
 #'
 #' @seealso \code{\link[ggplot2]{facet_grid}} \code{\link[grid]{unit}}
 #'
+#' @note \code{\link[ggnomics]{setup_cytobands}} needs to be run to populate
+#'   ideogram data before calling \code{facet_ideogrid}.
+#'
 #' @export
 #'
 #' @examples

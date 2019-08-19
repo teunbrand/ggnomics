@@ -170,3 +170,19 @@ test_that("FacetIdeo can indicate range", {
   expect_equal(rawdat$chromStart, start)
   expect_equal(rawdat$chromEnd, end)
 })
+
+test_that("setup_ideo can handle missing centromeres", {
+  cytobands <- example_cytobands()
+  cytobands <- cytobands[cytobands$gieStain != "acen",]
+  setup_cytobands(cytobands, example_cytoband_colours())
+  
+  cache <- getFromNamespace("tbcache", "ggnomics")
+  proto <- cache$FacetIdeo
+  
+  nrows <- sapply(proto$ideograms, function(ideo) {
+    sapply(ideo, nrow)
+  })
+  
+  expected <- matrix(c(4,4,61,60), nrow = 2, byrow = TRUE)
+  expect_equivalent(nrows, expected)
+})

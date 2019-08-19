@@ -37,9 +37,10 @@
 #' setup_cytobands(example_cytobands(),
 #'                 example_cytoband_colours())
 #'
-#' p <- ggplot(mpg, aes(displ, cty)) +
-#'    geom_point() +
-#'    facet_ideogrid(~ "chr1")
+#' df <- cbind(mpg, chr = sample(c("chr1", "chr2"), nrow(mpg), replace = TRUE))
+#' ggplot(df, aes(displ, cty)) +
+#'   geom_point() +
+#'   facet_ideogrid(~ chr)
 facet_ideogrid <- function(
   rows = NULL, cols = NULL, scales = "fixed",
   space = "fixed", shrink = TRUE, labeller = "label_value",

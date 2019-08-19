@@ -52,21 +52,23 @@ setup_cytobands <- function(bands, colourmap, gpars = gpar()){
   ideograms <- lapply(bands, function(ideo){
 
     nbands <- nrow(ideo)
-    is.centro <- range(which(ideo[, 5] == "acen"))
+    centro <- which(ideo[, 5] == "acen")
+    centro <- if (length(centro) > 0) range(centro) else c(0,0)
 
     # Format ideogram outline as polygon
-    poly <- c(ideo[c(1, is.centro[1]), 2],
-              ideo[c(is.centro[2], nbands), 3])
+    poly <- c(ideo[c(1, centro[1]), 2],
+              ideo[c(centro[2], nbands), 3])
     poly <- data.frame(x = c(poly, rev(poly)),
                        y = c(0, 0, 1, 1))
 
+    keep <- !(seq_len(nbands) %in% centro)
     # Setup bands as rectangles
-    rects <- data.frame(x = rowMeans(ideo[-is.centro, 2:3]),
+    rects <- data.frame(x = rowMeans(ideo[, 2:3]),
                         y = 0.5,
-                        width = (ideo[, 3] - ideo[, 2])[-is.centro],
+                        width = (ideo[, 3] - ideo[, 2]),
                         height = 1,
-                        fill = colourmap[as.character(ideo[-is.centro, 5])],
-                        stringsAsFactors = F)
+                        fill = colourmap[as.character(ideo[, 5])],
+                        stringsAsFactors = F)[keep,]
 
     return(list(polygon = poly, rectangles = rects))
   })

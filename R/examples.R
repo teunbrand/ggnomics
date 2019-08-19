@@ -63,9 +63,9 @@ example_cytobands <- function() {
 #' cytocols <- example_cytoband_colours()
 example_cytoband_colours <- function() {
   setNames(c("#E41A1C", "grey90", "black", "grey65",
-             "grey50",  "grey25", "grey1", "grey51"),
+             "grey50",  "grey25", "grey1", "grey51", "grey66", "grey33"),
            c("acen",   "gneg",   "gpos100", "gpos25",
-             "gpos50", "gpos75", "gvar",    "stalk"))
+             "gpos50", "gpos75", "gvar",    "stalk", "gpos33", "gpos66"))
 }
 
 #' Generate fake Hi-C experiment

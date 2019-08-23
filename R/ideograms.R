@@ -106,6 +106,25 @@ setup_cytobands <- function(bands, colourmap, gpars = gpar()){
 # Make a small environment so doesn't clog user environment
 tbcache <- new.env()
 
+#' Clear the cytoband cache.
+#'
+#' The ggnomics package creates a small environment to store ideogram related
+#' functions and data. When switching organisms in a single session, it might be
+#' useful to clear the ideogram data from the previous organism to make room
+#' for the current organism.
+#'
+#' @export
+#'
+#' @examples
+#' clear_cytoband_cache()
+clear_cytoband_cache <- function() {
+  env <- getFromNamespace("tbcache", "ggnomics")
+  objects <- ls(env)
+  if (length(objects) > 0) {
+    rm(list = objects, envir = env)
+  }
+}
+
 #' Ideogram renderer
 #'
 #' @param chr a chromosome name.
@@ -740,11 +759,6 @@ draw_ideo_panels_wrap <- function(panels, layout, x_scales, y_scales,
   } else {
     "y"
   }
-
-
-# Here --------------------------------------------------------------------
-
-
 
   ideos <- lapply(seq_along(ideovars), function(i){
     chr <- ideovars[[i]]

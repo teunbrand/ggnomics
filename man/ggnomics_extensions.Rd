@@ -8,8 +8,8 @@
 \alias{GeomGeneModel}
 \alias{GeomHicTriangle}
 \alias{GeomPointPath}
-\alias{GeomRectRug}
-\alias{GeomTileRug}
+\alias{GeomRectMargin}
+\alias{GeomTileMargin}
 \alias{ggnomics_extensions}
 \alias{PositionDisjointRanges}
 \alias{StatTheoDensity}

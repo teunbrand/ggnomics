@@ -6,7 +6,7 @@
 \usage{
 facet_ideowrap(facets, nrow = NULL, ncol = NULL, scales = "fixed",
   shrink = TRUE, labeller = "label_value", as.table = TRUE,
-  switch = NULL, drop = TRUE, dir = "h", strip.position = "top",
+  drop = TRUE, dir = "h", strip.position = "top",
   ideo.size = unit(0.1, "null"), high.col = NA)
 }
 \arguments{
@@ -43,12 +43,6 @@ options.}
 \item{as.table}{If \code{TRUE}, the default, the facets are laid out like
 a table with highest values at the bottom-right. If \code{FALSE}, the
 facets are laid out like a plot with the highest value at the top-right.}
-
-\item{switch}{By default, the labels are displayed on the top and
-right of the plot. If \code{"x"}, the top labels will be
-displayed to the bottom. If \code{"y"}, the right-hand side
-labels will be displayed to the left. Can also be set to
-\code{"both"}.}
 
 \item{drop}{If \code{TRUE}, the default, all factor levels not used in the
 data will automatically be dropped. If \code{FALSE}, all factor levels

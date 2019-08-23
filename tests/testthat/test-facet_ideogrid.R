@@ -9,6 +9,9 @@ df$chr <- ifelse(df$Species == "setosa", "chr1", "chr2")
 base <- ggplot(df, aes(Sepal.Width, y = Sepal.Length)) +
   geom_point()
 
+
+# Basic tests -------------------------------------------------------------
+
 test_that("facet_ideogrid adds ggproto", {
   g <- base + facet_ideogrid("chr1" ~ .)
   expect_is(g$facet, "gg")
@@ -24,6 +27,8 @@ test_that("facet_ideogrid adds ideogram", {
   ideo <- gt$grobs[grepl("ideo-r", gt$layout$name)][[1]]
   expect_equal(length(ideo$children), 3)
 })
+
+# Essence tests -----------------------------------------------------------
 
 test_that("facet_ideogrid adds multiple horizontal ideograms", {
   g <- base + facet_ideogrid(chr ~ .)
@@ -51,6 +56,66 @@ test_that("facet_ideogrid adds multiple vertical ideograms", {
   expect_false(identical(pattern1, pattern2))
 })
 
+test_that("facet_ideogrid works on both vars simultaneously", {
+  g <- base + facet_ideogrid(chr ~ rev(chr))
+  gt <- ggplotGrob(g)$layout
+  expect_equal(sum(grepl("ideo", gt$name)), 4)
+  expect_equal(sum(grepl("ideo-r", gt$name)), 2)
+  expect_equal(sum(grepl("ideo-t", gt$name)), 2)
+})
+
+test_that("facet_ideogrid can be nested with other variables", {
+  first  <- base + facet_ideogrid(~ chr + Species)
+  second <- base + facet_ideogrid(~ Species + chr)
+  first  <- ggplotGrob(first)
+  second <- ggplotGrob(second)
+  first  <- first$grobs[grepl("ideo",  first$layout$name)]
+  second <- second$grobs[grepl("ideo", second$layout$name)]
+  
+  # Should give 3 ideograms
+  expect_equal(length(first),  3)
+  expect_equal(length(second), 3)
+  
+  # Ideograms should not be nullGrobs
+  first  <- sapply(first,  inherits, "null")
+  second <- sapply(second, inherits, "null")
+  expect_equal(sum(first),  0)
+  expect_equal(sum(second), 0)
+  
+  # Should not draw double ideograms when self-nested
+  selfnest <- base + facet_ideogrid(~ chr + rev(chr))
+  selfnest <- ggplotGrob(selfnest)
+  selfnest <- selfnest$grobs[grepl("ideo", selfnest$layout$name)]
+  expect_equal(length(selfnest), 3)
+  selfnest <- sapply(selfnest, inherits, "null")
+  expect_equal(sum(selfnest), 0)
+})
+
+test_that("facet_ideogrid highlighting works", {
+  ctrl <- base + facet_ideogrid(~ chr, high.col = NA)
+  test <- base + facet_ideogrid(~ chr, high.col = "blue")
+  ctrl <- ggplotGrob(ctrl)
+  test <- ggplotGrob(test)
+  ctrl <- ctrl$grobs[grepl("ideo", ctrl$layout$name)][[1]]$children
+  test <- test$grobs[grepl("ideo", test$layout$name)][[2]]$children
+  
+  # Test children lengths
+  expect_equal(length(ctrl), 3)
+  expect_equal(length(test), 5)
+  
+  # Check test has colours
+  expect_equal(test[[1]]$gp$fill, "blue")
+  expect_equal(test[[5]]$gp$col,  "blue")
+  
+  # Ctrl band height should be larger than test band height
+  test <- unique(as.numeric(test[[3]]$height))
+  ctrl <- unique(as.numeric(ctrl[[2]]$height))
+  
+  expect_gt(ctrl, test)
+})
+
+# Edge cases --------------------------------------------------------------
+
 test_that("facet_ideogrid doesn't add ideograms when unnecessary", {
   # Behaves like facet_grid when facets aren't chromosomes
   ctrl <- base + facet_grid(~ Species)
@@ -76,13 +141,33 @@ test_that("facet_ideogrid doesn't add ideograms when unnecessary", {
   expect_equal(sum(isnull), 1)
 })
 
-test_that("facet_ideogrid works on both vars simultaneously", {
-  g <- base + facet_ideogrid(chr ~ rev(chr))
-  gt <- ggplotGrob(g)$layout
-  expect_equal(sum(grepl("ideo", gt$name)), 4)
-  expect_equal(sum(grepl("ideo-r", gt$name)), 2)
-  expect_equal(sum(grepl("ideo-t", gt$name)), 2)
+test_that("facet_ideogrid reverses ideogram along with axis", {
+  ctrl <- base + facet_ideogrid(~ chr) +
+    scale_x_continuous(trans = "identity")
+  test <- base + facet_ideogrid(~ chr) +
+    scale_x_continuous(trans = "reverse")
+  ctrl <- ggplotGrob(ctrl)
+  test <- ggplotGrob(test)
+  ctrl <- ctrl$grobs[grepl("ideo", ctrl$layout$name)][[1]]$children[[2]]
+  test <- test$grobs[grepl("ideo", test$layout$name)][[1]]$children[[2]]
+  # Ctrl is 1 - test
+  expect_equal(as.numeric(test$x), 1 - as.numeric(ctrl$x))
+  # Check test is not symmetric
+  expect_false(all(as.numeric(test$x) == 1 - as.numeric(test$x)))
 })
+
+test_that("facet_ideogrid draws ideograms in absence of strips", {
+  ctrl <- base + facet_ideogrid(~ chr) + theme(strip.text = element_text())
+  test <- base + facet_ideogrid(~ chr) + theme(strip.text = element_blank())
+  ctrl <- ggplotGrob(ctrl)
+  test <- ggplotGrob(test)
+  ctrl <- ctrl$grobs[grepl("strip", ctrl$layout$name)][[1]]
+  test <- test$grobs[grepl("strip", test$layout$name)][[1]]
+  expect_is(ctrl, "gTree")
+  expect_is(test, "zeroGrob")
+})
+
+# Argument tests ----------------------------------------------------------
 
 test_that("facet_ideogrid switch arguments works", {
   x_ctrl <- base + facet_ideogrid(~ chr)
@@ -109,7 +194,36 @@ test_that("facet_ideogrid switch arguments works", {
   expect_equal(y_test_panel - 1, y_test_ideo)
 })
 
-test_that("facet_ideogrid follows strip.placement theme", {
+test_that("facet_ideogrid follows stip.placement theme witout switch", {
+  x_ctrl <- base + facet_ideogrid(~ chr) +
+    theme(strip.placement = "inside")
+  y_ctrl <- base + facet_ideogrid(chr ~.) +
+    theme(strip.placement = "inside")
+  x_test <- base + facet_ideogrid(~ chr) +
+    theme(strip.placement = "outside")
+  y_test <- base + facet_ideogrid(chr ~ .) +
+    theme(strip.placement = "outside")
+  x_ctrl <- ggplotGrob(x_ctrl)$layout
+  y_ctrl <- ggplotGrob(y_ctrl)$layout
+  x_test <- ggplotGrob(x_test)$layout
+  y_test <- ggplotGrob(y_test)$layout
+  
+  x_ctrl_ideo  <- unique(x_ctrl$t[grepl("ideo",  x_ctrl$name)])
+  x_ctrl_panel <- unique(x_ctrl$t[grepl("panel", x_ctrl$name)])
+  x_test_ideo  <- unique(x_test$t[grepl("ideo",  x_test$name)])
+  x_test_panel <- unique(x_test$t[grepl("panel", x_test$name)])
+  y_ctrl_ideo  <- unique(y_ctrl$l[grepl("ideo",  y_ctrl$name)])
+  y_ctrl_panel <- unique(y_ctrl$l[grepl("panel", y_ctrl$name)])
+  y_test_ideo  <- unique(y_test$l[grepl("ideo",  y_test$name)])
+  y_test_panel <- unique(y_test$l[grepl("panel", y_test$name)])
+  
+  expect_equal(x_ctrl_panel - 1, x_ctrl_ideo)
+  expect_equal(x_test_panel - 3, x_test_ideo)
+  expect_equal(y_ctrl_panel + 1, y_ctrl_ideo)
+  expect_equal(y_test_panel + 3, y_test_ideo)
+})
+
+test_that("facet_ideogrid follows strip.placement theme with switch", {
   x_ctrl <- base + facet_ideogrid(~ chr, switch = "x") +
     theme(strip.placement = "inside")
   y_ctrl <- base + facet_ideogrid(chr ~ ., switch = "y") +
@@ -138,71 +252,6 @@ test_that("facet_ideogrid follows strip.placement theme", {
   expect_equal(y_test_axis - 2, y_test_ideo)
 })
 
-test_that("facet_ideogrid can be nested with other variables", {
-  first  <- base + facet_ideogrid(~ chr + Species)
-  second <- base + facet_ideogrid(~ Species + chr)
-  first  <- ggplotGrob(first)
-  second <- ggplotGrob(second)
-  first  <- first$grobs[grepl("ideo",  first$layout$name)]
-  second <- second$grobs[grepl("ideo", second$layout$name)]
-
-  # Should give 3 ideograms
-  expect_equal(length(first),  3)
-  expect_equal(length(second), 3)
-
-  # Ideograms should not be nullGrobs
-  first  <- sapply(first,  inherits, "null")
-  second <- sapply(second, inherits, "null")
-  expect_equal(sum(first),  0)
-  expect_equal(sum(second), 0)
-
-  # Should not draw double ideograms when self-nested
-  selfnest <- base + facet_ideogrid(~ chr + rev(chr))
-  selfnest <- ggplotGrob(selfnest)
-  selfnest <- selfnest$grobs[grepl("ideo", selfnest$layout$name)]
-  expect_equal(length(selfnest), 3)
-  selfnest <- sapply(selfnest, inherits, "null")
-  expect_equal(sum(selfnest), 0)
-})
-
-test_that("facet_ideogrid highlighting works", {
-  ctrl <- base + facet_ideogrid(~ chr, high.col = NA)
-  test <- base + facet_ideogrid(~ chr, high.col = "blue")
-  ctrl <- ggplotGrob(ctrl)
-  test <- ggplotGrob(test)
-  ctrl <- ctrl$grobs[grepl("ideo", ctrl$layout$name)][[1]]$children
-  test <- test$grobs[grepl("ideo", test$layout$name)][[2]]$children
-
-  # Test children lengths
-  expect_equal(length(ctrl), 3)
-  expect_equal(length(test), 5)
-
-  # Check test has colours
-  expect_equal(test[[1]]$gp$fill, "blue")
-  expect_equal(test[[5]]$gp$col,  "blue")
-
-  # Ctrl band height should be larger than test band height
-  test <- unique(as.numeric(test[[3]]$height))
-  ctrl <- unique(as.numeric(ctrl[[2]]$height))
-
-  expect_gt(ctrl, test)
-})
-
-test_that("facet_ideogrid reverses ideogram along with axis", {
-  ctrl <- base + facet_ideogrid(~ chr) +
-    scale_x_continuous(trans = "identity")
-  test <- base + facet_ideogrid(~ chr) +
-    scale_x_continuous(trans = "reverse")
-  ctrl <- ggplotGrob(ctrl)
-  test <- ggplotGrob(test)
-  ctrl <- ctrl$grobs[grepl("ideo", ctrl$layout$name)][[1]]$children[[2]]
-  test <- test$grobs[grepl("ideo", test$layout$name)][[1]]$children[[2]]
-  # Ctrl is 1 - test
-  expect_equal(as.numeric(test$x), 1 - as.numeric(ctrl$x))
-  # Check test is not symmetric
-  expect_false(all(as.numeric(test$x) == 1 - as.numeric(test$x)))
-})
-
 test_that("facet_ideogrid handles ideo.size arguments", {
   g1 <- base + facet_ideogrid(~ chr, ideo.size = unit(1, "inch"))
   g2 <- base + facet_ideogrid(~ chr, ideo.size = unit(5, "mm"))
@@ -219,13 +268,30 @@ test_that("facet_ideogrid handles ideo.size arguments", {
   expect_equal(attr(height2, "unit"), "mm")
 })
 
-test_that("facet_ideogrid draws ideograms in absence of strips", {
-  ctrl <- base + facet_ideogrid(~ chr) + theme(strip.text = element_text())
-  test <- base + facet_ideogrid(~ chr) + theme(strip.text = element_blank())
-  ctrl <- ggplotGrob(ctrl)
-  test <- ggplotGrob(test)
-  ctrl <- ctrl$grobs[grepl("strip", ctrl$layout$name)][[1]]
-  test <- test$grobs[grepl("strip", test$layout$name)][[1]]
-  expect_is(ctrl, "gTree")
-  expect_is(test, "zeroGrob")
+
+# Warning tests -----------------------------------------------------------
+
+test_that("facet_ideogrid warns when ideo.size unit improper", {
+  test <- substitute(base + facet_ideogrid(~ chr, ideo.size = 1))
+  expect_error(eval(test), "grid::unit()")
+})
+
+test_that("facet_ideogrid warns when free scales and coord is not", {
+  g <- base + facet_ideogrid(facets = rev(chr) ~ chr, scales = "free")
+  ctrl <- g + coord_cartesian()
+  test <- g + coord_fixed()
+  expect_silent(ggplotGrob(ctrl))
+  expect_error(ggplotGrob(test), "doesn't support free scales")
+})
+
+test_that("facet_ideogrid warns when switch is improper", {
+  test <- substitute(base + facet_ideogrid(~ chr, switch = "nonsense"))
+  expect_error(eval(test), "switch must be either")
+})
+
+
+clear_cytoband_cache()
+test_that("facet_ideogrid warns when no ideograms found", {
+  clear_cytoband_cache()
+  expect_error(base + facet_ideogrid(~ chr))
 })

@@ -21,6 +21,20 @@ test_that("class_distri classifies continuous distributions from the stats packa
   expect_true(all(classes == "continuous"))
 })
 
+
+
+test_that("class_distri identifies unknown distributions correctly", {
+
+  rxyz <- function(n, mean = 0, sd = 1) {rnorm(n, mean, sd)}
+  rzyx <- function(n, lambda) {rpois(n, lambda)}
+  
+  test <- class_distri("xyz")
+  expect_equal(test, "continuous")
+  
+  test <- class_distri("zyx")
+  expect_equal(test, "discrete")
+})
+
 # Warning tester ----------------------------------------------------------
 
 basic <- ggplot(iris, aes(x = Sepal.Length, colour = Species)) +

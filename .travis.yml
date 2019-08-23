@@ -11,8 +11,6 @@ bioc_packages:
   - AnnotationDbi
   - GenomeInfoDb
   - GenomicFeatures
-r_packages:
-  - extraDistr
 
 after_success:
   - Rscript -e 'covr::codecov()'

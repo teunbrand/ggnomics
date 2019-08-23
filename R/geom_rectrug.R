@@ -19,7 +19,7 @@
 #'
 #' @details By default, scales are expanded 5\% on either side of the plot,
 #'   whereas the rug rectangles will occupy 3\% of the total plot size by
-#'   default. The \code{geom_rectrug()} and \code{geom_tilerug()} versions do the
+#'   default. The \code{geom_rectmargin()} and \code{geom_tilemargin()} versions do the
 #'   same thing, but are parameterised differently; see
 #'   \code{\link[ggplot2]{geom_rect}}.
 #'
@@ -34,7 +34,7 @@
 #' @importFrom ggplot2 layer
 #'
 #' @section Aesthetics:
-#' \code{geom_rectrug()} requires either one of the following
+#' \code{geom_rectmargin()} requires either one of the following
 #' sets of aesthetics, but also can use both:
 #'
 #' \itemize{
@@ -49,7 +49,7 @@
 #'  \item \strong{ymax}
 #' }
 #'
-#' \code{geom_tilerug()} requires either one of the following
+#' \code{geom_tilemargin()} requires either one of the following
 #' sets of aesthetics, but can also use both:
 #'
 #' \itemize{
@@ -64,7 +64,7 @@
 #'  \item \strong{height}
 #' }
 #'
-#' Furthermore, \code{geom_rectrug()} and \code{geom_tilerug()} also
+#' Furthermore, \code{geom_rectmargin()} and \code{geom_tilemargin()} also
 #' understand these shared aesthetics:
 #'
 #' \itemize{
@@ -80,7 +80,7 @@
 #'   \code{\link[ggplot2]{geom_tile}}
 #'
 #' @examples
-#' # geom_rectrug() is parameterised by the four corners
+#' # geom_rectmargin() is parameterised by the four corners
 #' df <- data.frame(
 #'   xmin = c(1, 5),
 #'   xmax = c(2, 7),
@@ -94,9 +94,9 @@
 #'                ymin = ymin, ymax = ymax,
 #'                fill = fill)) +
 #'   geom_rect() +
-#'   geom_rectrug()
+#'   geom_rectmargin()
 #'
-#' # geom_tilerug() is parameterised by center and size
+#' # geom_tilemargin() is parameterised by center and size
 #' df <- data.frame(
 #'   x = c(1, 4),
 #'   y = c(1, 2),
@@ -109,8 +109,8 @@
 #'                width = width, height = height,
 #'                fill = fill)) +
 #'   geom_tile() +
-#'   geom_tilerug()
-geom_rectrug <- function(
+#'   geom_tilemargin()
+geom_rectmargin <- function(
   mapping = NULL,
   data = NULL,
   stat = "identity",
@@ -125,7 +125,7 @@ geom_rectrug <- function(
   inherit.aes = TRUE
 ) {
   layer(data = data, mapping = mapping,
-        stat = stat, geom = GeomRectRug,
+        stat = stat, geom = GeomRectMargin,
         position = position, show.legend = show.legend,
         inherit.aes = inherit.aes,
         params = list(outside = outside,
@@ -138,8 +138,8 @@ geom_rectrug <- function(
 #' @usage NULL
 #' @export
 #' @rdname ggnomics_extensions
-GeomRectRug <- ggplot2::ggproto(
-  "GeomRectRug", ggplot2::GeomRug,
+GeomRectMargin <- ggplot2::ggproto(
+  "GeomRectMargin", ggplot2::GeomRug,
   draw_panel = function(
     self, data, panel_params, coord, sides = "bl", outside = FALSE,
     length = unit(0.03, "npc"), linejoin = "mitre"
@@ -224,9 +224,9 @@ GeomRectRug <- ggplot2::ggproto(
   draw_key = ggplot2::draw_key_polygon
 )
 
-#' @rdname geom_rectrug
+#' @rdname geom_rectmargin
 #' @export
-geom_tilerug <- function(
+geom_tilemargin <- function(
   mapping = NULL,
   data = NULL,
   stat = "identity",
@@ -241,7 +241,7 @@ geom_tilerug <- function(
   inherit.aes = TRUE
 ) {
   layer(data = data, mapping = mapping,
-        stat = stat, geom = GeomTileRug,
+        stat = stat, geom = GeomTileMargin,
         position = position, show.legend = show.legend,
         inherit.aes = inherit.aes,
         params = list(outside = outside,
@@ -254,9 +254,9 @@ geom_tilerug <- function(
 #' @usage NULL
 #' @export
 #' @rdname ggnomics_extensions
-GeomTileRug <- ggplot2::ggproto(
-  "GeomTileRug",
-  GeomRectRug,
+GeomTileMargin <- ggplot2::ggproto(
+  "GeomTileMargin",
+  GeomRectMargin,
   extra_params = c("na.rm"),
   setup_data = function(data, params) {
     data$width  <- data$width %||% params$width %||% resolution(data$x, FALSE)

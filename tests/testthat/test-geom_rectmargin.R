@@ -1,4 +1,4 @@
-context("test-geom_rectrug")
+context("test-geom_rectmargin")
 
 df <- data.frame(
   xmin = c(1, 5),
@@ -13,9 +13,9 @@ base <- ggplot(df, aes(xmin = xmin, xmax = xmax,
                        fill = fill)) +
   geom_rect()
 
-test_that("geom_rectrug can be added to plots", {
-  g <- base + geom_rectrug()
-  expect_is(g$layers[[2]]$geom, "GeomRectRug")
+test_that("geom_rectmargin can be added to plots", {
+  g <- base + geom_rectmargin()
+  expect_is(g$layers[[2]]$geom, "GeomRectMargin")
 
   gt <- ggplotGrob(g)
   gt <- gt$grobs[grepl("panel", gt$layout$name)][[1]]
@@ -25,11 +25,11 @@ test_that("geom_rectrug can be added to plots", {
   expect_is(gt[[2]], "rect")
 })
 
-test_that("geom_rectrug recognises sides argument", {
-  t <- base + geom_rectrug(sides = "t")
-  b <- base + geom_rectrug(sides = "b")
-  l <- base + geom_rectrug(sides = "l")
-  r <- base + geom_rectrug(sides = "r")
+test_that("geom_rectmargin recognises sides argument", {
+  t <- base + geom_rectmargin(sides = "t")
+  b <- base + geom_rectmargin(sides = "b")
+  l <- base + geom_rectmargin(sides = "l")
+  r <- base + geom_rectmargin(sides = "r")
 
   t <- layer_grob(t, 2)[[1]]$children[[1]]
   b <- layer_grob(b, 2)[[1]]$children[[1]]
@@ -46,9 +46,9 @@ test_that("geom_rectrug recognises sides argument", {
   expect_equal(sizes, c(0.03, 0.03, 0.03, 0.03))
 })
 
-test_that("geom_rectrug size can be set", {
-  a <- base + geom_rectrug(length = unit(1, "inch"))
-  b <- base + geom_rectrug(length = unit(5, "mm"))
+test_that("geom_rectmargin size can be set", {
+  a <- base + geom_rectmargin(length = unit(1, "inch"))
+  b <- base + geom_rectmargin(length = unit(5, "mm"))
   a <- layer_grob(a, 2)[[1]]$children[[1]]$height
   b <- layer_grob(b, 2)[[1]]$children[[1]]$height
   expect_equal(attr(a, "unit"), "inch")
@@ -57,8 +57,8 @@ test_that("geom_rectrug size can be set", {
   expect_equal(as.numeric(b), 5)
 })
 
-test_that("coord flip flips rectrugs", {
-  a <- base + geom_rectrug(sides = "b")
+test_that("coord flip flips rectmargins", {
+  a <- base + geom_rectmargin(sides = "b")
   b <- a + coord_flip()
   a <- layer_grob(a, 2)[[1]]$children[[1]]
   b <- layer_grob(b, 2)[[1]]$children[[1]]
@@ -67,7 +67,7 @@ test_that("coord flip flips rectrugs", {
 })
 
 
-# geom_tilerug ------------------------------------------------------------
+# geom_tilemargin ------------------------------------------------------------
 
 df <- data.frame(
   x = c(1, 4),
@@ -82,10 +82,10 @@ base <- ggplot(df, aes(x, y,
                        fill = fill)) +
   geom_tile()
 
-test_that("geom_rectrug can be added to plots", {
-  g <- base + geom_tilerug()
-  expect_is(g$layers[[2]]$geom, "GeomTileRug")
-  expect_is(g$layers[[2]]$geom, "GeomRectRug")
+test_that("geom_rectmargin can be added to plots", {
+  g <- base + geom_tilemargin()
+  expect_is(g$layers[[2]]$geom, "GeomTileMargin")
+  expect_is(g$layers[[2]]$geom, "GeomRectMargin")
 
   gt <- ggplotGrob(g)
   gt <- gt$grobs[grepl("panel", gt$layout$name)][[1]]
@@ -95,11 +95,11 @@ test_that("geom_rectrug can be added to plots", {
   expect_is(gt[[2]], "rect")
 })
 
-test_that("geom_tilerug recognises sides argument", {
-  t <- base + geom_tilerug(sides = "t")
-  b <- base + geom_tilerug(sides = "b")
-  l <- base + geom_tilerug(sides = "l")
-  r <- base + geom_tilerug(sides = "r")
+test_that("geom_tilemargin recognises sides argument", {
+  t <- base + geom_tilemargin(sides = "t")
+  b <- base + geom_tilemargin(sides = "b")
+  l <- base + geom_tilemargin(sides = "l")
+  r <- base + geom_tilemargin(sides = "r")
 
   t <- layer_grob(t, 2)[[1]]$children[[1]]
   b <- layer_grob(b, 2)[[1]]$children[[1]]
@@ -116,9 +116,9 @@ test_that("geom_tilerug recognises sides argument", {
   expect_equal(sizes, c(0.03, 0.03, 0.03, 0.03))
 })
 
-test_that("geom_tilerug size can be set", {
-  a <- base + geom_tilerug(length = unit(1, "inch"))
-  b <- base + geom_tilerug(length = unit(5, "mm"))
+test_that("geom_tilemargin size can be set", {
+  a <- base + geom_tilemargin(length = unit(1, "inch"))
+  b <- base + geom_tilemargin(length = unit(5, "mm"))
   a <- layer_grob(a, 2)[[1]]$children[[1]]$height
   b <- layer_grob(b, 2)[[1]]$children[[1]]$height
   expect_equal(attr(a, "unit"), "inch")
@@ -127,8 +127,8 @@ test_that("geom_tilerug size can be set", {
   expect_equal(as.numeric(b), 5)
 })
 
-test_that("coord flip flips tilerugs", {
-  a <- base + geom_tilerug(sides = "b")
+test_that("coord flip flips tilemargins", {
+  a <- base + geom_tilemargin(sides = "b")
   b <- a + coord_flip()
   a <- layer_grob(a, 2)[[1]]$children[[1]]
   b <- layer_grob(b, 2)[[1]]$children[[1]]

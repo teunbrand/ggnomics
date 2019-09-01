@@ -6,7 +6,7 @@
 \usage{
 facet_ideowrap(facets, nrow = NULL, ncol = NULL, scales = "fixed",
   shrink = TRUE, labeller = "label_value", as.table = TRUE,
-  switch = NULL, drop = TRUE, dir = "h", strip.position = "top",
+  drop = TRUE, dir = "h", strip.position = "top",
   ideo.size = unit(0.1, "null"), high.col = NA)
 }
 \arguments{
@@ -43,12 +43,6 @@ options.}
 \item{as.table}{If \code{TRUE}, the default, the facets are laid out like
 a table with highest values at the bottom-right. If \code{FALSE}, the
 facets are laid out like a plot with the highest value at the top-right.}
-
-\item{switch}{By default, the labels are displayed on the top and
-right of the plot. If \code{"x"}, the top labels will be
-displayed to the bottom. If \code{"y"}, the right-hand side
-labels will be displayed to the left. Can also be set to
-\code{"both"}.}
 
 \item{drop}{If \code{TRUE}, the default, all factor levels not used in the
 data will automatically be dropped. If \code{FALSE}, all factor levels
@@ -98,9 +92,10 @@ In absence of chromosome names in variables will result in default
 setup_cytobands(example_cytobands(),
                 example_cytoband_colours())
 
-p <- ggplot(mpg, aes(displ, cty)) +
-   geom_point() +
-   facet_wrap(~ "chr1")
+df <- cbind(mpg, chr = sample(c("chr1", "chr2"), nrow(mpg), replace = TRUE))
+ggplot(df, aes(displ, cty)) +
+  geom_point() +
+  facet_ideowrap(~ chr)
 }
 \seealso{
 \code{\link[ggplot2]{facet_grid}} \code{\link[grid]{unit}}

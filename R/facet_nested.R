@@ -114,9 +114,8 @@ facet_nested <- function(
 #' @usage NULL
 #' @export
 #' @rdname ggnomics_extensions
-FacetNested <- ggplot2::ggproto(
-  "FacetNested", ggplot2::
-    FacetGrid,
+FacetNested <- ggproto(
+  "FacetNested", FacetGrid,
   map_data = function(data, layout, params) {
     # Handle empty data
     if (.int$empty(data)) {

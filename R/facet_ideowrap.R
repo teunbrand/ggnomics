@@ -37,21 +37,19 @@
 #' setup_cytobands(example_cytobands(),
 #'                 example_cytoband_colours())
 #'
-#' p <- ggplot(mpg, aes(displ, cty)) +
-#'    geom_point() +
-#'    facet_wrap(~ "chr1")
+#' df <- cbind(mpg, chr = sample(c("chr1", "chr2"), nrow(mpg), replace = TRUE))
+#' ggplot(df, aes(displ, cty)) +
+#'   geom_point() +
+#'   facet_ideowrap(~ chr)
 facet_ideowrap <- function(
   facets, nrow = NULL, ncol = NULL, scales = "fixed",
   shrink = TRUE, labeller = "label_value", as.table = TRUE,
-  switch = NULL, drop = TRUE, dir = "h", strip.position = "top",
+  drop = TRUE, dir = "h", strip.position = "top",
   ideo.size = unit(0.1, "null"), high.col = NA
 ) {
   # Error handling
-  if (!exists("tbcache", mode = "environment")) {
-    stop("No ideograms were found. Please call 'setup_ideograms()' first.",
-         call. = FALSE)
-  }
-  if (!exists("FacetIdeoGrid", envir = tbcache)) {
+  if (!exists("tbcache", mode = "environment") &&
+      !exists("FacetIdeoWrap", envir = tbcache)) {
     stop("No ideograms were found. Please call 'setup_ideograms()' first.",
          call. = FALSE)
   }
@@ -63,12 +61,6 @@ facet_ideowrap <- function(
   dir <- match.arg(dir, c("h", "v"))
   free <- list(x = any(scales %in% c("free_x", "free")),
                y = any(scales %in% c("free_y", "free")))
-  if (!is.null(switch)) {
-    .Deprecated("strip.position", old = "switch")
-    strip.position <- if (switch == "x")
-      "bottom"
-    else "left"
-  }
   strip.position <- match.arg(strip.position,
                               c("top", "bottom", "left", "right"))
   if (identical(dir, "v")){

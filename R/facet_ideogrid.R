@@ -37,9 +37,10 @@
 #' setup_cytobands(example_cytobands(),
 #'                 example_cytoband_colours())
 #'
-#' p <- ggplot(mpg, aes(displ, cty)) +
-#'    geom_point() +
-#'    facet_ideogrid(~ "chr1")
+#' df <- cbind(mpg, chr = sample(c("chr1", "chr2"), nrow(mpg), replace = TRUE))
+#' ggplot(df, aes(displ, cty)) +
+#'   geom_point() +
+#'   facet_ideogrid(~ chr)
 facet_ideogrid <- function(
   rows = NULL, cols = NULL, scales = "fixed",
   space = "fixed", shrink = TRUE, labeller = "label_value",
@@ -47,13 +48,10 @@ facet_ideogrid <- function(
   facets = NULL, ideo.size = unit(0.1, "null"), high.col = NA
 ) {
   # Error handling
-  if (!exists("tbcache", mode = "environment")) {
-    stop("No ideograms were found.
-         Please call 'setup_ideograms()' first.", call. = FALSE)
-  }
-  if (!exists("FacetIdeoGrid", envir = tbcache)) {
-    stop("No ideograms were found.
-         Please call 'setup_ideograms()' first.", call. = FALSE)
+  if (!exists("tbcache", mode = "environment") &&
+      !exists("FacetIdeoGrid", envir = tbcache)) {
+    stop("No ideograms were found. Please call 'setup_ideograms()' first.",
+         call. = FALSE)
   }
   if (!(class(ideo.size) == "unit")) {
     stop("Invalid 'ideo.size' specification.

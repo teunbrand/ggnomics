@@ -232,7 +232,8 @@ class_distri <- function(distri) {
   }
 
   # Empirical test for functions outside the stats package
-  rfun <- get(paste0("r", distri), mode = "function")
+  rfun <- dynGet(paste0("r", distri), inherits = TRUE)
+  # rfun <- get(paste0("r", distri), mode = "function")
   routput <- tryCatch({
     do.call(rfun, as.list(c(100, rep(1, length(formals(rfun)) - 1))))
   },

@@ -22,8 +22,8 @@
 #'   apply the transformations in another order, build a custom '\code{M}'
 #'   argument.
 #'
-#'   For a some common transformations, you can find appropriate matrices for
-#'   the '\code{M}' argument below.
+#'   For some common transformations, you can find appropriate matrices for the
+#'   '\code{M}' argument below.
 #'
 #' @section Common transformations: \subsection{Identity transformations}{An
 #'   identity transformation, or returning the original coordinates, can be
@@ -76,15 +76,32 @@
 #'                  y = c(0, 0, 1, 1))
 #' ggplot(df, aes(x, y)) +
 #'   geom_polygon(position = position_lineartrans(angle = 30))
-
-
+#'   
+#' # Custom transformation matrices
+#' # Rotation
+#' theta <- -30 * pi / 180
+#' rot <- matrix(c(cos(theta), sin(theta), -sin(theta), cos(theta)), 2)
+#' # Shear
+#' shear <- matrix(c(1, 0, 1, 1), 2)
+#' 
+#' # Shear and then rotate
+#' M <- rot %*% shear
+#' ggplot(df, aes(x, y)) +
+#'   geom_polygon(position = position_lineartrans(M = M))
+#' # Alternative shear and then rotate
+#' ggplot(df, aes(x, y)) +
+#'   geom_polygon(position = position_lineartrans(shear = c(0, 1), angle = 30))
+#' 
+#' # Rotate and then shear
+#' M <- shear %*% rot
+#' ggplot(df, aes(x, y)) +
+#'   geom_polygon(position = position_lineartrans(M = M))
 position_lineartrans <- function(scale = c(1,1), shear = c(0,0), angle = 0, 
                                  M = NULL) {
   ggproto(NULL, PositionLinearTrans, 
           scale = scale, shear = shear,
           angle = angle, M = M)
 }
-
 
 # ggproto -----------------------------------------------------------------
 
@@ -124,7 +141,7 @@ PositionLinearTrans <- ggproto(
           -sin(angle), cos(angle)),
         ncol = 2
       )
-      M <- M %*% angle
+      M <- angle %*% M
     }
     list(M = M)
   }

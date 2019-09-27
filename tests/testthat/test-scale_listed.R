@@ -144,7 +144,7 @@ test_that("scale_listed can mix discrete and continuous colours", {
   })
 
   bar_should <- scales::gradient_n_pal(c("red","green","blue"))(scales::rescale(20:1))
-  key_should <- alpha(RColorBrewer::brewer.pal(5, "Set1"), 1)
+  key_should <- c("#E41A1CFF", "#377EB8FF", "#4DAF4AFF", "#984EA3FF", "#FF7F00FF")
 
   expect_equal(bar, bar_should)
   expect_equal(keys, key_should)
@@ -178,7 +178,10 @@ test_that("scale_listed can mix discrete and continuous fills", {
     key$gp$fill
   })
 
-  bar_should <- scales::gradient_n_pal(RColorBrewer::brewer.pal(7, "YlGnBu"))(scales::rescale(1:20))
+  bar_should <- c("#FFFFCC", "#EDF8C4", "#DCF1BD", "#CAEAB5", "#B5E2B6", "#9FD9B8", 
+                  "#88D0BA", "#74C8BD", "#63C1C0", "#4EBAC3", "#3DB0C3", "#33A4C2", 
+                  "#2899C1", "#1F8CBD", "#237BB6", "#236BAE", "#215BA6", "#1D4B9B", 
+                  "#163C8F", "#0C2C84")
   key_should <- alpha(scales::viridis_pal()(5), 1)
 
   expect_equal(bar, bar_should)

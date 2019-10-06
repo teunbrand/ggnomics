@@ -1,4 +1,4 @@
-# Visible -----------------------------------------------------------------
+# Main function ----------------------------------------------------------------
 
 #' Polygon parameterisation for rasters
 #'
@@ -39,9 +39,9 @@
 #'   coord_polar()
 #'
 #' # Combining with linear transformations
-#' df <- data.frame(x = row(volcano)[T],
-#'                  y = col(volcano)[T],
-#'                  z = volcano[T])
+#' df <- data.frame(x = row(volcano)[TRUE],
+#'                  y = col(volcano)[TRUE],
+#'                  z = volcano[TRUE])
 #'
 #' ggplot(df, aes(x, y, fill = z)) +
 #'   geom_polygonraster(position = position_lineartrans(angle = 30,
@@ -64,6 +64,7 @@ geom_polygonraster <- function(
 # ggproto -----------------------------------------------------------------
 
 #' @usage NULL
+#' @format NULL
 #' @export
 #' @rdname ggnomics_extensions
 GeomPolygonRaster <- ggproto(

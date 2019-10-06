@@ -1,3 +1,5 @@
+# Main function -----------------------------------------------------------
+
 #' Gene models
 #'
 #' @description \code{geom_genemodel} is a specialised geom for drawing gene
@@ -126,7 +128,10 @@ geom_genemodel <- function(
   )
 }
 
+# ggproto -----------------------------------------------------------------
+
 #' @usage NULL
+#' @format NULL
 #' @export
 #' @rdname ggnomics_extensions
 GeomGeneModel <- ggproto(
@@ -376,6 +381,8 @@ style_intron_chevron <- function(data, linejoin = "bevel", height = 1) {
     )
   )
 }
+
+# Drawing methods ---------------------------------------------------------
 
 #' @export
 makeContent.genemodel <- function(x) {

@@ -1,3 +1,5 @@
+# Main functions ----------------------------------------------------------
+
 #' Multiple gradient colour scales
 #'
 #' @description Maps multiple aesthetics to multiple colour fill gradient
@@ -106,6 +108,9 @@ scale_colour_multi <- function(
                  replaced_aes = standardise_aes_names("colour")),
             class = "MultiScale")
 }
+
+
+# Helpers -----------------------------------------------------------------
 
 distribute_scale_multi <- function(
   aesthetics, colours, values, na.value, guide, ...

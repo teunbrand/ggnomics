@@ -1,3 +1,5 @@
+# Main function -----------------------------------------------------------
+
 #' Add a list of scales for non-standard aesthetics
 #'
 #' Distributes a list of non-standard aesthetics scales to the plot,
@@ -113,6 +115,8 @@ scale_listed <- function(scalelist, replaces = NULL) {
   })
   return(out)
 }
+
+# S3 add method --------------------------------------------------------------
 
 #' @usage NULL
 #' @format NULL

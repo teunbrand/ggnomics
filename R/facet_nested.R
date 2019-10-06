@@ -1,3 +1,5 @@
+# Main function -----------------------------------------------------------
+
 #' @title Layout panels in a grid with nested strips
 #'
 #' @description \code{facet_nest()} form a matrix of panels defined by row and
@@ -111,7 +113,10 @@ facet_nested <- function(
           ))
 }
 
+# ggproto -----------------------------------------------------------------
+
 #' @usage NULL
+#' @format NULL
 #' @export
 #' @rdname ggnomics_extensions
 FacetNested <- ggproto(

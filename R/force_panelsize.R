@@ -1,3 +1,5 @@
+# Main function -----------------------------------------------------------
+
 #' Force a facetted plot to have specified panel sizes
 #'
 #' Takes a ggplot and modifies its facet drawing behaviour such that the widths
@@ -52,6 +54,8 @@ force_panelsizes <- function(rows = NULL, cols = NULL, respect = NULL) {
   structure(list(rows = rows, cols = cols, respect = respect),
             class = "forcedsize")
 }
+
+# S3 add method -----------------------------------------------------------
 
 #' @usage NULL
 #' @format NULL

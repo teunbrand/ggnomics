@@ -1,4 +1,4 @@
-# Visible -----------------------------------------------------------------
+# Main function ----------------------------------------------------------------
 
 #' Linearly transform coordinates
 #'
@@ -106,6 +106,7 @@ position_lineartrans <- function(scale = c(1,1), shear = c(0,0), angle = 0,
 # ggproto -----------------------------------------------------------------
 
 #' @usage NULL
+#' @format NULL
 #' @export
 #' @rdname ggnomics_extensions
 PositionLinearTrans <- ggproto(

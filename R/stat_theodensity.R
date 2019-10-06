@@ -1,3 +1,5 @@
+# Main function -----------------------------------------------------------
+
 #' Fitted theoretical density
 #'
 #' @description Estimates the parameters of a given distribution and evaluates
@@ -124,6 +126,7 @@ stat_theodensity <- function(
 # ggproto -----------------------------------------------------------------
 
 #' @usage NULL
+#' @format NULL
 #' @export
 #' @rdname ggnomics_extensions
 StatTheoDensity <- ggproto(

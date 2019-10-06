@@ -83,12 +83,12 @@ tracklayer <- function(data = NULL,
     show.legend <- FALSE
   }
   if (!is.null(mapping)) {
-    mapping <- ggplot2:::validate_mapping(mapping)
+    mapping <- .int$validate_mapping(mapping)
   }
   data <- fortify(data)
-  geom <- ggplot2:::check_subclass(geom, "Geom", env = parent.frame())
-  stat <- ggplot2:::check_subclass(stat, "Stat", env = parent.frame())
-  position <- ggplot2:::check_subclass(position, "Position", env = parent.frame())
+  geom <- .int$check_subclass(geom, "Geom", env = parent.frame())
+  stat <- .int$check_subclass(stat, "Stat", env = parent.frame())
+  position <- .int$check_subclass(position, "Position", env = parent.frame())
   if (is.null(params$na.rm)) {
     params$na.rm <- FALSE
   }
@@ -99,7 +99,7 @@ tracklayer <- function(data = NULL,
     key_glyph <- params$key_glyph
     params$key_glyph <- NULL
   }
-  params <- ggplot2:::rename_aes(params)
+  params <- .int$rename_aes(params)
   aes_params  <- params[intersect(names(params), geom$aesthetics())]
   geom_params <- params[intersect(names(params), geom$parameters(TRUE))]
   stat_params <- params[intersect(names(params), stat$parameters(TRUE))]
@@ -109,7 +109,7 @@ tracklayer <- function(data = NULL,
     warning("Ignoring unknown parameters: ", paste(extra_param, collapse = ", "),
             call. = FALSE, immediate. = TRUE)
   }
-  extra_aes <- setdiff(ggplot2:::mapped_aesthetics(mapping),
+  extra_aes <- setdiff(.int$mapped_aesthetics(mapping),
                        c(geom$aesthetics(), stat$aesthetics(),
                          "track_x", "track_y"))
   if (check.aes && length(extra_aes) > 0) {
@@ -117,7 +117,7 @@ tracklayer <- function(data = NULL,
                                                    collapse = ", "),
             call. = FALSE, immediate. = TRUE)
   }
-  geom <- ggplot2:::set_draw_key(geom, key_glyph)
+  geom <- .int$set_draw_key(geom, key_glyph)
   ggproto("TrackLayerInstance", TrackLayer, geom = geom, 
           geom_params = geom_params,
           stat = stat, stat_params = stat_params, data = data,
@@ -138,7 +138,7 @@ TrackLayer <- ggproto(
     data <- ggproto_parent(ggplot2:::Layer, self)$setup_layer(data, plot)
     
     if (self$inherit.aes) {
-      aesthetics <- ggplot2:::defaults(self$mapping, plot$mapping)
+      aesthetics <- .int$defaults(self$mapping, plot$mapping)
     } else {
       aesthetics <- self$mapping
     }
@@ -166,14 +166,13 @@ TrackLayer <- ggproto(
 
 #' @export
 ggplot_add.TrackLayer <- function(object, plot, object_name) {
-  aplot <<- plot
   if (inherits(plot$facet, "FacetNull")) {
     plot <- plot + facet_track()
   }
   plot$layers <- append(plot$layers, object)
-  mapping <- ggplot2:::make_labels(object$mapping)
-  default <- ggplot2:::make_labels(object$stat$default_aes)
-  new_labels <- ggplot2:::defaults(mapping, default)
-  plot$labels <- ggplot2:::defaults(plot$labels, new_labels)
+  mapping <- .int$make_labels(object$mapping)
+  default <- .int$make_labels(object$stat$default_aes)
+  new_labels <- .int$defaults(mapping, default)
+  plot$labels <- .int$defaults(plot$labels, new_labels)
   plot
 }

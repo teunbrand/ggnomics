@@ -258,6 +258,20 @@ test_that("facetted_pos_scales can set secondary axis", {
   expect_null(c[[3]])
 })
 
+test_that("facetted_pos_scales can handle empty panels", {
+  df <- cbind(expand.grid(1:2, 1:2), x = 1:4)
+  df <- df[-3,]
+  
+  g <- ggplot(df, aes(x, x)) +
+    geom_point() +
+    facet_grid(Var1 ~ Var2) +
+    facetted_pos_scales(y = list(
+      scale_y_continuous(),
+      scale_y_reverse()
+    ))
+  expect_silent(print(g))
+})
+
 
 # Warning tests -----------------------------------------------------------
 

@@ -4,10 +4,21 @@
 \alias{tracklayer}
 \title{Create a layer as track}
 \usage{
-tracklayer(data = NULL, mapping = NULL, geom = "point",
-  stat = "identity", position = "identity", inherit.aes = TRUE,
-  check.aes = TRUE, check.param = TRUE, show.legend = NA,
-  key_glyph = NULL, track_y = "Default", track_x = "Default", ...)
+tracklayer(
+  data = NULL,
+  mapping = NULL,
+  geom = "point",
+  stat = "identity",
+  position = "identity",
+  inherit.aes = TRUE,
+  check.aes = TRUE,
+  check.param = TRUE,
+  show.legend = NA,
+  key_glyph = NULL,
+  track_y = "Default",
+  track_x = "Default",
+  ...
+)
 }
 \arguments{
 \item{data}{The data to be displayed in this layer. There are three
@@ -58,7 +69,7 @@ It can also be a named logical vector to finely select the aesthetics to
 display.}
 
 \item{key_glyph}{A legend key drawing function or a string providing the
-function name minus the \code{draw_key_} prefix. See \link{draw_key} for details.}
+function name minus the \code{draw_key_} prefix. See \link[ggplot2]{draw_key} for details.}
 
 \item{track_y}{A \code{character} of length 1 setting the name of a facet row
 for this layer. Alternatively, \code{track_y} may also be defined in the

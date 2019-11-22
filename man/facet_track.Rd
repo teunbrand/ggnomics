@@ -4,10 +4,19 @@
 \alias{facet_track}
 \title{Lay out panels as tracks}
 \usage{
-facet_track(heights = NULL, widths = NULL, respect = FALSE,
-  scales = "free", space = "fixed", shrink = TRUE,
-  labeller = "label_value", as.table = TRUE, switch = "y",
-  drop = TRUE, margins = FALSE)
+facet_track(
+  heights = NULL,
+  widths = NULL,
+  respect = FALSE,
+  scales = "free",
+  space = "fixed",
+  shrink = TRUE,
+  labeller = "label_value",
+  as.table = TRUE,
+  switch = "y",
+  drop = TRUE,
+  margins = FALSE
+)
 }
 \arguments{
 \item{heights}{a \code{numeric} or \code{unit} vector for setting panel

@@ -4,10 +4,21 @@
 \alias{facet_ideogrid}
 \title{Lay out panels in a grid with ideograms}
 \usage{
-facet_ideogrid(rows = NULL, cols = NULL, scales = "fixed",
-  space = "fixed", shrink = TRUE, labeller = "label_value",
-  as.table = TRUE, switch = NULL, drop = TRUE, margins = FALSE,
-  facets = NULL, ideo.size = unit(0.1, "null"), high.col = NA)
+facet_ideogrid(
+  rows = NULL,
+  cols = NULL,
+  scales = "fixed",
+  space = "fixed",
+  shrink = TRUE,
+  labeller = "label_value",
+  as.table = TRUE,
+  switch = NULL,
+  drop = TRUE,
+  margins = FALSE,
+  facets = NULL,
+  ideo.size = unit(0.1, "null"),
+  high.col = NA
+)
 }
 \arguments{
 \item{rows}{A set of variables or expressions quoted by

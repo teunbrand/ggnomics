@@ -4,8 +4,18 @@
 \alias{draw_ideo_panels_grid}
 \title{Drawing panels for facet_ideogrid()}
 \usage{
-draw_ideo_panels_grid(panels, layout, x_scales, y_scales, ranges, coord,
-  data, theme, params, self)
+draw_ideo_panels_grid(
+  panels,
+  layout,
+  x_scales,
+  y_scales,
+  ranges,
+  coord,
+  data,
+  theme,
+  params,
+  self
+)
 }
 \value{
 A gtable object

@@ -6,8 +6,12 @@
 \alias{style_intron_chevron}
 \title{Intron styles}
 \usage{
-style_intron_arrowline(data, linejoin = "mitre", arrow.template = NULL,
-  arrow.freq = unit(4, "mm"))
+style_intron_arrowline(
+  data,
+  linejoin = "mitre",
+  arrow.template = NULL,
+  arrow.freq = unit(4, "mm")
+)
 
 style_intron_plainline(data, linejoin)
 

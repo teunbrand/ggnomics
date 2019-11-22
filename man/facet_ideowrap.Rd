@@ -4,10 +4,20 @@
 \alias{facet_ideowrap}
 \title{Wrap a 1d ribbon of panels into 2d with ideograms}
 \usage{
-facet_ideowrap(facets, nrow = NULL, ncol = NULL, scales = "fixed",
-  shrink = TRUE, labeller = "label_value", as.table = TRUE,
-  drop = TRUE, dir = "h", strip.position = "top",
-  ideo.size = unit(0.1, "null"), high.col = NA)
+facet_ideowrap(
+  facets,
+  nrow = NULL,
+  ncol = NULL,
+  scales = "fixed",
+  shrink = TRUE,
+  labeller = "label_value",
+  as.table = TRUE,
+  drop = TRUE,
+  dir = "h",
+  strip.position = "top",
+  ideo.size = unit(0.1, "null"),
+  high.col = NA
+)
 }
 \arguments{
 \item{facets}{A set of variables or expressions quoted by \code{\link[=vars]{vars()}}

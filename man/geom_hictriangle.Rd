@@ -4,8 +4,15 @@
 \alias{geom_hictriangle}
 \title{Hi-C Triangle}
 \usage{
-geom_hictriangle(exp, ranges, stat = "identity", position = "identity",
-  ..., na.rm = FALSE, show.legend = NA)
+geom_hictriangle(
+  exp,
+  ranges,
+  stat = "identity",
+  position = "identity",
+  ...,
+  na.rm = FALSE,
+  show.legend = NA
+)
 }
 \arguments{
 \item{exp}{A \pkg{GENOVA} experiment}

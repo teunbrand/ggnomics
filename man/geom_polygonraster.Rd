@@ -4,9 +4,18 @@
 \alias{geom_polygonraster}
 \title{Polygon parameterisation for rasters}
 \usage{
-geom_polygonraster(mapping = NULL, data = NULL, stat = "identity",
-  position = position_lineartrans(), ..., hjust = 0.5, vjust = 0.5,
-  na.rm = FALSE, show.legend = NA, inherit.aes = TRUE)
+geom_polygonraster(
+  mapping = NULL,
+  data = NULL,
+  stat = "identity",
+  position = position_lineartrans(),
+  ...,
+  hjust = 0.5,
+  vjust = 0.5,
+  na.rm = FALSE,
+  show.legend = NA,
+  inherit.aes = TRUE
+)
 }
 \arguments{
 \item{mapping}{Set of aesthetic mappings created by \code{\link[=aes]{aes()}} or

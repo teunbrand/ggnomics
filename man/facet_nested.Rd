@@ -4,11 +4,22 @@
 \alias{facet_nested}
 \title{Layout panels in a grid with nested strips}
 \usage{
-facet_nested(rows = NULL, cols = NULL, scales = "fixed",
-  space = "fixed", shrink = TRUE, labeller = "label_value",
-  as.table = TRUE, switch = NULL, drop = TRUE, margins = FALSE,
-  facets = NULL, nest_line = FALSE, resect = unit(0, "mm"),
-  bleed = FALSE)
+facet_nested(
+  rows = NULL,
+  cols = NULL,
+  scales = "fixed",
+  space = "fixed",
+  shrink = TRUE,
+  labeller = "label_value",
+  as.table = TRUE,
+  switch = NULL,
+  drop = TRUE,
+  margins = FALSE,
+  facets = NULL,
+  nest_line = FALSE,
+  resect = unit(0, "mm"),
+  bleed = FALSE
+)
 }
 \arguments{
 \item{rows}{A set of variables or expressions quoted by

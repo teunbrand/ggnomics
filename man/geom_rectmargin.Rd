@@ -5,15 +5,35 @@
 \alias{geom_tilemargin}
 \title{Rectangular rugs in the margins}
 \usage{
-geom_rectmargin(mapping = NULL, data = NULL, stat = "identity",
-  position = "identity", ..., outside = FALSE, sides = "bl",
-  length = unit(0.03, "npc"), linejoin = "mitre", na.rm = FALSE,
-  show.legend = NA, inherit.aes = TRUE)
+geom_rectmargin(
+  mapping = NULL,
+  data = NULL,
+  stat = "identity",
+  position = "identity",
+  ...,
+  outside = FALSE,
+  sides = "bl",
+  length = unit(0.03, "npc"),
+  linejoin = "mitre",
+  na.rm = FALSE,
+  show.legend = NA,
+  inherit.aes = TRUE
+)
 
-geom_tilemargin(mapping = NULL, data = NULL, stat = "identity",
-  position = "identity", ..., outside = FALSE, sides = "bl",
-  length = unit(0.03, "npc"), linejoin = "mitre", na.rm = FALSE,
-  show.legend = NA, inherit.aes = TRUE)
+geom_tilemargin(
+  mapping = NULL,
+  data = NULL,
+  stat = "identity",
+  position = "identity",
+  ...,
+  outside = FALSE,
+  sides = "bl",
+  length = unit(0.03, "npc"),
+  linejoin = "mitre",
+  na.rm = FALSE,
+  show.legend = NA,
+  inherit.aes = TRUE
+)
 }
 \arguments{
 \item{mapping}{Set of aesthetic mappings created by \code{\link[=aes]{aes()}} or

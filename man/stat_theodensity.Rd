@@ -4,10 +4,20 @@
 \alias{stat_theodensity}
 \title{Fitted theoretical density}
 \usage{
-stat_theodensity(mapping = NULL, data = NULL, geom = "line",
-  position = "identity", ..., distri = "norm", n = 512,
-  fix.arg = NULL, start.arg = NULL, na.rm = TRUE, show.legend = NA,
-  inherit.aes = TRUE)
+stat_theodensity(
+  mapping = NULL,
+  data = NULL,
+  geom = "line",
+  position = "identity",
+  ...,
+  distri = "norm",
+  n = 512,
+  fix.arg = NULL,
+  start.arg = NULL,
+  na.rm = TRUE,
+  show.legend = NA,
+  inherit.aes = TRUE
+)
 }
 \arguments{
 \item{mapping}{Set of aesthetic mappings created by \code{\link[=aes]{aes()}} or

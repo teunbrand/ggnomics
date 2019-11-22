@@ -4,8 +4,7 @@
 \alias{position_lineartrans}
 \title{Linearly transform coordinates}
 \usage{
-position_lineartrans(scale = c(1, 1), shear = c(0, 0), angle = 0,
-  M = NULL)
+position_lineartrans(scale = c(1, 1), shear = c(0, 0), angle = 0, M = NULL)
 }
 \arguments{
 \item{scale}{A \code{numeric} of length two describing relative units with

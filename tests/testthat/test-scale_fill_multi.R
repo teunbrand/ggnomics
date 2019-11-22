@@ -81,7 +81,7 @@ test_that("scale_fill_multi has appropriate legends", {
                    c(startcols[3], endcols[3]))
   )
   gt <- ggplotGrob(g)
-  gt <- gt$grobs[gt$layout$name == "guide-box"][[1]]$grobs[1:3]
+  gt <- gt$grobs[gt$layout$name == "guide-box"][[1]]$grobs[c(2,1,3)]
   cols <- lapply(gt, function(leg){
     as.vector(leg$grobs[leg$layout$name == "bar"][[1]]$raster)
   })
@@ -89,8 +89,8 @@ test_that("scale_fill_multi has appropriate legends", {
   starts <- col2rgb(starts)
   ends <- unname(sapply(cols, head, 1))
   ends <- col2rgb(ends)
-  startcols <- col2rgb(rev(startcols))
-  endcols <- col2rgb(rev(endcols))
+  startcols <- col2rgb(startcols)
+  endcols <- col2rgb(endcols)
   expect_identical(startcols, starts)
   expect_identical(endcols, ends)
 })
@@ -155,9 +155,9 @@ test_that("scale_fill_multi sets breaks independently", {
     as.numeric(leg$grobs[leg$layout$name == "label"][[1]]$children[[1]]$label)
   })
   # Order is a bit wierd
-  expect_equal(labs[[2]], breaks[[3]])
+  expect_equal(labs[[1]], breaks[[3]])
+  expect_equal(labs[[2]], breaks[[2]])
   expect_equal(labs[[3]], breaks[[1]])
-  expect_equal(labs[[1]], breaks[[2]])
 })
 
 test_that("scale_fill_multi sets limits independently", {
@@ -208,9 +208,9 @@ test_that("scale_fill_multi sets labels independently", {
   labs <- lapply(gt, function(tg){
     tg$grobs[tg$layout$name == "label"][[1]]$children[[1]]$label
   })
-  expect_equal(labs[[1]], paste0(seq(0, 100, by = 25), " Nonsense"))
-  expect_equal(labs[[2]], paste0(seq(0, 1, by = 0.25)))
-  expect_equal(labs[[3]], paste0(seq(0, 100, by = 25)))
+  expect_equal(labs[[3]], paste0(seq(0, 100, by = 25), " Nonsense"))
+  expect_equal(labs[[1]], paste0(seq(0, 1, by = 0.25)))
+  expect_equal(labs[[2]], paste0(seq(0, 100, by = 25)))
 })
 
 test_that("scale_fill_multi sets titles independently", {
@@ -231,7 +231,7 @@ test_that("scale_fill_multi sets titles independently", {
   title <- lapply(gt, function(tg) {
     tg$grobs[tg$layout$name == "title"][[1]]$children[[1]]$children[[1]]$label
   })
-  expect_equal(titles, unname(title))
+  expect_equal(titles, unname(title)[c(2,3,1)])
 })
 
 test_that("scale_fill_multi handles discrete guides", {

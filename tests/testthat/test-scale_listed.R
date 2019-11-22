@@ -172,17 +172,17 @@ test_that("scale_listed can mix discrete and continuous fills", {
   gt <- ggplotGrob(test)
   gt <- gt$grobs[gt$layout$name == "guide-box"][[1]]
   gt <- gt$grobs[gt$layout$name == "guides"]
-  bar <- as.vector(gt[[1]]$grobs[gt[[1]]$layout$name == "bar"][[1]]$raster)
-  keys <- gt[[2]]$grobs[grepl("key", gt[[2]]$layout$name) & !endsWith(gt[[2]]$layout$name, "bg")]
+  bar <- as.vector(gt[[2]]$grobs[gt[[2]]$layout$name == "bar"][[1]]$raster)
+  keys <- gt[[1]]$grobs[grepl("key", gt[[1]]$layout$name) & !endsWith(gt[[1]]$layout$name, "bg")]
   keys <- sapply(keys, function(key){
     key$gp$fill
   })
 
-  bar_should <- c("#FFFFCC", "#EDF8C4", "#DCF1BD", "#CAEAB5", "#B5E2B6", "#9FD9B8", 
-                  "#88D0BA", "#74C8BD", "#63C1C0", "#4EBAC3", "#3DB0C3", "#33A4C2", 
+  bar_should <- c("#FFFFCC", "#EDF8C4", "#DCF1BD", "#CAEAB5", "#B6E2B6", "#9FD9B8", 
+                  "#88D0BA", "#74C8BD", "#63C1C0", "#4EBAC3", "#3DB0C3", "#34A4C2", 
                   "#2899C1", "#1F8CBD", "#237BB6", "#236BAE", "#215BA6", "#1D4B9B", 
                   "#163C8F", "#0C2C84")
-  key_should <- alpha(scales::viridis_pal()(5), 1)
+  key_should <- scales::viridis_pal()(5)
 
   expect_equal(bar, bar_should)
   expect_equal(keys, key_should)

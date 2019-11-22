@@ -40,7 +40,6 @@
 #' @examples
 #' x <- 1:10
 hic_extractor <- function(exp1, exp2 = NULL, xrange = NULL, yrange = NULL) {
-  try_require("GENOVA", "hic_extractor")
   try_require("data.table", "hic_extractor")
   
   # Checks compatibility of experiments
@@ -57,7 +56,7 @@ hic_extractor <- function(exp1, exp2 = NULL, xrange = NULL, yrange = NULL) {
       stop("Resolutions of experiments are incompatible.", 
            call. = FALSE)
     }
-    if (!all.equal(exp1$IDX, exp2$IDX)) {
+    if (is.character(all.equal(exp1$IDX, exp2$IDX))) {
       stop("Indices of experiments are not equal. Cannot extract two ",
            "experiments with differences in indices reliably.",
            call. = FALSE)
@@ -65,6 +64,11 @@ hic_extractor <- function(exp1, exp2 = NULL, xrange = NULL, yrange = NULL) {
     explist <- list(exp1, exp2)
   } else {
     explist <- list(exp1)
+  }
+  
+  if (is.null(xrange)) {
+    stop("Don't know what regions of the Hi-C matrix to take.",
+         " Please supply a valid `xrange` argument.")
   }
   
   # Translate ranges to Hi-C indices

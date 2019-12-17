@@ -332,8 +332,8 @@ merge_strips <- function(panel_table, strip, vars, switch, params, theme, orient
   }
 
   sizes <- switch(orient,
-                  x = do.call(unit.c, lapply(splitstrip, max_height)),
-                  y = do.call(unit.c, lapply(splitstrip, max_width)))
+                  x = do.call(grid::unit.c, lapply(splitstrip, max_height)),
+                  y = do.call(grid::unit.c, lapply(splitstrip, max_width)))
 
   assign("panel_table", panel_table, 1)
 
@@ -348,17 +348,17 @@ merge_strips <- function(panel_table, strip, vars, switch, params, theme, orient
   if (orient == "x") {
     nudge <- if (pos_y < panel_pos$t) -1 else -1
     panel_table <- panel_table[-pos_y,]
-    panel_table <- gtable_add_rows(panel_table, sizes, pos_y + nudge)
+    panel_table <- gtable::gtable_add_rows(panel_table, sizes, pos_y + nudge)
 
   } else {
     nudge <- if (pos_x < panel_pos$l) -1 else 0
     panel_table <- panel_table[, -pos_x]
-    panel_table <- gtable_add_cols(panel_table, sizes, pos_x + nudge)
+    panel_table <- gtable::gtable_add_cols(panel_table, sizes, pos_x + nudge)
   }
 
   for(i in seq_len(n_levels)) {
     if (!merge[i]) {
-      panel_table <- gtable_add_grob(
+      panel_table <- gtable::gtable_add_grob(
         panel_table, splitstrip[[i]],
         t = pos_y + switch(orient, x = i + nudge, y = 0),
         l = pos_x + switch(orient, x = 0, y = i + nudge),
@@ -369,7 +369,7 @@ merge_strips <- function(panel_table, strip, vars, switch, params, theme, orient
       j <- as.numeric(as.factor(vars[,i]))
       ends <- cumsum(rle(j)$lengths)
       starts <- c(1, which(diff(j) != 0) + 1)
-      panel_table <- gtable_add_grob(
+      panel_table <- gtable::gtable_add_grob(
         panel_table, splitstrip[[i]][starts],
         t = switch(orient, x = pos_y + i + nudge, y = pos_y[starts]),
         b = switch(orient, x = pos_y + i + nudge, y = pos_y[ends]),
@@ -381,18 +381,18 @@ merge_strips <- function(panel_table, strip, vars, switch, params, theme, orient
 
       if(params$nest_line && any(starts != ends)) {
         insert_here <- which(starts != ends)
-        indicator <- linesGrob(
+        indicator <- grid::linesGrob(
           x = switch(orient,
-                     x = unit(c(0, 1), "npc") + c(1, -1) * params$resect,
+                     x = grid::unit(c(0, 1), "npc") + c(1, -1) * params$resect,
                      y = if (switch) c(1, 1) else c(0, 0)),
           y = switch(orient,
                      x = if (switch) c(1, 1) else c(0, 0),
-                     y = unit(c(0, 1), "npc") + c(1, -1) * params$resect),
+                     y = grid::unit(c(0, 1), "npc") + c(1, -1) * params$resect),
           gp = grid::gpar(col = theme$line$colour,
                           lty = theme$line$linetype,
                           lwd = theme$line$size * .pt,
                           lineend = theme$line$lineend))
-        panel_table <- gtable_add_grob(
+        panel_table <- gtable::gtable_add_grob(
           panel_table, lapply(seq_along(insert_here), function(x) indicator),
           t = switch(orient, x = pos_y + i + nudge,
                      y = pos_y[starts[insert_here]]),

@@ -1,3 +1,5 @@
+# Main function -----------------------------------------------------------
+
 #'Setting up cytogenetic bands
 #'
 #'Sets up the necessary \code{ggproto} objects and methods to plot ideograms
@@ -103,6 +105,8 @@ setup_cytobands <- function(bands, colourmap, gpars = gpar()){
          envir = tbcache)
 }
 
+# Helpers -----------------------------------------------------------------
+
 # Make a small environment so doesn't clog user environment
 tbcache <- new.env()
 
@@ -124,6 +128,8 @@ clear_cytoband_cache <- function() {
     rm(list = objects, envir = env)
   }
 }
+
+
 
 #' Ideogram renderer
 #'
@@ -232,6 +238,12 @@ render.ideo <- function(chr, orient = "x", ranges, theme, high.col, ideodat){
 
   return(tree)
 }
+
+
+# ggproto methods ---------------------------------------------------------
+
+# These are not already in ggproto objects because these are build on the fly
+# depending on the cytobands data used.
 
 #' Drawing panels for facet_ideogrid()
 #'

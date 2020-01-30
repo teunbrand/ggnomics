@@ -4,7 +4,12 @@
 \alias{example_HiC}
 \title{Generate fake Hi-C experiment}
 \usage{
-example_HiC()
+example_HiC(version = "old")
+}
+\arguments{
+\item{version}{When this is set to \code{"old"}, it formats the object as pre
+v1.0.0 GENOVA experiment, else it formats the object as a \code{contacts}
+object.}
 }
 \value{
 A \code{list} with the skeleton of a GENOVA Hi-C experiment.
@@ -22,6 +27,6 @@ The data is formatted as the first 120 Mb of 'chr1' at 1 Mb
 exp <- example_HiC()
 }
 \seealso{
-\code{\link[GENOVA]{construct.experiment}} for how to construct
+\code{\link[GENOVA]{load_contacts}} for how to construct
   proper Hi-C experiment objects.
 }

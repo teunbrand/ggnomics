@@ -1,3 +1,5 @@
+# Main function -----------------------------------------------------------
+
 #' Segregrating overlapping ranges
 #'
 #' @description One-dimensional ranged data in the x-direction is segregated in
@@ -45,8 +47,10 @@ position_disjoint_ranges <- function(extend = 1, stepsize = 1) {
   ggproto(NULL, PositionDisjointRanges, extend = extend, stepsize = stepsize)
 }
 
+# ggproto -----------------------------------------------------------------
 
 #' @usage NULL
+#' @format NULL
 #' @export
 #' @rdname ggnomics_extensions
 PositionDisjointRanges <- ggplot2::ggproto(

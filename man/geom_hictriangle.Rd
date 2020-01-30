@@ -4,8 +4,15 @@
 \alias{geom_hictriangle}
 \title{Hi-C Triangle}
 \usage{
-geom_hictriangle(exp, ranges, stat = "identity", position = "identity",
-  ..., na.rm = FALSE, show.legend = NA)
+geom_hictriangle(
+  exp,
+  ranges,
+  stat = "identity",
+  position = "identity",
+  ...,
+  na.rm = FALSE,
+  show.legend = NA
+)
 }
 \arguments{
 \item{exp}{A \pkg{GENOVA} experiment}
@@ -21,7 +28,7 @@ layer, as a string.}
 \item{position}{Position adjustment, either as a string, or the result of
 a call to a position adjustment function.}
 
-\item{...}{Other arguments passed on to \code{\link[=layer]{layer()}}. These are
+\item{...}{Other arguments passed on to \code{\link[ggplot2:layer]{layer()}}. These are
 often aesthetics, used to set an aesthetic to a fixed value, like
 \code{colour = "red"} or \code{size = 3}. They may also be parameters
 to the paired geom/stat.}
@@ -58,7 +65,7 @@ ggplot() +
   geom_hictriangle(exp, gr)
 }
 \seealso{
-\code{\link[GENOVA]{construct.experiment}} on how to construct a
+\code{\link[GENOVA]{load_contacts}} on how to construct a
   \pkg{GENOVA} experiment object. \code{\link[GenomicRanges]{GRanges}} on how to
   make or subset GRanges objects.
 }

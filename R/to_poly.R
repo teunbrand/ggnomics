@@ -1,3 +1,5 @@
+# Generic -----------------------------------------------------------------
+
 #' Covert an object to polygon data.frame
 #'
 #' @param object An object to convert to a polygon.
@@ -20,6 +22,9 @@
 #' x <- rle(rep(1:5, each = 5))
 #' to_poly(x)
 setGeneric("to_poly", function(object, selection) standardGeneric("to_poly"))
+
+
+# Methods -----------------------------------------------------------------
 
 #' @rdname to_poly
 setMethod(

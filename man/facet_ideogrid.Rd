@@ -4,14 +4,25 @@
 \alias{facet_ideogrid}
 \title{Lay out panels in a grid with ideograms}
 \usage{
-facet_ideogrid(rows = NULL, cols = NULL, scales = "fixed",
-  space = "fixed", shrink = TRUE, labeller = "label_value",
-  as.table = TRUE, switch = NULL, drop = TRUE, margins = FALSE,
-  facets = NULL, ideo.size = unit(0.1, "null"), high.col = NA)
+facet_ideogrid(
+  rows = NULL,
+  cols = NULL,
+  scales = "fixed",
+  space = "fixed",
+  shrink = TRUE,
+  labeller = "label_value",
+  as.table = TRUE,
+  switch = NULL,
+  drop = TRUE,
+  margins = FALSE,
+  facets = NULL,
+  ideo.size = unit(0.1, "null"),
+  high.col = NA
+)
 }
 \arguments{
 \item{rows}{A set of variables or expressions quoted by
-\code{\link[=vars]{vars()}} and defining faceting groups on the rows or columns
+\code{\link[ggplot2:vars]{vars()}} and defining faceting groups on the rows or columns
 dimension. The variables can be named (the names are passed to
 \code{labeller}).
 
@@ -22,7 +33,7 @@ formula is used to indicate there should be no faceting on this
 dimension (either row or column).}
 
 \item{cols}{A set of variables or expressions quoted by
-\code{\link[=vars]{vars()}} and defining faceting groups on the rows or columns
+\code{\link[ggplot2:vars]{vars()}} and defining faceting groups on the rows or columns
 dimension. The variables can be named (the names are passed to
 \code{labeller}).
 
@@ -52,8 +63,8 @@ column corresponds to one factor. Thus there will be more than
 one with formulae of the type \code{~cyl + am}. Each output
 column gets displayed as one separate line in the strip
 label. This function should inherit from the "labeller" S3 class
-for compatibility with \code{\link[=labeller]{labeller()}}. See
-\code{\link[=label_value]{label_value()}} for more details and pointers to other
+for compatibility with \code{\link[ggplot2:labeller]{labeller()}}. See
+\code{\link[ggplot2:label_value]{label_value()}} for more details and pointers to other
 options.}
 
 \item{as.table}{If \code{TRUE}, the default, the facets are laid out like

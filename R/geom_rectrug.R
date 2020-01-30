@@ -1,3 +1,5 @@
+# Main functions ----------------------------------------------------------
+
 #' Rectangular rugs in the margins
 #'
 #' @description Like rug plots display data points of a 2D plot as lines in the
@@ -135,7 +137,37 @@ geom_rectmargin <- function(
                       ...))
 }
 
+#' @rdname geom_rectmargin
+#' @export
+geom_tilemargin <- function(
+  mapping = NULL,
+  data = NULL,
+  stat = "identity",
+  position = "identity",
+  ...,
+  outside = FALSE,
+  sides = "bl",
+  length = unit(0.03, "npc"),
+  linejoin = "mitre",
+  na.rm = FALSE,
+  show.legend = NA,
+  inherit.aes = TRUE
+) {
+  layer(data = data, mapping = mapping,
+        stat = stat, geom = GeomTileMargin,
+        position = position, show.legend = show.legend,
+        inherit.aes = inherit.aes,
+        params = list(outside = outside,
+                      sides = sides,
+                      length = length,
+                      na.rm = na.rm,
+                      ...))
+}
+
+# ggproto -----------------------------------------------------------------
+
 #' @usage NULL
+#' @format NULL
 #' @export
 #' @rdname ggnomics_extensions
 GeomRectMargin <- ggplot2::ggproto(
@@ -224,34 +256,8 @@ GeomRectMargin <- ggplot2::ggproto(
   draw_key = ggplot2::draw_key_polygon
 )
 
-#' @rdname geom_rectmargin
-#' @export
-geom_tilemargin <- function(
-  mapping = NULL,
-  data = NULL,
-  stat = "identity",
-  position = "identity",
-  ...,
-  outside = FALSE,
-  sides = "bl",
-  length = unit(0.03, "npc"),
-  linejoin = "mitre",
-  na.rm = FALSE,
-  show.legend = NA,
-  inherit.aes = TRUE
-) {
-  layer(data = data, mapping = mapping,
-        stat = stat, geom = GeomTileMargin,
-        position = position, show.legend = show.legend,
-        inherit.aes = inherit.aes,
-        params = list(outside = outside,
-                      sides = sides,
-                      length = length,
-                      na.rm = na.rm,
-                      ...))
-}
-
 #' @usage NULL
+#' @format NULL
 #' @export
 #' @rdname ggnomics_extensions
 GeomTileMargin <- ggplot2::ggproto(

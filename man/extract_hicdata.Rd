@@ -4,8 +4,7 @@
 \alias{extract_hicdata}
 \title{Extractor function for Hi-C GENOVA experiment objects.}
 \usage{
-extract_hicdata(exp1, exp2 = NULL, xranges, yranges = NULL,
-  triangle = FALSE)
+extract_hicdata(exp1, exp2 = NULL, xranges, yranges = NULL, triangle = FALSE)
 }
 \arguments{
 \item{exp1, exp2}{A GENOVA experiment object.}

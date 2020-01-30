@@ -1,3 +1,5 @@
+# Main function -----------------------------------------------------------
+
 #' Point Paths
 #'
 #' The point path geom is used to make a scatterplot wherein the points are
@@ -39,7 +41,10 @@ geom_pointpath <- function(
   )
 }
 
+# ggproto -----------------------------------------------------------------
+
 #' @usage NULL
+#' @format NULL
 #' @export
 #' @rdname ggnomics_extensions
 GeomPointPath <- ggplot2::ggproto(
@@ -99,7 +104,7 @@ GeomPointPath <- ggplot2::ggproto(
   )
 )
 
-# Helpers ----------------------------------------
+# Draw methods ----------------------------------------
 
 #' @title Calculate broken segments for a point-interrupted path
 #' @export

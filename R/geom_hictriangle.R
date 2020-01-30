@@ -1,3 +1,5 @@
+# Main function -----------------------------------------------------------
+
 #' Hi-C Triangle
 #'
 #' The Hi-C triangle geom is used to portray a rotated Hi-C matrix such that the
@@ -22,7 +24,7 @@
 #'
 #' @export
 #'
-#' @seealso \code{\link[GENOVA]{construct.experiment}} on how to construct a
+#' @seealso \code{\link[GENOVA]{load_contacts}} on how to construct a
 #'   \pkg{GENOVA} experiment object. \code{\link[GenomicRanges]{GRanges}} on how to
 #'   make or subset GRanges objects.
 #'
@@ -49,7 +51,10 @@ geom_hictriangle <- function(
         params = list(na.rm = na.rm, ...))
 }
 
+# ggproto -----------------------------------------------------------------
+
 #' @usage NULL
+#' @format NULL
 #' @export
 #' @rdname ggnomics_extensions
 GeomHicTriangle <- ggplot2::ggproto(

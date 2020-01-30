@@ -17,10 +17,14 @@ try_require <- function(package, fun) {
 .grab_ggplot_internals <- function() {
   objects <- c(
     ".all_aesthetics", "as_facets_list", "as_gg_data_frame", "check_aesthetics",
-    "check_labeller", "compact", "convertInd", "df.grid", "empty",
-    "eval_facets", "ggname",
-    "grid_as_facets_list", "is.zero", "sanitise_dim", "snake_class", "ulevels",
-    "unique_combs", "var_list", "weave_tables_col", "weave_tables_row", ".pt"
+    "check_labeller", "check_subclass", "compact", "convertInd", "df.grid", 
+    "defaults",
+    "empty", "eval_facets", "ggname", "rename_aes", "mapped_aesthetics",
+    "make_labels",
+    "grid_as_facets_list", "is.zero", "sanitise_dim", "set_draw_key",
+    "snake_class", "ulevels",
+    "unique_combs", "var_list", "validate_mapping", 
+    "weave_tables_col", "weave_tables_row", ".pt"
   )
   objects <- setNames(objects, objects)
   out <- lapply(objects, function(i) {

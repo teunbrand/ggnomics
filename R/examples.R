@@ -78,15 +78,18 @@ example_cytoband_colours <- function() {
 #'   resolution. Since data is randomly generated, use \code{set.seed()} for
 #'   reproducibility. Qualifies as the bare minimum requirement for the
 #'   \code{\link[ggnomics]{geom_hictriangle}}'s \code{exp} argument.
+#' @param version When this is set to \code{"old"}, it formats the object as pre
+#'   v1.0.0 GENOVA experiment, else it formats the object as a \code{contacts}
+#'   object.
 #'
-#' @seealso \code{\link[GENOVA]{construct.experiment}} for how to construct
+#' @seealso \code{\link[GENOVA]{load_contacts}} for how to construct
 #'   proper Hi-C experiment objects.
 #'
 #' @export
 #'
 #' @examples
 #' exp <- example_HiC()
-example_HiC <- function() {
+example_HiC <- function(version = "old") {
   try_require("MASS", "example_HiC")
   try_require("reshape2", "example_HiC")
   try_require("data.table", "example_HiC")
@@ -123,9 +126,29 @@ example_HiC <- function() {
                        V2 = as.integer(seq.int(0, 119e6, by = 1e6)),
                        V3 = as.integer(seq.int(1e6, 120e6, by = 1e6)),
                        V4 = 1:120)
-  exp <- list(ICE = ev,
-              ABS = coords,
-              RES = 1e6)
+  
+  if (version == "old") {
+    exp <- list(ICE = ev,
+                ABS = coords,
+                RES = 1e6)
+    
+  } else {
+    data.table::setDT(coords)
+    data.table::setkeyv(coords, c("V1", "V2"))
+    exp <- structure(
+      list(
+        MAT = ev,
+        IDX = coords,
+        CHRS = "chr1",
+        CENTROMERES = NULL
+      ),
+      class = "contacts", znorm = FALSE, samplename = "test",
+      resolution = 1e6,
+      colour = "black", rmChrom = TRUE, balanced = TRUE, scale_cis = FALSE,
+      package = "ggnomics"
+    )
+  }
+  return(exp)
 }
 
 #' Example gene models

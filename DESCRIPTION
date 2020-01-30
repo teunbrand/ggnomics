@@ -27,7 +27,8 @@ Suggests:
     GenomeInfoDb,
     GenomicFeatures,
     plyr,
-    covr
+    covr,
+    RColorBrewer
 VignetteBuilder: knitr
 Imports: 
     scales,

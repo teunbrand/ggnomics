@@ -137,13 +137,18 @@ test_that("scale_listed can mix discrete and continuous colours", {
   gt <- ggplotGrob(test)
   gt <- gt$grobs[gt$layout$name == "guide-box"][[1]]
   gt <- gt$grobs[gt$layout$name == "guides"]
-  bar <- as.vector(gt[[1]]$grobs[gt[[1]]$layout$name == "bar"][[1]]$raster)
-  keys <- gt[[2]]$grobs[grepl("key", gt[[2]]$layout$name) & !endsWith(gt[[2]]$layout$name, "bg")]
+  is_bar <- which(sapply(gt, function(x){"bar" %in% x$layout$name}))
+  is_key <- which(sapply(gt, function(x){any(grepl("key", x$layout$name))}))
+  bar <- gt[[is_bar]]
+  bar <- as.vector(bar$grobs[bar$layout$name == "bar"][[1]]$raster)
+  keys <- gt[[is_key]]
+  keys <- keys$grobs[grepl("key", keys$layout$name) & !endsWith(keys$layout$name, "bg")]
   keys <- sapply(keys, function(key){
     key$gp$col
   })
 
-  bar_should <- scales::gradient_n_pal(c("red","green","blue"))(scales::rescale(20:1))
+  nbin <- rev(seq_len(formals(guide_colourbar)$nbin))
+  bar_should <- scales::gradient_n_pal(c("red","green","blue"))(scales::rescale(nbin))
   key_should <- c("#E41A1CFF", "#377EB8FF", "#4DAF4AFF", "#984EA3FF", "#FF7F00FF")
 
   expect_equal(bar, bar_should)
@@ -172,19 +177,26 @@ test_that("scale_listed can mix discrete and continuous fills", {
   gt <- ggplotGrob(test)
   gt <- gt$grobs[gt$layout$name == "guide-box"][[1]]
   gt <- gt$grobs[gt$layout$name == "guides"]
-  bar <- as.vector(gt[[2]]$grobs[gt[[2]]$layout$name == "bar"][[1]]$raster)
-  keys <- gt[[1]]$grobs[grepl("key", gt[[1]]$layout$name) & !endsWith(gt[[1]]$layout$name, "bg")]
+  is_bar <- which(sapply(gt, function(x){"bar" %in% x$layout$name}))
+  bar <- gt[[is_bar]]
+  bar <- as.vector(bar$grobs[bar$layout$name == "bar"][[1]]$raster)
+  is_key <- which(sapply(gt, function(x){any(grepl("key", x$layout$name))}))
+  keys <- gt[[is_key]]
+  keys <- keys$grobs[grepl("key", keys$layout$name) & !endsWith(keys$layout$name, "bg")]
   keys <- sapply(keys, function(key){
     key$gp$fill
   })
 
-  bar_should <- c("#FFFFCC", "#EDF8C4", "#DCF1BD", "#CAEAB5", "#B6E2B6", "#9FD9B8", 
-                  "#88D0BA", "#74C8BD", "#63C1C0", "#4EBAC3", "#3DB0C3", "#34A4C2", 
-                  "#2899C1", "#1F8CBD", "#237BB6", "#236BAE", "#215BA6", "#1D4B9B", 
-                  "#163C8F", "#0C2C84")
+  nbin <- seq_len(formals(guide_colourbar)$nbin)
+  bar_should <- RColorBrewer::brewer.pal(7, "YlGnBu")
+  bar_should <- scales::gradient_n_pal(bar_should)(nbin / length(nbin))
+  bar_should <- col2rgb(bar_should)
+  bar <- col2rgb(bar)
+  diff <- mean(abs(bar - bar_should))
+  
   key_should <- scales::viridis_pal()(5)
-
-  expect_equal(bar, bar_should)
+  
+  expect_lt(diff, 1)
   expect_equal(keys, key_should)
 })
 

@@ -9,7 +9,7 @@ Description: This package contains some extensions to ggplot2 and convenience fu
 License: file LICENSE
 Encoding: UTF-8
 LazyData: true
-RoxygenNote: 7.0.0
+RoxygenNote: 7.0.2
 URL: https://github.com/teunbrand/ggnomics
 Suggests: 
     testthat (>= 2.1.0),

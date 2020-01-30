@@ -187,17 +187,13 @@ test_that("scale_listed can mix discrete and continuous fills", {
     key$gp$fill
   })
 
-  nbin <- seq_len(formals(guide_colourbar)$nbin)
-  bar_should <- RColorBrewer::brewer.pal(7, "YlGnBu")
-  bar_should <- scales::gradient_n_pal(bar_should)(nbin / length(nbin))
-  bar_should <- col2rgb(bar_should)
-  bar <- col2rgb(bar)
-  diff <- mean(abs(bar - bar_should))
+  nbin <- formals(guide_colourbar)$nbin
   
   key_should <- scales::viridis_pal()(5)
   
-  expect_lt(diff, 1)
   expect_equal(keys, key_should)
+  expect_equal(length(bar), nbin)
+  
 })
 
 # Error tests -------------------------------------------------------------

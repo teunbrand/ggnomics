@@ -80,10 +80,13 @@ test_that("scale_colour_multi has appropriate legends", {
                    c(startcols[3], endcols[3]))
   )
   gt <- ggplotGrob(g)
-  gt <- gt$grobs[gt$layout$name == "guide-box"][[1]]$grobs[c(3,2,1)]
-  cols <- lapply(gt, function(leg){
+  guidebox <- gt$grobs[gt$layout$name == "guide-box"][[1]]$grobs[1:3]
+  guidenames <- vapply(guidebox, function(box) {
+    box$grobs[box$layout$name == "title"][[1]]$children[[1]]$children[[1]]$label
+  }, character(1))
+  cols <- lapply(guidebox, function(leg){
     as.vector(leg$grobs[leg$layout$name == "bar"][[1]]$raster)
-  })
+  })[order(guidenames)]
   starts <- unname(sapply(cols, tail, 1))
   starts <- col2rgb(starts)
   ends <- unname(sapply(cols, head, 1))
@@ -203,13 +206,16 @@ test_that("scale_colour_multi sets labels independently", {
 
   # Test practical labels
   gt <- ggplotGrob(g)
-  gt <- gt$grobs[gt$layout$name == "guide-box"][[1]]$grobs[1:3]
-  labs <- lapply(gt, function(tg){
+  guidebox <- gt$grobs[gt$layout$name == "guide-box"][[1]]$grobs[1:3]
+  guidenames <- vapply(guidebox, function(box) {
+    box$grobs[box$layout$name == "title"][[1]]$children[[1]]$children[[1]]$label
+  }, character(1))
+  labs <- lapply(guidebox, function(tg){
     tg$grobs[tg$layout$name == "label"][[1]]$children[[1]]$label
-  })
+  })[order(guidenames)]
+  expect_equal(labs[[1]], paste0(seq(0, 1, by = 0.25)))
   expect_equal(labs[[2]], paste0(seq(0, 100, by = 25), " Nonsense"))
-  expect_equal(labs[[3]], paste0(seq(0, 1, by = 0.25)))
-  expect_equal(labs[[1]], paste0(seq(0, 100, by = 25)))
+  expect_equal(labs[[3]], paste0(seq(0, 100, by = 25)))
 })
 
 test_that("scale_colour_multi sets titles independently", {
@@ -230,7 +236,7 @@ test_that("scale_colour_multi sets titles independently", {
   title <- lapply(gt, function(tg) {
     tg$grobs[tg$layout$name == "title"][[1]]$children[[1]]$children[[1]]$label
   })
-  expect_equal(titles, unname(title)[c(2, 1, 3)])
+  expect_true(all(title %in% titles))
 })
 
 test_that("scale_colour_multi handles discrete guides", {
@@ -259,3 +265,4 @@ test_that("scale_colour_multi throws error when guide inappropriate", {
                                                            c("grey50", "green")),
                                             guide = "nonsense"), regexp = "I haven't programmed this path yet")
 })
+

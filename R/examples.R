@@ -82,7 +82,7 @@ example_cytoband_colours <- function() {
 #'   v1.0.0 GENOVA experiment, else it formats the object as a \code{contacts}
 #'   object.
 #'
-#' @seealso \code{\link[GENOVA]{construct.experiment}} for how to construct
+#' @seealso \code{\link[GENOVA]{load_contacts}} for how to construct
 #'   proper Hi-C experiment objects.
 #'
 #' @export

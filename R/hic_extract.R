@@ -41,6 +41,11 @@
 #' x <- 1:10
 hic_extractor <- function(exp1, exp2 = NULL, xrange = NULL, yrange = NULL) {
   try_require("data.table", "hic_extractor")
+  # TODO: Find better way to get rid of the 'no visible binding' check
+  V1 <- NULL
+  V2 <- NULL
+  V3 <- NULL
+  V4 <- NULL
   
   # Checks compatibility of experiments
   if (!inherits(exp1, "contacts")) {
@@ -127,6 +132,7 @@ hic_extractor <- function(exp1, exp2 = NULL, xrange = NULL, yrange = NULL) {
                    "exp", "x", "y", "xchr", "ychr")
   
   # Sneaky trick for automatic appropriate axes
+  # TODO: To be replaced later with proper axes
   class(data[["y"]]) <- c("hicint", class(data[["y"]]))
   class(data[["x"]]) <- c("hicint", class(data[["x"]]))
   as.data.frame(data)

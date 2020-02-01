@@ -26,9 +26,8 @@ Suggests:
     AnnotationDbi,
     GenomeInfoDb,
     GenomicFeatures,
-    plyr,
     covr,
-    RColorBrewer
+    ggdendro
 VignetteBuilder: knitr
 Imports: 
     scales,
@@ -36,4 +35,4 @@ Imports:
     methods,
     data.table
 Depends: 
-    ggplot2
+    ggplot2 (>= 3.3.0)

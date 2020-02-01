@@ -21,7 +21,19 @@
 #' @export
 #'
 #' @examples
-#' NULL
+#' # Hierarchically cluster data
+#' yclus <- hclust(dist(USArrests), "ave")
+#' xclus <- hclust(dist(t(USArrests)), "ave")
+#' 
+#' df <- cbind(State = rownames(USArrests),
+#'             USArrests)
+#' df <- reshape2::melt(df, id.vars = "State")
+#' 
+#' # Supply the clustering to the scales
+#' ggplot(df, aes(variable, State, fill = value)) +
+#'   geom_raster() +
+#'   scale_y_dendrogram(hclust = yclus) +
+#'   scale_x_dendrogram(hclust = xclus)
 scale_x_dendrogram <- function(..., 
                                hclust = waiver(),
                                expand = waiver(), 

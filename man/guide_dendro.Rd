@@ -7,7 +7,6 @@
 guide_dendro(
   title = waiver(),
   check.overlap = FALSE,
-  angle = NULL,
   n.dodge = 1,
   order = 0,
   position = waiver(),
@@ -22,10 +21,6 @@ specified in \code{\link[ggplot2:labs]{labs()}} is used for the title.}
 
 \item{check.overlap}{silently remove overlapping labels,
 (recursively) prioritizing the first, last, and middle labels.}
-
-\item{angle}{Compared to setting the angle in \code{\link[ggplot2:theme]{theme()}} / \code{\link[ggplot2:element_text]{element_text()}},
-this also uses some heuristics to automatically pick the \code{hjust} and \code{vjust} that
-you probably want.}
 
 \item{n.dodge}{The number of rows (for vertical axes) or columns (for
 horizontal axes) that should be used to render the labels. This is
@@ -46,5 +41,15 @@ between members, like those detailed in
 \code{\link[=scale_x_dendrogram]{scale_(x|y)_dendrogram)}}.
 }
 \examples{
-NULL
+clust <- hclust(dist(USArrests), "ave")
+
+df <- cbind(State = rownames(USArrests),
+            USArrests)
+df <- reshape2::melt(df, id.vars = "State")
+
+# The guide function can be used to customise the axis
+ggplot(df, aes(variable, State, fill = value)) +
+  geom_raster() +
+scale_y_dendrogram(hclust = clust, 
+                   guide = guide_dendro(n.dodge = 2))
 }

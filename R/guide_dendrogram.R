@@ -13,11 +13,21 @@
 #' @export
 #'
 #' @examples
-#' NULL
+#' clust <- hclust(dist(USArrests), "ave")
+#' 
+#' df <- cbind(State = rownames(USArrests),
+#'             USArrests)
+#' df <- reshape2::melt(df, id.vars = "State")
+#' 
+#' # The guide function can be used to customise the axis
+#' ggplot(df, aes(variable, State, fill = value)) +
+#'   geom_raster() +
+#' scale_y_dendrogram(hclust = clust, 
+#'                    guide = guide_dendro(n.dodge = 2))
 guide_dendro <- function(
   title = waiver(),
   check.overlap = FALSE,
-  angle = NULL, n.dodge = 1,
+  n.dodge = 1,
   order = 0,
   position = waiver(),
   dendro = waiver()
@@ -25,7 +35,6 @@ guide_dendro <- function(
   structure(
     list(title = title,
          check.overlap = check.overlap,
-         angle = angle,
          n.dodge = n.dodge,
          order = order,
          position = position,
@@ -99,7 +108,6 @@ guide_gengrob.dendroguide <- function(guide, theme) {
     axis_position = guide$position,
     theme = theme,
     check.overlap = guide$check.overlap,
-    angle = guide$angle,
     n.dodge = guide$n.dodge,
     dendro = guide$dendro$segments
   )
@@ -109,19 +117,19 @@ guide_gengrob.dendroguide <- function(guide, theme) {
 
 draw_dendroguide <- function(
   break_positions, break_labels, axis_position, theme,
-  check.overlap = FALSE, angle = NULL, n.dodge = 1, dendro = NULL
+  check.overlap = FALSE, n.dodge = 1, dendro = NULL
 ) {
   axis_position <- match.arg(axis_position, c("top", "bottom", "right", "left"))
   aesthetic <- if (axis_position %in% c("top", "bottom")) "x" else "y"
   
   # Resolve elements
-  line_element_name <- paste0("axis.line.", aesthetic, ".", axis_position)
-  label_element_name <- paste0("axis.text.", aesthetic, ".", axis_position)
-  tick_element_name <- paste0("axis.ticks.", aesthetic, ".", axis_position)
+  line_element_name  <- paste0("axis.line.",  aesthetic, ".", axis_position)
+  label_element_name <- paste0("axis.text.",  aesthetic, ".", axis_position)
+  tick_element_name  <- paste0("axis.ticks.", aesthetic, ".", axis_position)
   
-  line_element <- calc_element(line_element_name, theme)
+  line_element  <- calc_element(line_element_name, theme)
   label_element <- calc_element(label_element_name, theme)
-  tick_element <- calc_element(tick_element_name, theme)
+  tick_element  <- calc_element(tick_element_name, theme)
   
   # Set vertical labels
   is_vertical <- axis_position %in% c("left", "right")
@@ -179,11 +187,6 @@ draw_dendroguide <- function(
         height = grobHeight(line_grob),
         xmin = NULL, ymin = NULL, vp = NULL, cl = "absoluteGrob"
       )
-      # absoluteGrob(
-      #   gList(line_grob),
-      #   width = grobWidth(line_grob),
-      #   height = grobHeight(line_grob)
-      # )
     )
   }
   
@@ -218,7 +221,6 @@ draw_dendroguide <- function(
       col = tick_element$colour, fill = tick_element$colour,
       lwd = if (length(tick_element$size) == 0) NULL 
       else tick_element$size * .pt,
-      # lwd = ggplot2:::len0_null(tick_element$size * .pt),
       lty = tick_element$linetype,
       lineend = tick_element$lineend
     )
@@ -257,11 +259,4 @@ draw_dendroguide <- function(
         height = gtable::gtable_height(gt),
         xmin = NULL, ymin = NULL, vp = justvp,
         cl = "absoluteGrob")
-  
-  # ggplot2:::absoluteGrob(
-  #   gList(line_grob, gt),
-  #   width = gtable::gtable_width(gt),
-  #   height = gtable::gtable_height(gt),
-  #   vp = justvp
-  # )
 }

@@ -271,10 +271,14 @@ FacetNested <- ggproto(
 combine_nested_vars <- function(
   data, env = emptyenv(), vars = NULL, drop = TRUE
 ) {
+  possible_columns <- unique(unlist(lapply(data, names)))
   if (length(vars) == 0)
     return(data.frame())
-  values <- .int$compact(plyr::llply(data, .int$eval_facets, facets = vars,
-                                          env = env))
+  values <- .int$compact(lapply(data, .int$eval_facets, facets = vars,
+                                possible_columns = possible_columns))
+  
+  # values <- .int$compact(plyr::llply(data, .int$eval_facets, facets = vars,
+  #                                         env = env))
   has_all <- unlist(lapply(values, length)) == length(vars)
   if (!any(has_all)) {
     missing <- lapply(values, function(x) setdiff(names(vars), names(x)))

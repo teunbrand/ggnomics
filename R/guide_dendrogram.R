@@ -57,7 +57,7 @@ guide_transform.dendroguide <- function(guide, coord, panel_params) {
     guide$key[[other_aesthetic]] <- override_value
     guide$key <- coord$transform(guide$key, panel_params)
     
-    ggplot2:::warn_for_guide_position(guide)
+    .int$warn_for_guide_position(guide)
   }
   
   denseg <- guide$dendro$segments
@@ -95,7 +95,7 @@ guide_gengrob.dendroguide <- function(guide, theme) {
   
   draw_dendroguide(
     break_positions = guide$key[[aesthetic]],
-    break_label = guide$dendro$labels$label,
+    break_labels = guide$dendro$labels$label,
     axis_position = guide$position,
     theme = theme,
     check.overlap = guide$check.overlap,
@@ -173,11 +173,17 @@ draw_dendroguide <- function(
   
   if (n_breaks < 1L) {
     return(
-      absoluteGrob(
+      gTree(
         gList(line_grob),
         width = grobWidth(line_grob),
-        height = grobHeight(line_grob)
+        height = grobHeight(line_grob),
+        xmin = NULL, ymin = NULL, vp = NULL, cl = "absoluteGrob"
       )
+      # absoluteGrob(
+      #   gList(line_grob),
+      #   width = grobWidth(line_grob),
+      #   height = grobHeight(line_grob)
+      # )
     )
   }
   
@@ -194,7 +200,7 @@ draw_dendroguide <- function(
   dodge_indices <- split(seq_len(n_breaks), dodge_pos)
   
   label_grobs <- lapply(dodge_indices, function(indices) {
-    ggplot2:::draw_axis_labels(
+    .int$draw_axis_labels(
       break_positions = break_positions[indices],
       break_labels = break_labels[indices],
       label_element = label_element,
@@ -210,7 +216,9 @@ draw_dendroguide <- function(
     y1 = if (axis_position == "bottom") 1 - dendro$yend else dendro$yend,
     gp = grid::gpar(
       col = tick_element$colour, fill = tick_element$colour,
-      lwd = ggplot2:::len0_null(tick_element$size * .pt),
+      lwd = if (length(tick_element$size) == 0) NULL 
+      else tick_element$size * .pt,
+      # lwd = ggplot2:::len0_null(tick_element$size * .pt),
       lty = tick_element$linetype,
       lineend = tick_element$lineend
     )
@@ -244,10 +252,16 @@ draw_dendroguide <- function(
     just = axis_position_opposite
   )
   
-  ggplot2:::absoluteGrob(
-    gList(line_grob, gt),
-    width = gtable::gtable_width(gt),
-    height = gtable::gtable_height(gt),
-    vp = justvp
-  )
+  gTree(children = gList(line_grob, gt),
+        width = gtable::gtable_width(gt),
+        height = gtable::gtable_height(gt),
+        xmin = NULL, ymin = NULL, vp = justvp,
+        cl = "absoluteGrob")
+  
+  # ggplot2:::absoluteGrob(
+  #   gList(line_grob, gt),
+  #   width = gtable::gtable_width(gt),
+  #   height = gtable::gtable_height(gt),
+  #   vp = justvp
+  # )
 }

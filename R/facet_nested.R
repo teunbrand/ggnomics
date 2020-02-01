@@ -276,9 +276,6 @@ combine_nested_vars <- function(
     return(data.frame())
   values <- .int$compact(lapply(data, .int$eval_facets, facets = vars,
                                 possible_columns = possible_columns))
-  
-  # values <- .int$compact(plyr::llply(data, .int$eval_facets, facets = vars,
-  #                                         env = env))
   has_all <- unlist(lapply(values, length)) == length(vars)
   if (!any(has_all)) {
     missing <- lapply(values, function(x) setdiff(names(vars), names(x)))
@@ -289,7 +286,7 @@ combine_nested_vars <- function(
                                               missing_txt, collapse = "\n"),
          call. = FALSE)
   }
-  base <- unique(plyr::ldply(values[has_all]))
+  base <- unique(.int$rbind_dfs(values[has_all]))
   if (!drop) {
     base <- .int$unique_combs(base)
   }

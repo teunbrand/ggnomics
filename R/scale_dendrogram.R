@@ -55,7 +55,7 @@ scale_x_dendrogram <- function(...,
                        guide = guide, 
                        position = position, 
                        super = ScaleDendrogram)
-  sc$range_c <- ggplot2:::continuous_range()
+  sc$range_c <- .int$continuous_range()
   sc$hclust <- hclust
   sc
 }
@@ -95,7 +95,7 @@ scale_y_dendrogram <- function(...,
                        guide = guide,
                        position = position,
                        super = ScaleDendrogram)
-  sc$range_c <- ggplot2:::continuous_range()
+  sc$range_c <- .int$continuous_range()
   sc$hclust <- hclust
   sc
 }

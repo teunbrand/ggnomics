@@ -104,7 +104,7 @@ test_that("scale_xy_dendrogram position is correct", {
     gt
   })
   
-  # We check how many segment ends hit the relevant axis, which should equal
+  # We check how many segment ends are at the relevant axis, which should equal
   # the number of leaves / samples
   bottom <- sum(unclass(grobs$bottom$y1) == 1)
   top <- sum(unclass(grobs$top$y1) == 0)

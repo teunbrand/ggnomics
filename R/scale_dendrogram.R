@@ -1,11 +1,13 @@
 # External facing functions -----------------------------------------------
 
-#' @name scale_dendrogram Dendrogram position scales.
+#' @name scale_dendrogram
+#' @title Dendrogram position scales
 #'
+#' @description 
 #'   When discrete data has some inherent hierarchy to the relationship between
 #'   discrete categories, you can display a dendrogram instead of a tick axis.
 #'
-#' @inheritParams scale_x_discrete
+#' @inheritParams ggplot2::scale_x_discrete
 #' @param hclust An object of the type produced by the
 #'   \code{\link[stats]{hclust}} function.
 #'
@@ -39,6 +41,7 @@ scale_x_dendrogram <- function(...,
   }
   if (inherits(guide, "guide") && inherits(guide, "dendroguide")) {
     if (inherits(guide$dendro, "waiver")) {
+      try_require("ggdendro", "scale_x_dendrogram")
       guide$dendro <- ggdendro::dendro_data(hclust)
     }
   }
@@ -78,6 +81,7 @@ scale_y_dendrogram <- function(...,
   }
   if (inherits(guide, "guide") && inherits(guide, "dendroguide")) {
     if (inherits(guide$dendro, "waiver")) {
+      try_require("ggdendro", "scale_y_dendrogram")
       guide$dendro <- ggdendro::dendro_data(hclust)
     }
   }

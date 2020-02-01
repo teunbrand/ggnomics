@@ -1,18 +1,19 @@
 # Constructor -------------------------------------------------------------
 
-#' Dendrogram guide.
+#' Dendrogram guide
 #'
 #' Visual representation of a discrete variable with hierarchical relationships
 #' between members, like those detailed in
-#' \code{\link[scale_x_dendrogram]{scale_(x|y)_dendrogram}}.
+#' \code{\link[=scale_x_dendrogram]{scale_(x|y)_dendrogram)}}.
 #'
-#' @inheritParams guide_axis
-#' @param dendro
+#' @inheritParams ggplot2::guide_axis
+#' @param dendro Relevant plotting data for a dendrogram such as those returned
+#'   by \code{\link[ggdendro]{dendro_data}}.
 #'
-#' @return
 #' @export
 #'
 #' @examples
+#' NULL
 guide_dendro <- function(
   title = waiver(),
   check.overlap = FALSE,
@@ -38,6 +39,9 @@ guide_dendro <- function(
 
 # Transformer -------------------------------------------------------------
 
+#' @method guide_transform dendroguide
+#' @export
+#' @noRd
 guide_transform.dendroguide <- function(guide, coord, panel_params) {
   if (is.null(guide$position) || nrow(guide$key) == 0) {
     return(guide)
@@ -83,6 +87,9 @@ guide_transform.dendroguide <- function(guide, coord, panel_params) {
 
 # Grob generator ----------------------------------------------------------
 
+#' @method guide_gengrob dendroguide
+#' @export
+#' @noRd
 guide_gengrob.dendroguide <- function(guide, theme) {
   aesthetic <- names(guide$key)[!grepl("^\\.", names(guide$key))][1]
   

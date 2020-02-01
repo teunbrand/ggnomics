@@ -3,7 +3,7 @@
 %   R/geom_genemodel.R, R/geom_hictriangle.R, R/geom_pointpath.R,
 %   R/geom_polygonraster.R, R/geom_rectrug.R, R/ggnomics_extensions.R,
 %   R/layer_track.R, R/position_disjoint_ranges.R, R/position_lineartrans.R,
-%   R/stat_theodensity.R
+%   R/scale_dendrogram.R, R/stat_theodensity.R
 \docType{data}
 \name{FacetNested}
 \alias{FacetNested}
@@ -18,6 +18,7 @@
 \alias{TrackLayer}
 \alias{PositionDisjointRanges}
 \alias{PositionLinearTrans}
+\alias{ScaleDendrogram}
 \alias{StatTheoDensity}
 \title{ggnomics extensions to ggplot2}
 \description{

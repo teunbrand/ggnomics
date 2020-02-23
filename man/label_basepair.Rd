@@ -38,7 +38,8 @@ smaller than 1000 (default: \code{FALSE}).}
 label.}
 }
 \value{
-
+A \code{function} for \code{label_basepair()} or a character vector
+  of labels for \code{basepair_label()}.
 }
 \description{
 \code{basepair_label()} automatically scales and labels numbers

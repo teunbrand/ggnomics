@@ -5,6 +5,13 @@
 \alias{GreekSoldier}
 \alias{Nightfall}
 \alias{HelenOfTroy}
+\alias{GreekSoldier,ANY-method}
+\alias{GreekSoldier,Vector-method}
+\alias{GreekSoldier,AtomicList-method}
+\alias{Nightfall,ANY-method}
+\alias{Nightfall,WoodenHorse-method}
+\alias{HelenOfTroy,ANY-method}
+\alias{HelenOfTroy,WoodenHorse-method}
 \title{Hiding S4 objects as S3 vectors}
 \usage{
 GreekSoldier(x)
@@ -31,16 +38,32 @@ Calling \code{GreekSoldier()} on an S4 Vector object will generate
   where the original S4 Vector is inside the \code{WoodenHorse} object as an
   attribute.
 
-  Calling \code{Nightfall()} on the \code{WoodenHorse} object, will restore
-  the input given to \code{GreekSoldier} to an S4 object.
-
-  Calling \code{HelenOfTroy()} on the \code{WoodenHorse} object returns the
-  class of the \code{GreekSoldier} attribute.
-
   Encoding the \code{WoodenHorse} object as a \code{vctrs_vctr} object allows
   us to pass the \code{rlang::is_vector} check and gives us nice options to
   preserve attributes over subsetting and concatenation operations.
 }
+\section{Functions}{
+\itemize{
+\item \code{GreekSoldier,ANY-method}: By default, don't disguise object as
+\code{WoodenHorse} and return the input.
+
+\item \code{GreekSoldier,Vector-method}: If an object inherits from \linkS4class{Vector},
+disguise object as \code{WoodenHorse}, and put the input as an attribute of
+the vector.
+
+\item \code{Nightfall,ANY-method}: If the object is not a \code{WoodenHorse} return
+the input unaltered.
+
+\item \code{Nightfall,WoodenHorse-method}: If the object is a \code{WoodenHorse} return the
+\code{GreekSoldier} attribute within the \code{WoodenHorse}.
+
+\item \code{HelenOfTroy,ANY-method}: Equivalent to calling \code{class(x)} for
+non-\code{WoodenHorse} objects.
+
+\item \code{HelenOfTroy,WoodenHorse-method}: Returns the \code{class} of the \code{GreekSoldier}
+attribute of the \code{WoodenHorse}.
+}}
+
 \examples{
 # Making an S4 object
 Anticlus <- Rle(1:10, 10:1)

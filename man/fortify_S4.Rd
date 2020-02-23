@@ -10,6 +10,13 @@
 
 \method{fortify}{DataFrame}(model, data, ...)
 }
+\arguments{
+\item{model}{model or other R object to convert to data frame}
+
+\item{data}{original dataset, if needed}
+
+\item{...}{other arguments passed to methods}
+}
 \value{
 A base R \code{data.frame} with (when applicable) S4 columns
 }

@@ -2,9 +2,18 @@
 % Please edit documentation in R/labels-format.R
 \name{S4LabelFormat}
 \alias{S4LabelFormat}
+\alias{S4LabelFormat,ANY-method}
+\alias{S4LabelFormat,WoodenHorse-method}
+\alias{S4LabelFormat,ANYGenomic-method}
 \title{Format labels for S4 classes}
 \usage{
 S4LabelFormat(x, type = "major", ...)
+
+\S4method{S4LabelFormat}{ANY}(x, type = "major", ...)
+
+\S4method{S4LabelFormat}{WoodenHorse}(x, type = "major", ...)
+
+\S4method{S4LabelFormat}{ANYGenomic}(x, type = "major", ...)
 }
 \arguments{
 \item{x}{A vector to format}
@@ -30,6 +39,7 @@ The \code{type} argument is currently only implemented for the
 S4LabelFormat(1:10)
 S4LabelFormat(LETTERS[1:5])
 
+require(GenomicRanges)
 # GenomicRanges major labels are seqnames
 S4LabelFormat(GPos("chr1", 1:10))
 

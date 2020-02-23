@@ -1,4 +1,4 @@
-# Normal minor breaks -----------------------------------------------------
+# Numeric minor breaks ----------------------------------------------------
 
 # Tests equivalent to the scales package tests for minor breaks
 
@@ -9,13 +9,22 @@ b2 <- scales::extended_breaks()(l2)
 m1 <- S4BreaksMinor(b1, l1, n = 2)
 m2 <- S4BreaksMinor(b2, l2, n = 2)
 
-test_that("minor breaks are calculated correctly", {
+test_that("S4BreaksMinor are calculated correctly for numeric", {
   expect_equal(m1, seq(b1[1], b1[length(b1)], by = 1.25))
   expect_equal(m2, seq(b2[1], b2[length(b2)], by = 1.25))
 })
 
-test_that("minor breaks for reversed scales are comparable to non-reversed", {
+test_that("S4BreaksMinor for reversed scales are comparable to non-reversed for numeric", {
   expect_equal(m1, sort(-m2))
+})
+
+test_that("S4BreaksMinor handles edge cases", {
+  test <- list(
+    S4BreaksMinor(numeric(), l1),    # zero length input
+    S4BreaksMinor(c(1, 2), c(0, 4)), # limits outside breaks
+    S4BreaksMinor(c(0, 4), c(1, 2))  # breaks outside limits
+  )
+  expect_equal(test, list(NULL, seq(0, 3, by = 0.5), seq(0, 4, by = 2)))
 })
 
 # GRanges minor breaks ----------------------------------------------------
@@ -55,3 +64,4 @@ test_that("Genomic minor breaks are like extended breaks", {
   expect_equal(c(100, 200), test$chr1)
   
 })
+

@@ -1,6 +1,6 @@
 # Documentation -----------------------------------------------------------
 
-#' @name fortify_S4
+#' @name fortify-methods-S4
 #'
 #' @title Fortification of S4 vectors
 #'
@@ -75,12 +75,12 @@ fortify.DataFrame <- function(model, data, ...) {
   model
 }
 
-#' @method fortify SummarizedExperiment
-#' @export
-#' @rdname fortify_S4
-fortify.SummarizedExperiment <- function(model, data, ...) {
-  model
-}
+# #' @method fortify SummarizedExperiment
+# #' @export
+# #' @rdname fortify_S4
+# fortify.SummarizedExperiment <- function(model, data, ...) {
+#   model
+# }
 
 # Matrices ----------------------------------------------------------------
 

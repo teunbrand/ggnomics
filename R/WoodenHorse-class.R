@@ -181,6 +181,20 @@ obj_print_header.WoodenHorse <- function(x, ...) {
   invisible(x)
 }
 
+#' @importFrom vctrs vec_ptype_full
+#' @method vec_ptype_full WoodenHorse
+#' @export
+vec_ptype_full.WoodenHorse <- function(x, ...) {
+  "WoodenHorse"
+}
+
+#' @importFrom vctrs vec_ptype_abbr
+#' @method vec_ptype_abbr WoodenHorse
+#' @export
+vec_ptype_abbr.WoodenHorse <- function(x, ...) {
+  "WHrse"
+}
+
 # Wooden Horse prototyping ------------------------------------------------
 
 #' @importFrom vctrs vec_ptype2
@@ -315,56 +329,6 @@ vec_cast.WoodenHorse.WoodenHorse <- function(x, to, ...) {
   )
 }
 
-
-# Functions ---------------------------------------------------------------
-
-#' @export
-#' @method levels WoodenHorse
-levels.WoodenHorse <- function(x) NULL
-
-#' set NAs
-#'
-#' Not all S4 Vectors subclasses support having NAs.
-#'
-#' @param x An object to set NAs on
-#' @param i A logical of \code{length(x)}, indicating which positions to set NAs.
-#'
-#' @return
-#' @export
-#'
-#' @examples
-#' NULL
-setGeneric(
-  "setNA",
-  function(x, i) {
-    standardGeneric("setNA")
-  }
-)
-
-setMethod(
-  "setNA",
-  signature = c(x = "ANY"),
-  definition = function(x, i) {
-    vec_assert(i, logical(), size = length(x))
-    x[i] <- NA
-  }
-)
-
-setMethod(
-  "setNA",
-  signature = c(x = "WoodenHorse", i = "logical"),
-  definition = function(x, i) {
-    vec_assert(i, logical(), size = length(x))
-    dat <- vec_data(x)
-    dat[i] <- NA_real_
-    new_vctr(
-      dat,
-      GreekSoldier = attr(x, "GreekSoldier"),
-      class = "WoodenHorse"
-    )
-  }
-)
-
 # Mathy functions ---------------------------------------------------------
 
 #' @importFrom vctrs vec_math
@@ -444,3 +408,94 @@ vec_arith.WoodenHorse.WoodenHorse <- function(op, x, y) {
     class = "WoodenHorse"
   )
 }
+
+# is.finite / is.infinite and is.na are 'Math' group functions through the vctrs
+# package. Since is.finite and is.infinite is ill-defined for most Vectors, we'd
+# rather intercept them at the WoodenHorse class than in the vctrs class.
+# Since the WoodenHorse is specialised for plotting and is.(in)finite is often
+# used to decide wether data should be included, I see no obvious harm in this.
+
+#' @method is.finite WoodenHorse
+#' @export
+#' @noRd
+#' @keywords internal
+is.finite.WoodenHorse <- function(x) {
+  fun <- selectMethod("is.finite", HelenOfTroy(x))
+  if (is.primitive(fun) || is.null(fun)) {
+    return(rep(TRUE, length(x)) & is.finite(vec_data(x)))
+  }
+  ans <- fun(attr(x, "GreekSoldier")) & is.finite(vec_data(x))
+  return(as.vector(ans))
+}
+
+#' @method is.infinite WoodenHorse
+#' @export
+#' @noRd
+#' @keywords internal
+is.infinite.WoodenHorse <- function(x) {
+  fun <- selectMethod("is.infinite", HelenOfTroy(x))
+  if (is.primitive(fun) || is.null(fun)) {
+    return(rep(FALSE, length(x)) | is.infinite(vec_data(x)))
+  }
+  ans <- fun(attr(x, "GreekSoldier")) & is.infinite(vec_data(x))
+  return(ans)
+}
+
+#' @method is.na WoodenHorse
+#' @export
+#' @noRd
+#' @keywords internal
+is.na.WoodenHorse <- function(x) {
+  ans <- is.na(attr(x, "GreekSoldier"))
+  ans <- as.vector(ans) | is.na(vec_data(x))
+  return(ans)
+}
+
+# Functions ---------------------------------------------------------------
+
+#' @export
+#' @method levels WoodenHorse
+levels.WoodenHorse <- function(x) NULL
+
+#' set NAs
+#'
+#' Not all S4 Vectors subclasses support having NAs.
+#'
+#' @param x An object to set NAs on
+#' @param i A logical of \code{length(x)}, indicating which positions to set NAs.
+#'
+#' @return
+#' @export
+#'
+#' @examples
+#' NULL
+setGeneric(
+  "setNA",
+  function(x, i) {
+    standardGeneric("setNA")
+  }
+)
+
+setMethod(
+  "setNA",
+  signature = c(x = "ANY"),
+  definition = function(x, i) {
+    vec_assert(i, logical(), size = length(x))
+    x[i] <- NA
+  }
+)
+
+setMethod(
+  "setNA",
+  signature = c(x = "WoodenHorse", i = "logical"),
+  definition = function(x, i) {
+    vec_assert(i, logical(), size = length(x))
+    dat <- vec_data(x)
+    dat[i] <- NA_real_
+    new_vctr(
+      dat,
+      GreekSoldier = attr(x, "GreekSoldier"),
+      class = "WoodenHorse"
+    )
+  }
+)

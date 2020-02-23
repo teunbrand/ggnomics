@@ -1,15 +1,18 @@
-#' Minor breaks for Vectors
+#' @name S4BreaksMinor
+#' @title Minor breaks for Vectors
+#' @description Produces minor breaks for use on plot axes.
 #'
-#' @param b The currently existing major breaks
+#' @param b The current major breaks
 #' @param limits An object representing the limits of the breaks
 #' @param n The desired number of breaks
 #'
-#' @return
+#' @return A vector with minor breaks positions
 #' @export
 #'
 #' @examples
 #' S4BreaksMinor(c(1,3,5), c(0, 6), 2)
 #'
+#' require(GenomicRanges)
 #' S4BreaksMinor(GRanges(),
 #'               GRanges(c("chr1:100-200", "chr2:140-260", "chr3:311-403")),
 #'               n = 5)
@@ -20,6 +23,8 @@ setGeneric(
 
 # Whenever the major breaks are numeric, minor breaks default to the 
 # scales::regular_minor_breaks() method
+
+#' @rdname S4BreaksMinor
 setMethod(
   "S4BreaksMinor",
   signature(b = "numeric"),
@@ -44,9 +49,10 @@ setMethod(
 # What the GRanges minor breaks do, is to ignore major breaks altogether,
 # then take the largest stretch in IRanges space and compute the
 # major breaks algorithm on that.
+#' @rdname S4BreaksMinor
 setMethod(
   "S4BreaksMinor",
-  signature(b = "ANY", limits = "GenomicRanges"),
+  signature(b = "ANY", limits = "GRanges"),
   definition = function(b, limits, n = 5) {
     # First, disregard sequences and take stretches
     sets <- reduce(ranges(limits), with.revmap = TRUE)

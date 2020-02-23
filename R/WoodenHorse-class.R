@@ -19,12 +19,6 @@
 #'   where the original S4 Vector is inside the \code{WoodenHorse} object as an
 #'   attribute.
 #'
-#'   Calling \code{Nightfall()} on the \code{WoodenHorse} object, will restore
-#'   the input given to \code{GreekSoldier} to an S4 object.
-#'
-#'   Calling \code{HelenOfTroy()} on the \code{WoodenHorse} object returns the
-#'   class of the \code{GreekSoldier} attribute.
-#'
 #'   Encoding the \code{WoodenHorse} object as a \code{vctrs_vctr} object allows
 #'   us to pass the \code{rlang::is_vector} check and gives us nice options to
 #'   preserve attributes over subsetting and concatenation operations.
@@ -62,14 +56,19 @@ setGeneric(
   }
 )
 
-# By default, don't disguise as WoodenHorse
+#' @describeIn TheFallOfTroy By default, don't disguise object as
+#'   \code{WoodenHorse} and return the input.
+#' @usage NULL
 setMethod(
   "GreekSoldier",
   signature = c(x = "ANY"),
   function(x) x
 )
 
-# If inherits from Vector, disguise as WoodenHorse
+#' @describeIn TheFallOfTroy If an object inherits from \linkS4class{Vector},
+#'   disguise object as \code{WoodenHorse}, and put the input as an attribute of
+#'   the vector.
+#' @usage NULL
 setMethod(
   "GreekSoldier",
   signature = c(x = "Vector"),
@@ -83,6 +82,8 @@ setMethod(
   }
 )
 
+#' @rdname TheFallOfTroy
+#' @usage NULL
 setMethod(
   "GreekSoldier",
   signature = c(x = "AtomicList"),
@@ -107,7 +108,9 @@ setGeneric(
   }
 )
 
-# Just return input if not WoodenHorse
+#' @describeIn TheFallOfTroy If the object is not a \code{WoodenHorse} return
+#'   the input unaltered.
+#' @usage NULL
 setMethod(
   "Nightfall",
   signature = c(x = "ANY"),
@@ -115,6 +118,10 @@ setMethod(
 )
 
 # Return GreekSoldier if WoodenHorse
+
+#' @describeIn TheFallOfTroy If the object is a \code{WoodenHorse} return the
+#'   \code{GreekSoldier} attribute within the \code{WoodenHorse}.
+#' @usage NULL
 setMethod(
   "Nightfall",
   signature = c(x = "WoodenHorse"),
@@ -135,14 +142,18 @@ setGeneric(
   }
 )
 
-# Return regular class for any object
+#' @describeIn TheFallOfTroy Equivalent to calling \code{class(x)} for
+#'   non-\code{WoodenHorse} objects.
+#' @usage NULL
 setMethod(
   "HelenOfTroy",
   signature = c(x = "ANY"),
   function(x) class(x)
 )
 
-# Return class of WoodenHorse's GreekSoldier attribute
+#' @describeIn TheFallOfTroy Returns the \code{class} of the \code{GreekSoldier}
+#'   attribute of the \code{WoodenHorse}.
+#' @usage NULL
 setMethod(
   "HelenOfTroy",
   signature = c(x = "WoodenHorse"),
@@ -151,18 +162,22 @@ setMethod(
 
 # Wooden Horse boilerplate ------------------------------------------------
 
+#' @name WoodenHorse-vctr
+#' @title WoodenHorse vctr methods
+#'
+#' @description Here are the methods listed for the \code{WoodenHorse} class.
+#'   Refer to the documentation in the \code{vctrs} package to learn about their
+#'   use.
+#'
+#' @details These are vctrs-methods that enable the \code{WoodenHorse} class,
+#'   but should never be called directly by users. Consider these
+#'   implementation details.
+#'
+#' @seealso See \code{\link[ggnomics]{TheFallOfTroy}} for the role that the
+#'   \code{WoodenHorse} plays in the package.
+
 #' @importFrom vctrs new_vctr vec_data vec_assert
 NULL
-
-# Constructor, for internal use only
-# External constructor is the GreekSoldier function.
-.WoodenHorse <- function(x) {
-  new_vctr(
-    numeric(length(x)),
-    GreekSoldier = x,
-    class = "WoodenHorse"
-  )
-}
 
 #' @method format WoodenHorse
 #' @export
@@ -173,6 +188,8 @@ format.WoodenHorse <- function(x, ...) {
 #' @importFrom vctrs obj_print_header
 #' @method obj_print_header WoodenHorse
 #' @export
+#' @describeIn WoodenHorse-vctr See \code{\link[vctrs]{obj_print_header}}
+#' @usage NULL
 obj_print_header.WoodenHorse <- function(x, ...) {
   cat(paste0("<", vec_ptype_full(x), ": ",
              classNameForDisplay(attr(x, "GreekSoldier")),
@@ -184,6 +201,8 @@ obj_print_header.WoodenHorse <- function(x, ...) {
 #' @importFrom vctrs vec_ptype_full
 #' @method vec_ptype_full WoodenHorse
 #' @export
+#' @describeIn WoodenHorse-vctr See \code{\link[vctrs]{vec_ptype_full}}
+#' @usage NULL
 vec_ptype_full.WoodenHorse <- function(x, ...) {
   "WoodenHorse"
 }
@@ -191,6 +210,8 @@ vec_ptype_full.WoodenHorse <- function(x, ...) {
 #' @importFrom vctrs vec_ptype_abbr
 #' @method vec_ptype_abbr WoodenHorse
 #' @export
+#' @describeIn WoodenHorse-vctr See \code{\link[vctrs]{vec_ptype_abbr}}
+#' @usage NULL
 vec_ptype_abbr.WoodenHorse <- function(x, ...) {
   "WHrse"
 }
@@ -201,28 +222,27 @@ vec_ptype_abbr.WoodenHorse <- function(x, ...) {
 #' @method vec_ptype2 WoodenHorse
 #' @export
 #' @export vec_ptype2.WoodenHorse
-#' @noRd
-#' @keywords internal
+#' @describeIn WoodenHorse-vctr Generic for \code{\link[vctrs]{vec_ptype2}}
+#' @usage NULL
 vec_ptype2.WoodenHorse <- function(x, y, ...) {
   UseMethod("vec_ptype2.WoodenHorse", y)
 }
 
-#' There is no common type between WoodenHorse specified classes
 #' @method vec_ptype2.WoodenHorse default
 #' @export
-#' @noRd
-#' @keywords internal
+#' @describeIn WoodenHorse-vctr Default method for
+#'   \code{vec_ptype2.WoodenHorse}: there are no common types.
+#' @usage NULL
 vec_ptype2.WoodenHorse.default <- function(x, y, ..., x_arg = "x", y_arg = "y") {
   vctrs::vec_default_ptype2(x, y, x_arg = x_arg, y_arg = y_arg)
 }
 
-#' The common type between two WoodenHorse objects is a WoodenHorse object. If
-#' the GreekSoldiers in x and y are not coercable into oneanother, we'll rely
-#' on the default error signalling.
 #' @method vec_ptype2.WoodenHorse WoodenHorse
 #' @export
-#' @noRd
-#' @keywords internal
+#' @describeIn WoodenHorse-vctr WoodenHorse method for
+#'   \code{vec_ptype2.WoodenHorse}: attempt to merge
+#'   \code{GreekSoldier} attributes.
+#' @usage NULL
 vec_ptype2.WoodenHorse.WoodenHorse <- function(x, y, ...) {
   new_vctr(
     numeric(0),
@@ -239,24 +259,27 @@ vec_ptype2.WoodenHorse.WoodenHorse <- function(x, y, ...) {
 #' @method vec_cast WoodenHorse
 #' @export
 #' @export vec_cast.WoodenHorse
-#' @noRd
-#' @keywords internal
+#' @describeIn WoodenHorse-vctr Generic for \code{\link[vctrs]{vec_cast}}
+#' @usage NULL
 vec_cast.WoodenHorse <- function(x, to, ...) {
   UseMethod("vec_cast.WoodenHorse")
 }
 
 #' @method vec_cast.WoodenHorse default
 #' @export
-#' @noRd
-#' @keywords internal
+#' @describeIn WoodenHorse-vctr Default method for \code{vec_cast.WoodenHorse}:
+#'   it should not be casted.
+#' @usage NULL
 vec_cast.WoodenHorse.default <- function(x, to, ...) {
   vctrs::vec_default_cast(x, to)
 }
 
 #' @method vec_cast.WoodenHorse WoodenHorse
 #' @export
-#' @noRd
-#' @keywords internal
+#' @describeIn WoodenHorse-vctr \code{WoodenHorse} method for
+#'   \code{vec_cast.WoodenHorse}: attempt to cast if the \code{GreekSoldier}
+#'   attribute is similar.
+#' @usage NULL
 vec_cast.WoodenHorse.WoodenHorse <- function(x, to, ...) {
   new_vctr(vec_data(x),
            GreekSoldier = attr(to, "GreekSoldier"),
@@ -334,8 +357,10 @@ vec_cast.WoodenHorse.WoodenHorse <- function(x, to, ...) {
 #' @importFrom vctrs vec_math
 #' @method vec_math WoodenHorse
 #' @export
-#' @noRd
-#' @keywords internal
+#' @describeIn WoodenHorse-vctr See \code{\link[vctrs]{vec_math}}. Exceptions to
+#'   the math group generics for \code{WoodenHorse} class are \code{is.na()},
+#'   \code{is.finite()} and \code{is.infinite()}.
+#' @usage NULL
 vec_math.WoodenHorse <- function(.fn, .x, ...) {
   dat <- vec_data(.x)
   .x <- Nightfall(.x)
@@ -354,17 +379,18 @@ vec_math.WoodenHorse <- function(.fn, .x, ...) {
 #' @method vec_arith WoodenHorse
 #' @export
 #' @export vec_arith.WoodenHorse
-#' @noRd
-#' @keywords internal
+#' @describeIn WoodenHorse-vctr Generic for \code{\link[vctrs]{vec_arith}}
+#' @usage NULL
 vec_arith.WoodenHorse <- function(op, x, y, ...) {
   UseMethod("vec_arith.WoodenHorse", y)
 }
 
 #' @export
 #' @method vec_arith.WoodenHorse default
-#' @noRd
-#' @keywords internal
-vec_arith.WoodenHorse.default <- function(op, x, y) {
+#' @describeIn WoodenHorse-vctr Default method for \code{vec_arith.WoodenHorse}:
+#'   try and apply arithmatic to the \code{GreekSoldier} attribute.
+#' @usage NULL
+vec_arith.WoodenHorse.default <- function(op, x, y, ...) {
   dat <- vec_data(x)
   x <- Nightfall(x)
   x <- plotarith(x, y, op)
@@ -378,8 +404,10 @@ vec_arith.WoodenHorse.default <- function(op, x, y) {
 #' @export
 #' @method vec_arith.WoodenHorse MISSING
 #' @noRd
-#' @keywords internal
-vec_arith.WoodenHorse.MISSING <- function(op, x, y) {
+#' @describeIn WoodenHorse-vctr Missing method for \code{vec_arith.WoodenHorse}:
+#'   try and apply unary arithmatic to the \code{GreekSoldier} attribute.
+#' @usage NULL
+vec_arith.WoodenHorse.MISSING <- function(op, x, y, ...) {
   dat <- vec_data(x)
   x <- Nightfall(x)
   x <- plotarith(x, op = op)
@@ -395,9 +423,11 @@ vec_arith.WoodenHorse.MISSING <- function(op, x, y) {
 
 #' @export
 #' @method vec_arith.WoodenHorse WoodenHorse
-#' @noRd
-#' @keywords internal
-vec_arith.WoodenHorse.WoodenHorse <- function(op, x, y) {
+#' @describeIn WoodenHorse-vctr \code{WoodenHorse} method for
+#'   \code{vec_arith.WoodenHorse}: try and apply arithmatic between the
+#'   \code{GreekSoldier} attribute of the two vectors.
+#' @usage NULL
+vec_arith.WoodenHorse.WoodenHorse <- function(op, x, y, ...) {
   dat <- vec_arith_base(op, vec_data(x), vec_data(y))
   x <- Nightfall(x)
   y <- Nightfall(y)
@@ -457,15 +487,15 @@ is.na.WoodenHorse <- function(x) {
 #' @method levels WoodenHorse
 levels.WoodenHorse <- function(x) NULL
 
-#' set NAs
+#' @title set NAs
 #'
-#' Not all S4 Vectors subclasses support having NAs.
+#' @description Not all S4 Vectors subclasses support having NAs.
 #'
 #' @param x An object to set NAs on
 #' @param i A logical of \code{length(x)}, indicating which positions to set NAs.
 #'
-#' @return
-#' @export
+#' @return The \code{x} argument with NAs set at positions where \code{i == TRUE}.
+#' @noRd
 #'
 #' @examples
 #' NULL
@@ -482,6 +512,7 @@ setMethod(
   definition = function(x, i) {
     vec_assert(i, logical(), size = length(x))
     x[i] <- NA
+    x
   }
 )
 

@@ -12,13 +12,35 @@ LazyData: true
 RoxygenNote: 7.0.2
 URL: https://github.com/teunbrand/ggnomics
 Suggests: 
-    testthat (>= 2.1.0)
+    testthat (>= 2.1.0),
+    knitr,
+    rmarkdown,
+    rlang,
+    stats,
+    labeling
 VignetteBuilder: knitr
 Depends: 
-    ggplot2,
+    ggplot2 (>= 3.3.0),
     S4Vectors
 Imports: 
+    GenomeInfoDb,
     GenomicRanges,
     IRanges,
     scales,
-    vctrs
+    vctrs,
+    data.table,
+    methods,
+    BiocGenerics
+Collate: 
+    'WoodenHorse-class.R'
+    'all-class-unions.R'
+    'breaks-major.R'
+    'breaks-minor.R'
+    'fortify-methods.R'
+    'ggnomics-package.R'
+    'ggproto_sibling.R'
+    'labels-format.R'
+    'out_of_bounds.R'
+    'plot_maths.R'
+    'transforms.R'
+    'utils.R'

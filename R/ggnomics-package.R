@@ -1,8 +1,12 @@
 #' @keywords internal
 "_PACKAGE"
 
+#' @import S4Vectors
+#' @import ggplot2
 #' @import GenomicRanges
-#' @import GenomeInfoDb
+#' @importFrom GenomeInfoDb seqinfo seqlengths seqlevels seqinfo<- seqlengths<- seqlevels<-
+#' @importFrom methods selectMethod callGeneric is .valueClassTest getGeneric
+#' @importFrom stats setNames
 #' @import IRanges
 #' @import vctrs
 NULL

@@ -1,5 +1,6 @@
 # S4 Labellers ------------------------------------------------------------
 
+#' @name S4LabelFormat
 #' @title Format labels for S4 classes
 #' 
 #' @description Attempts to figure out appropriate labels for S4 classes.
@@ -21,6 +22,7 @@
 #' S4LabelFormat(1:10)
 #' S4LabelFormat(LETTERS[1:5])
 #' 
+#' require(GenomicRanges)
 #' # GenomicRanges major labels are seqnames
 #' S4LabelFormat(GPos("chr1", 1:10))
 #' 
@@ -32,6 +34,7 @@ setGeneric(
   signature = "x"
 )
 
+#' @rdname S4LabelFormat
 setMethod(
   "S4LabelFormat",
   signature(x = "ANY"),
@@ -44,6 +47,7 @@ setMethod(
   }
 )
 
+#' @rdname S4LabelFormat
 setMethod(
   "S4LabelFormat",
   signature(x = "WoodenHorse"),
@@ -52,6 +56,7 @@ setMethod(
   }
 )
 
+#' @rdname S4LabelFormat
 setMethod(
   "S4LabelFormat",
   signature(x = "ANYGenomic"),
@@ -94,7 +99,8 @@ setMethod(
 #'   \code{\link[=scale_x_genomic]{scale_(x|y)_genomic}}, these labelling
 #'   functions work best as the \code{minor_labels} argument.
 #'
-#' @return
+#' @return A \code{function} for \code{label_basepair()} or a character vector
+#'   of labels for \code{basepair_label()}.
 #' @export
 #'
 #' @examples
@@ -110,7 +116,9 @@ label_basepair <- function(accuracy = NULL, unit = "b",
                            sep = NULL, labelsmall = FALSE, ...) {
   sep <- if (is.null(unit)) "" else " "
   # Force arguments
-  list(accuracy, labelsmall, ...)
+  force(accuracy)
+  force(labelsmall)
+  dots <- list(...)
   
   function(x) {
     if (missing(x) || is.null(x) || length(x) < 1L) {
@@ -147,13 +155,17 @@ label_basepair <- function(accuracy = NULL, unit = "b",
       accuracy <- est_accuracy(x * scale)
     }
     
-    scales::number(
-      x,
-      accuracy = accuracy,
-      scale = unname(scale),
-      suffix = suffix,
-      ...
-    )
+    args <- c(list(x = x, accuracy = accuracy, scale = unname(scale),
+                   suffix = suffix), dots)
+    
+    do.call(scales::number, args)
+    # scales::number(
+    #   x,
+    #   accuracy = accuracy,
+    #   scale = unname(scale),
+    #   suffix = suffix,
+    #   ...
+    # )
   }
 }
 
@@ -161,8 +173,8 @@ label_basepair <- function(accuracy = NULL, unit = "b",
 #' @rdname label_basepair
 basepair_label <- label_basepair()
 
-#' Estimating the needed accuracy
-#' Mainly to get around r-lib/scales#251 issue
+# Estimating the needed accuracy
+# Mainly to get around r-lib/scales#251 issue
 est_accuracy <- function(x) {
   if (all(!is.finite(x)) || length(x) == 1) {
     return(1)

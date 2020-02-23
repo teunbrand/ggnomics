@@ -10,6 +10,8 @@
 #'   internals. Since \code{ggplot} exclusively handles \code{data.frames}, we
 #'   use \code{fortify} methods to convert S4 vector objects to base
 #'   \code{data.frame}s.
+#'   
+#' @inheritParams ggplot2::fortify
 #'
 #' @details The fortify methods in this package are written for two classes.
 #'   \enumerate{

@@ -1,5 +1,5 @@
-#' Like 'ggproto', but also captures methods from 'sister' in addition to the
-#' usual parental inheritance. Used in the ScaleS4-family of scale ggprotos.
+# Like 'ggproto', but also captures methods from 'sister' in addition to the
+# usual parental inheritance. Used in the ScaleS4-family of scale ggprotos.
 ggproto_sibling <- function(
   class_name = character(),
   parent = NULL,
@@ -52,7 +52,7 @@ ggproto_sibling <- function(
   e
 }
 
-#' Copy inner function from ggproto methods
+# Copy inner function from ggproto methods
 copy_method <- function(what, from) {
   this <- from[[what]]
   if (is.null(this)) {

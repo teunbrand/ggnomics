@@ -5,12 +5,6 @@ cache: packages
 warnings_are_errors: false
 bioc_packages:
   - S4Vectors
-  - GenomicRanges
-  - IRanges
-  - rtracklayer
-  - AnnotationDbi
-  - GenomeInfoDb
-  - GenomicFeatures
 
 after_success:
   - Rscript -e 'covr::codecov()'

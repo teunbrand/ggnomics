@@ -12,28 +12,7 @@ LazyData: true
 RoxygenNote: 7.0.2
 URL: https://github.com/teunbrand/ggnomics
 Suggests: 
-    testthat (>= 2.1.0),
-    knitr,
-    rmarkdown,
-    S4Vectors,
-    GenomicRanges,
-    IRanges,
-    rtracklayer,
-    fitdistrplus,
-    rlang,
-    reshape2,
-    MASS,
-    AnnotationDbi,
-    GenomeInfoDb,
-    GenomicFeatures,
-    plyr,
-    covr,
-    RColorBrewer
+    testthat
 VignetteBuilder: knitr
-Imports: 
-    scales,
-    gtable,
-    methods,
-    data.table
 Depends: 
     ggplot2

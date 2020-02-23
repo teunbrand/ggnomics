@@ -22,7 +22,7 @@ setGeneric(
 # scales::regular_minor_breaks() method
 setMethod(
   "S4BreaksMinor",
-  signature(b = "int_or_num"),
+  signature(b = "numeric"),
   function(b, limits, n = 2) {
     b <- b[!is.na(b)]
     if (length(b) < 2)

@@ -26,9 +26,12 @@ setGeneric(
 )
 
 # Equivalent to the scales::extended_breaks() method
+# S4 classes that have a projection on the real number line, e.g. IRanges or 
+# numeric-Rle should give limits in numeric terms, so they also go through this
+# breaks method.
 setMethod(
   "S4BreaksMajor",
-  signature(x = "int_or_num"),
+  signature(x = "numeric"),
   function(x, n = 5L, ...) {
     x <- x[is.finite(x)]
     if (length(x) == 0) {
@@ -39,13 +42,14 @@ setMethod(
   }
 )
 
-# Takes chromosome starts and ends
+# Takes chromosome starts and ends as breaks. Should thus give appropriate
+# positions for major gridlines.
 setMethod(
   "S4BreaksMajor",
   signature(x = "GRanges"),
   function(x, n = 5L, ...) {
     if (length(x) == 0) {
-      return(GRanges())
+      return(GreekSoldier(GRanges()))
     }
     br <- sort(GPos(seqnames = rep(seqnames(x), 2),
                     pos = c(start(x), end(x))))

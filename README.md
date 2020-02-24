@@ -5,6 +5,12 @@
 
 <!-- badges: start -->
 
+[![Lifecycle:
+experimental](https://img.shields.io/badge/lifecycle-experimental-orange.svg)](https://www.tidyverse.org/lifecycle/#experimental)
+[![Travis build
+status](https://travis-ci.org/teunbrand/ggnomics.svg?branch=master)](https://travis-ci.org/teunbrand/ggnomics)
+[![Codecov test
+coverage](https://codecov.io/gh/teunbrand/ggnomics/branch/BioC/graph/badge.svg)](https://codecov.io/gh/teunbrand/ggnomics?branch=BioC)
 <!-- badges: end -->
 
 This branch of ggnomics explores how to integrate Bioconductor S4 class

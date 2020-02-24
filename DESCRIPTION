@@ -17,7 +17,8 @@ Suggests:
     rmarkdown,
     rlang,
     stats,
-    labeling
+    labeling,
+    covr
 VignetteBuilder: knitr
 Depends: 
     ggplot2 (>= 3.3.0),

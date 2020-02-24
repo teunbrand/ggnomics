@@ -5,6 +5,6 @@ cache: packages
 warnings_are_errors: false
 bioc_packages:
   - S4Vectors
-
+  
 after_success:
   - Rscript -e 'covr::codecov()'

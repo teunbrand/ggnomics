@@ -42,5 +42,8 @@ Collate:
     'labels-format.R'
     'out_of_bounds.R'
     'plot_maths.R'
+    'range_operations.R'
     'transforms.R'
     'utils.R'
+Remotes:
+    tidyverse/ggplot2@v3.3.0-rc

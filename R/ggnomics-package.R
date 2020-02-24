@@ -5,7 +5,7 @@
 #' @import ggplot2
 #' @import GenomicRanges
 #' @importFrom GenomeInfoDb seqinfo seqlengths seqlevels seqinfo<- seqlengths<- seqlevels<-
-#' @importFrom methods selectMethod callGeneric is .valueClassTest getGeneric
+#' @importFrom methods selectMethod callGeneric is .valueClassTest getGeneric as
 #' @importFrom stats setNames
 #' @import IRanges
 #' @import vctrs

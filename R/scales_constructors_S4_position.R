@@ -69,7 +69,7 @@ scale_x_S4_continuous <- function(
     position = position,
     super = ScaleS4ContinuousPosition
   )
-  ggplot2:::set_sec_axis(sec.axis, sc)
+  .int$set_sec_axis(sec.axis, sc)
 }
 
 #' @export
@@ -110,7 +110,7 @@ scale_y_S4_continuous <- function(
     position = position,
     super = ScaleS4ContinuousPosition
   )
-  ggplot2:::set_sec_axis(sec.axis, sc)
+  .int$set_sec_axis(sec.axis, sc)
 }
 
 # Internal Constructor ----------------------------------------------------
@@ -137,12 +137,12 @@ S4_continuous_scale <- function(
 ) {
   aesthetics <- standardise_aes_names(aesthetics)
   
-  ggplot2:::check_breaks_labels(breaks, labels)
-  ggplot2:::check_breaks_labels(minor_breaks, minor_labels)
+  .int$check_breaks_labels(breaks, labels)
+  .int$check_breaks_labels(minor_breaks, minor_labels)
   
   position <- match.arg(position, c("left", "right", "top", "bottom"))
   
-  if (is.null(breaks) && all(!ggplot2:::is_position_aes(aesthetics))) {
+  if (is.null(breaks) && all(!.int$is_position_aes(aesthetics))) {
     guide <- "none"
   }
   

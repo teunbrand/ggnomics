@@ -38,6 +38,37 @@ setMethod(
   }
 )
 
+
+# Import ggplot internals -------------------------------------------------
+
+.grab_ggplot_internals <- function() {
+  objects <- c(
+    "check_breaks_labels",    # in scale constructors
+    "default_expansion",      # in viewscales
+    "expand_limits_discrete", # in viewscales
+    "is_position_aes",        # in scale constructors
+    "make_labels",            # in ggplot constructor
+    "scales_list",            # in ggplot constructor
+    "set_sec_axis",           # in scale constructor
+    "view_scale_secondary"    # in viewscales
+  )
+  objects <- setNames(objects, objects)
+  out <- lapply(objects, function(i) {
+    getFromNamespace(i, "ggplot2")
+  })
+}
+
+.int <- .grab_ggplot_internals()
+
+
+# Global variables --------------------------------------------------------
+
+# Since ggproto works similar to R6 reference classes, we'd best define "self" 
+# as a global variable for check
+globalVariables(
+  "self"
+)
+
 # Miscellaneous -----------------------------------------------------------
 
 # The rlang operator

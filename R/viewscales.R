@@ -5,7 +5,7 @@
 # ggplot2:::expand_limits_scale
 view_scales_from_scale_S4 <- function(scale, coord_limits = NULL, expand = TRUE) {
   # Setup scale expansion
-  expansion <- ggplot2:::default_expansion(scale, expand = expand)
+  expansion <- .int$default_expansion(scale, expand = expand)
   limits <- scale$get_limits()
   continuous_range <- expand_scale_limits_S4(scale,
                                              expansion,
@@ -15,7 +15,7 @@ view_scales_from_scale_S4 <- function(scale, coord_limits = NULL, expand = TRUE)
 
   view_scales <- list(
     view_scale_primaryS4(scale, limits, continuous_range),
-    sec = ggplot2:::view_scale_secondary(scale, limits, continuous_range),
+    sec = .int$view_scale_secondary(scale, limits, continuous_range),
     arrange = scale$axis_order(),
     range = continuous_range
   )
@@ -42,7 +42,7 @@ expand_scale_limits_S4 <- function(scale, expand = expansion(0, 0),
   }
 
   if (scale$is_discrete()) {
-    ggplot2:::expand_limits_discrete(
+    .int$expand_limits_discrete(
       limits,
       expand,
       coord_limits,

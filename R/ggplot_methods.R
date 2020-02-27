@@ -17,12 +17,12 @@ ggplot.Vector <- function(data = NULL,
     rlang::abort("Mapping should be created with `aes()` or `aes_()`.")
   }
 
-  data <- fortify(data, ....)
+  data <- fortify(data, ...)
 
   p <- structure(list(
     data = data,
     layers = list(),
-    scales = ggplot2:::scales_list(),
+    scales = .int$scales_list(),
     mapping = mapping,
     theme = list(),
     coordinates = coord_S4(default = TRUE),
@@ -30,7 +30,7 @@ ggplot.Vector <- function(data = NULL,
     plot_env = environment
   ), class = c("gg", "ggplot"))
 
-  p$labels <- ggplot2:::make_labels(mapping)
+  p$labels <- .int$make_labels(mapping)
 
   set_last_plot(p)
   p

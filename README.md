@@ -32,7 +32,7 @@ ggplot2, which you can install as such:
 
 ``` r
 # install.packages("devtools")
-devtools::install_github("tidyverse/ggplot2", ref = "v3.3.0-rc")
+devtools::install_github("tidyverse/ggplot2", ref = "master")
 ```
 
 ## Example

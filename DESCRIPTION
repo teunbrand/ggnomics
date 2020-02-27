@@ -59,4 +59,4 @@ Collate:
     'scales_class_S4.R'
     'scales_constructors_S4_position.R'
 Remotes:
-    tidyverse/ggplot2@v3.3.0-rc
+    tidyverse/ggplot2@master

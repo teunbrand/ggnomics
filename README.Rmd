@@ -36,7 +36,7 @@ It would probably only work with the current release candidate of ggplot2, which
 
 ``` r
 # install.packages("devtools")
-devtools::install_github("tidyverse/ggplot2", ref = "v3.3.0-rc")
+devtools::install_github("tidyverse/ggplot2", ref = "master")
 ```
 
 ## Example

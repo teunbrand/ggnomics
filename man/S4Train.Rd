@@ -26,7 +26,16 @@ S4Train(new, existing = NULL, ..., aes = "z")
 
 \item{existing}{An object representing the new range}
 
+\item{...}{Arguments passed down to downstream methods. Currently used for
+discrete scales.}
+
 \item{aes}{An aesthetic for which to evaluate the range}
+
+\item{drop}{When \code{TRUE}, will drop factor levels not associated with
+data. Used in discrete scales.}
+
+\item{na.rm}{When \code{TRUE}, will remove missing values. Used in discrete
+scales.}
 }
 \value{
 An updated representation of a range

@@ -10,7 +10,7 @@ setMethod(
   signature = c(x = "numeric"),
   function(x, to = c(0, 1), from = range(x, na.rm = TRUE, finite = TRUE),
            aes = "z") {
-    scales:::rescale(x, to = to, from = from)
+    scales::rescale(x, to = to, from = from)
   }
 )
 

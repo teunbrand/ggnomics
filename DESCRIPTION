@@ -31,22 +31,32 @@ Imports:
     vctrs,
     data.table,
     methods,
-    BiocGenerics
+    BiocGenerics,
+    utils
 Collate: 
     'WoodenHorse-class.R'
     'all-class-unions.R'
     'breaks-major.R'
     'breaks-minor.R'
+    'viewscales.R'
+    'coord_class_cartesian.R'
+    'coord_constructors.R'
     'force_flat.R'
     'fortify-methods.R'
     'ggnomics-package.R'
+    'ggnomics_extensions.R'
+    'ggplot_methods.R'
     'ggproto_sibling.R'
     'labels-format.R'
     'out_of_bounds.R'
     'plot_maths.R'
     'range_ggproto.R'
     'range_operations.R'
-    'transforms.R'
+    'rescaling.R'
+    'scale_types.R'
     'utils.R'
+    'transforms.R'
+    'scales_class_S4.R'
+    'scales_constructors_S4_position.R'
 Remotes:
     tidyverse/ggplot2@v3.3.0-rc

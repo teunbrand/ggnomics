@@ -14,6 +14,10 @@ new_S4_discrete_range <- function(aes) {
 
 # Range ggproto -----------------------------------------------------------
 
+#' @describeIn ggnomics_extensions Identical to ggplot's Range ggproto. Note:
+#'   this class and children are not exported and are for internal use.
+#' @usage NULL
+#' @format NULL
 RangeS4 <- ggproto(
   "RangeS4", NULL,
   aes = NULL,
@@ -23,6 +27,10 @@ RangeS4 <- ggproto(
   }
 )
 
+#' @describeIn ggnomics_extensions A child to RangeS4 with S4 compatible train
+#'   method.
+#' @usage NULL
+#' @format NULL
 RangeS4Continuous <- ggproto(
   "RangeS4Continuous",
   RangeS4,
@@ -32,6 +40,10 @@ RangeS4Continuous <- ggproto(
   }
 )
 
+#' @describeIn ggnomics_extensions A child to RangeS4 with S4 compatible train
+#'   method.
+#' @usage NULL
+#' @format NULL
 RangeS4Discrete <- ggproto(
   "RangeS4Discrete",
   RangeS4,
@@ -52,6 +64,12 @@ RangeS4Discrete <- ggproto(
 #'
 #' @param new An object representing the current range
 #' @param existing An object representing the new range
+#' @param ... Arguments passed down to downstream methods. Currently used for
+#'   discrete scales.
+#' @param drop When \code{TRUE}, will drop factor levels not associated with
+#'   data. Used in discrete scales.
+#' @param na.rm When \code{TRUE}, will remove missing values. Used in discrete
+#'   scales.
 #' @param aes An aesthetic for which to evaluate the range
 #'
 #' @return An updated representation of a range

@@ -1,6 +1,11 @@
 
 <!-- README.md is generated from README.Rmd. Please edit that file -->
 
+# Update
+
+ggnomics will start focussing more on genomics tasks in the future. The functions that are not genomics related have been moved to [ggh4x](https://github.com/teunbrand/ggh4x) to avoid large bioconductor dependencies.
+
+
 # ggnomics <img src="man/figures/icon.png" align = "right" width = "120" />
 
 <!-- badges: start -->

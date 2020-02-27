@@ -19,6 +19,11 @@ setClassUnion(
 )
 
 setClassUnion(
+  "knownDiscretes_OR_missing",
+  c("knownDiscretes", "missing_OR_NULL")
+)
+
+setClassUnion(
   "knownContinuous",
   c("integer", "double", "numeric", "complex", "POSIXt", "Date", "dist")
 )

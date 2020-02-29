@@ -15,8 +15,8 @@
 #'   calculating ranges?
 #' @param aes An aesthetic for which to evaluate the function.
 #'
-#' @description Defaults to the \code{\link[base]{range}} function.
-#'
+#' @details Defaults to the \code{\link[base]{range}} function.
+#' 
 #' @return A vector indicating lower- and upper-bounds of the input.
 #' @export
 #'

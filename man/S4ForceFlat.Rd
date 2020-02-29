@@ -32,19 +32,19 @@ When using a ranged class as \code{x} argument, the result can be
   when \code{x} is an \code{IRanges} class, setting \code{aes = "xmin"} gives
   rescaled start values and \code{aes = "xmax"} gives rescaled end values.
 }
-\section{Methods (by class)}{
+\section{Functions}{
 \itemize{
-\item \code{x = WoodenHorse,limits = ANY}: Releases the \code{GreekSoldier} attribute and call
+\item \code{S4ForceFlat,WoodenHorse,ANY-method}: Releases the \code{GreekSoldier} attribute and call
 the generic on the result.
 
-\item \code{x = numeric,limits = numeric}: Calls \code{scales::rescale}.
+\item \code{S4ForceFlat,numeric,numeric-method}: Calls \code{scales::rescale}.
 
-\item \code{x = Vector,limits = numeric}: Attempts to coerce to a vector first.
+\item \code{S4ForceFlat,Vector,numeric-method}: Attempts to coerce to a vector first.
 
-\item \code{x = IntegerRanges,limits = numeric}: for xmin/ymin gives start, for xmax/ymax gives
+\item \code{S4ForceFlat,IntegerRanges,numeric-method}: for xmin/ymin gives start, for xmax/ymax gives
 end, otherwise gives midpoint.
 
-\item \code{x = ANYGenomic,limits = GRanges}: Linearises seqlevels, then gives start for xmin/ymin
+\item \code{S4ForceFlat,ANYGenomic,GRanges-method}: Linearises seqlevels, then gives start for xmin/ymin
 and end for xmax/xmax.
 }}
 

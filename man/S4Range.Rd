@@ -41,7 +41,8 @@ A vector indicating lower- and upper-bounds of the input.
 \description{
 Returns a vector containing the minimum and maximum of all the given
 arguments.
-
+}
+\details{
 Defaults to the \code{\link[base]{range}} function.
 }
 \examples{

@@ -85,10 +85,10 @@ test_that("scale_S4Vector can work with IRanges", {
 
   # Test scale training is done properly
   sc <- layer_scales(g)
-  expect_identical(sc$x$get_limits(), c(1L, 6L))
-  expect_identical(sc$x$get_breaks(), as.numeric(c(1:6)))
-  expect_identical(sc$x$get_breaks_minor(), seq(1, 6, by = 0.5))
-  expect_identical(sc$x$get_labels(), format(seq(1, 6, by = 1)))
+  expect_identical(sc$x$get_limits(), c(0.5, 6.5))
+  expect_identical(sc$x$get_breaks(), c(NA, 2, 4, 6))
+  expect_identical(sc$x$get_breaks_minor(), seq(1, 6, by = 1))
+  expect_identical(sc$x$get_labels(), c(NA, format(seq(2, 6, by = 2))))
 
   # Test plot can become ggplotGrob
   expres <- substitute(ggplotGrob(g))

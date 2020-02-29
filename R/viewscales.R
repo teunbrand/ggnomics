@@ -140,7 +140,7 @@ view_scale_primaryS4 <- function(
 ViewScaleS4 <- ggproto(
   "ViewScaleS4",
   ggplot2:::ViewScale,
-  get_label_minor = function(self, breaks = self$get_breaks_minor()) {
+  get_labels_minor = function(self, breaks = self$get_breaks_minor()) {
     self$scale$get_labels_minor(breaks)
   }
 )

@@ -28,7 +28,13 @@
 #' S4ForceFlat(value, limits, aes = "xmax")
 setGeneric(
   "S4ForceFlat",
-  function(x, limits = NULL, aes = "z") standardGeneric("S4ForceFlat"),
+  function(x, limits = NULL, aes = "z") {
+    # Special case for axis training, where orthogonal scale is set to Inf/-Inf
+    if (all(!(check_finite(x)))) {
+      return(x)
+    }
+    standardGeneric("S4ForceFlat")
+  },
   signature = c("x", "limits")
 )
 
@@ -74,8 +80,8 @@ setMethod(
   function(x, limits = NULL, aes = "z") {
     aes <- gsub("^y|^x", "z", aes)
     x <- switch(aes,
-                "zmin" = start(x),
-                "zmax" = end(x),
+                "zmin" = start(x) - 0.5,
+                "zmax" = end(x) + 0.5,
                 (start(x) + end(x)) / 2)
     scales::rescale(x, to = c(0, 1), from = limits)
   }
@@ -93,24 +99,18 @@ setMethod(
     aes <- gsub("^x|^y", "z", aes)
     seqmatch <- as.vector(BiocGenerics::match(seqnames(x), seqnames(limits)))
 
-    widths <- width(limits)
+    widths <- width(limits) + 1
     offset <- c(0, cumsum(head(widths, -1)))
-    newlimits <- c(0, sum(widths))
+    newlimits <- c(0, sum(widths) - 1L)
 
     x <- switch(aes,
-                "zmin" = start(x),
-                "zmax" = end(x) + 1,
+                "zmin" = start(x) - 0.5,
+                "zmax" = end(x) + 0.5,
                 (start(x) + end(x))/2)
     # Rebase x such that limits start at 0
-    x <- x - start(limits)[seqmatch]
+    x <- x - (start(limits)[seqmatch] - 0.5)
     # Offset x by staggered seqlength
     x <- x + offset[seqmatch]
     scales::rescale(x, to = c(0, 1), from = newlimits)
   }
 )
-
-# setMethod("S4ForceFlat",
-#           signature = c(x = "int_or_num", limits = "ANYGenomic"),
-#           function(x, limits = NULL, aes = "z") {
-#             scales::rescale(x, to = c(0, 1), from = width(limits)[1])
-#           })

@@ -129,9 +129,9 @@ setMethod(
 #' @rdname S4Train
 setMethod(
   "S4Train",
-  signature = c(new = "IntegerRanges", existing = "numeric"),
+  signature = c(new = "IntegerRanges", existing = "numeric_OR_missing"),
   definition = function(new, existing = NULL, aes = "z") {
-    new <- c(start(new), end(new))
+    new <- c(start(new) - 0.5, end(new) + 0.5)
     callGeneric(new, existing, aes = aes)
   }
 )
@@ -141,7 +141,7 @@ setMethod(
 #' @rdname S4Train
 setMethod(
   "S4Train",
-  signature = c(new = "GenomicRanges", existing = "GRanges"),
+  signature = c(new = "GenomicRanges", existing = "GRanges_OR_missing"),
   definition = function(new, existing = NULL, aes = "z") {
     suppressWarnings(S4Range(new, existing, aes = aes))
   }

@@ -139,14 +139,13 @@ ScaleS4Continuous <- ggproto_sibling(
     } else {
       breaks <- self$breaks
     }
+    breaks <- GreekSoldier(breaks)
 
     # Convert data space back to transformed space
     breaks <- self$trans$transform(breaks)
     # Any breaks outside the dimensions are flagged as missing
     breaks <- censorThis(breaks, self$trans$transform(limits), only.finite = FALSE,
                          aes = self$aesthetics[1])
-
-    GreekSoldier(breaks)
   },
   get_breaks_minor = function(self, n = 2,
                               b = self$break_positions(),

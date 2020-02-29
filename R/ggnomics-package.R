@@ -10,6 +10,7 @@
 #' @importFrom utils getFromNamespace globalVariables
 #' @import IRanges
 #' @import vctrs
+#' @importFrom rlang `%||%`
 NULL
 
 # The following block is used by usethis to automatically manage

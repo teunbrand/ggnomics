@@ -16,6 +16,15 @@ setMethod(
 
 setMethod(
   "S4Rescale",
+  signature = c(x = "NULL"),
+  function(x, to = c(0, 1), from = range(x, na.rm = TRUE, finite = TRUE),
+           aes = "z") {
+    NULL
+  }
+)
+
+setMethod(
+  "S4Rescale",
   signature = c(x = "WoodenHorse"),
   function(x, to = c(0, 1), from = S4Range(x, na.rm = TRUE, finite = TRUE)) {
     x <- Nightfall(x)

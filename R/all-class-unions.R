@@ -32,3 +32,8 @@ setClassUnion(
   "ANYGenomic",
   c("GenomicRanges", "GRangesFactor")
 )
+
+setClassUnion(
+  "GRanges_OR_missing",
+  c("GRanges", "missing")
+)

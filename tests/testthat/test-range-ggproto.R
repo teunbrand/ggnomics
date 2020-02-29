@@ -24,7 +24,7 @@ test_that("S4Train reports correct ranges", {
       c(1L, 3L),
       c(1L, 10L),
       LETTERS[1:3],
-      c(1L, 12L),
+      c(0.5, 12.5),
       news[[5]]
     )
   )
@@ -38,7 +38,7 @@ test_that("S4Train can correctly update ranges", {
       c(-3, 3),
       c(1, 20),
       LETTERS[1:5],
-      c(-5, 12),
+      c(-5, 12.5),
       GRanges(c("chr1:100-200", "chr2:50-250"))
     )
   )

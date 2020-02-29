@@ -23,7 +23,7 @@ test_that("S4ForceFlat works as intended", {
     seq(0, 1, length.out = 16)[6:11],
     rep(seq(0, 1, by = 0.2), 10:5),
     seq(0, 1, length.out = 27)[c(10, 12, 14, 16, 18)],
-    c(50, 100 + 201) / c(352)
+    c(50.5, 101.5 + 201) / c(353)
   )
   
   expect_equal(test, ctrl)
@@ -36,5 +36,5 @@ test_that("S4ForceFlat has contextual behaviour", {
   y <- IRanges(5, 10)
   
   expect_equal(S4ForceFlat(x, GRanges(c("chr1:1-4")), "xmax"), 0.5)
-  expect_equal(S4ForceFlat(y, c(0, 10), "xmin"), 0.5)
+  expect_equal(S4ForceFlat(y, c(0, 10.5), "xmin"), 4.5/10.5)
 })

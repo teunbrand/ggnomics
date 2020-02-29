@@ -67,8 +67,10 @@ setMethod(
     s <- start(sets) %% bd
     e <- end(sets) %% bd
     seqs <- lapply(seq_along(sets), function(i) {
-      seqr <- seq(0, width(sets)[i] - s[i], by = bd)
+      seqr <- scales::fullseq(c(0, width(sets[i]) - 1L), bd)
       seqr + (start(sets)[i] %/% bd) * bd
+      # seqr <- seq(0, width(sets)[i] + bd, by = bd)
+      # seqr + (start(sets)[i] %/% bd) * bd
     })
     ii <- rep(seq_along(sets), lengths(rmap))
     lens <- lengths(seqs)
@@ -77,6 +79,6 @@ setMethod(
           lens[ii]),
       unlist(seqs[ii])
     )
-    GreekSoldier(br2)
+    GreekSoldier(unique(br2))
   }
 )

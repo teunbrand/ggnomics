@@ -5,8 +5,8 @@
 \alias{S4Train,WoodenHorse,ANY-method}
 \alias{S4Train,ANY,ANY-method}
 \alias{S4Train,knownDiscretes,knownDiscretes_OR_missing-method}
-\alias{S4Train,IntegerRanges,numeric-method}
-\alias{S4Train,GenomicRanges,GRanges-method}
+\alias{S4Train,IntegerRanges,numeric_OR_missing-method}
+\alias{S4Train,GenomicRanges,GRanges_OR_missing-method}
 \title{Scale training}
 \usage{
 S4Train(new, existing = NULL, ..., aes = "z")
@@ -17,9 +17,9 @@ S4Train(new, existing = NULL, ..., aes = "z")
 
 \S4method{S4Train}{knownDiscretes,knownDiscretes_OR_missing}(new, existing = NULL, drop = FALSE, na.rm = FALSE, ..., aes = "z")
 
-\S4method{S4Train}{IntegerRanges,numeric}(new, existing = NULL, aes = "z")
+\S4method{S4Train}{IntegerRanges,numeric_OR_missing}(new, existing = NULL, aes = "z")
 
-\S4method{S4Train}{GenomicRanges,GRanges}(new, existing = NULL, aes = "z")
+\S4method{S4Train}{GenomicRanges,GRanges_OR_missing}(new, existing = NULL, aes = "z")
 }
 \arguments{
 \item{new}{An object representing the current range}

@@ -3,8 +3,8 @@
 #' @title Position scales for S4 continuous data (x & y)
 #'
 #' @description \code{scale_x_S4_continuous} and \code{scale_y_S4_continuous}
-#' are the analogues of \code{\link[ggplot]{scale_x_continuous}} and
-#'  \code{\link[ggplot]{scale_y_continuous}}. They are the default scales for S4
+#' are the analogues of \code{\link[ggplot2]{scale_x_continuous}} and
+#'  \code{\link[ggplot2]{scale_y_continuous}}. They are the default scales for S4
 #'  data classes.
 #'
 #' @inheritParams ggplot2::scale_x_continuous

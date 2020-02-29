@@ -37,8 +37,42 @@ devtools::install_github("tidyverse/ggplot2", ref = "master")
 
 ## Example
 
-There are no examples yet. It is still under construction. Will post
-more once something might actually be useful.
+The main idea is that you would be able to plot S4 Vector classes as you
+would any other vector.
+
+``` r
+suppressPackageStartupMessages({
+  library(ggnomics)
+  library(GenomicRanges)
+})
+
+df <- DataFrame(
+  x = GRanges(c("chr1:100-200:+", "chr1:150-250:-", "chr2:200-300:*")),
+  y = 1:3
+)
+
+g <- ggplot(df, aes(x, y, fill)) +
+  geom_tile(width = 0, height = 0.8)
+g
+```
+
+<img src="man/figures/README-genomic_scale-1.png" width="60%" style="display: block; margin: auto;" />
+
+The data retains the S4 classes throughout the vast majority of plot
+building, allowing specialised geoms and stats to take advantage of
+this.
+
+``` r
+layer_data(g)
+#>                x y PANEL group           xmin           xmax ymin ymax   fill
+#> 1 chr1:100-200:+ 1     1    -1 chr1:100-200:+ chr1:100-200:+  0.6  1.4 grey20
+#> 2 chr1:150-250:- 2     1    -1 chr1:150-250:- chr1:150-250:-  1.6  2.4 grey20
+#> 3 chr2:200-300:* 3     1    -1 chr2:200-300:* chr2:200-300:*  2.6  3.4 grey20
+#>   colour size linetype alpha width height
+#> 1     NA  0.1        1    NA     0    0.8
+#> 2     NA  0.1        1    NA     0    0.8
+#> 3     NA  0.1        1    NA     0    0.8
+```
 
 ## Likely advantages
 
@@ -56,10 +90,10 @@ Here is a list:
 
 Here is a list:
 
-  - Cannot execute evaluation of aesthetics when the referred column is
-    S4
+  - Cannot evaluate expressions on S4 columns in aesthetics ([work in
+    progress]())
   - Using GRanges as position unit is slow
-  - There is no way (yet) to represent non-integers on genomic scales.
+  - Currently cannot represent non-integers on genomic scales.
   - Doesn’t have a polar coordinate system
   - No working implementation of discrete scales
   - No working List-like solution yet (e.g. IntegerList etc.)

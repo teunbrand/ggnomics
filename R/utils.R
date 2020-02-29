@@ -50,7 +50,11 @@ setMethod(
     "make_labels",            # in ggplot constructor
     "scales_list",            # in ggplot constructor
     "set_sec_axis",           # in scale constructor
-    "view_scale_secondary"    # in viewscales
+    "view_scale_secondary",   # in viewscales
+    "new_data_frame",         # in guide_axis_genomic
+    "axis_label_element_overrides", # in guide_axis genomic
+    "draw_axis_labels",       # in guide_axis genomic
+    "warn_for_guide_position" # in guide_axis genomic
   )
   objects <- setNames(objects, objects)
   out <- lapply(objects, function(i) {
@@ -70,10 +74,3 @@ globalVariables(
 )
 
 # Miscellaneous -----------------------------------------------------------
-
-# The rlang operator
-`%||%` <- function(x, y) {
-  if (is.null(x))
-    y
-  else x
-}

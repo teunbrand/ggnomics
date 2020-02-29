@@ -15,7 +15,6 @@ Suggests:
     testthat (>= 2.1.0),
     knitr,
     rmarkdown,
-    rlang,
     stats,
     labeling,
     covr
@@ -32,7 +31,8 @@ Imports:
     data.table,
     methods,
     BiocGenerics,
-    utils
+    utils,
+    rlang
 Collate: 
     'WoodenHorse-class.R'
     'all-class-unions.R'
@@ -47,6 +47,7 @@ Collate:
     'ggnomics_extensions.R'
     'ggplot_methods.R'
     'ggproto_sibling.R'
+    'guide_axis_genomic.R'
     'labels-format.R'
     'out_of_bounds.R'
     'plot_maths.R'
@@ -57,6 +58,8 @@ Collate:
     'utils.R'
     'transforms.R'
     'scales_class_S4.R'
+    'scales_class_genomic.R'
     'scales_constructors_S4_position.R'
+    'scales_constructors_genomic.R'
 Remotes:
     tidyverse/ggplot2@master

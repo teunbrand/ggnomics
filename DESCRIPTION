@@ -54,6 +54,7 @@ Collate:
     'labels-format.R'
     'out_of_bounds.R'
     'plot_maths.R'
+    'position_disjoint_ranges.R'
     'range_ggproto.R'
     'range_operations.R'
     'rescaling.R'

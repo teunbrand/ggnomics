@@ -73,7 +73,7 @@ setMethod(
     x <- bindROWS(granges(x), list(...),
                   use.names = FALSE, ignore.mcols = TRUE, check = FALSE)
     y <- base::vapply(base::split(c(start(x), end(x)), 
-                                  decode(rep(seqnames(x), 2))),
+                                  decode(rep(seqnames(x), 2)), drop = TRUE),
                       function(z) {c(min(z), max(z))}, integer(2))
     GRanges(colnames(y), IRanges(y[1,], y[2,]), seqinfo = seqinfo(x))
   }

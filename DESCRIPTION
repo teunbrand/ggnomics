@@ -49,6 +49,7 @@ Collate:
     'ggnomics_extensions.R'
     'ggplot_methods.R'
     'ggproto_sibling.R'
+    'greek_soldier.R'
     'guide_axis_genomic.R'
     'labels-format.R'
     'out_of_bounds.R'

@@ -4,15 +4,18 @@ test_that("GreekSoldiers packs appropriately", {
   cases <- list(
     1:10,
     Rle(1:5),
-    IntegerList(1, 2)
+    IntegerList(1, 2),
+    GRanges("chr1:100-200")
   )
   
   test <- lapply(cases, GreekSoldier)
   classes <- lapply(test, function(x) head(class(x), 1))
-  expect_identical(classes, list("integer", "WoodenHorse", "WoodenHorse"))
+  expect_identical(classes, list("integer", "BeechHorse", 
+                                 "BeechHorse", "OakHorse"))
   
   implicit <- lapply(test, HelenOfTroy)
-  expect_equivalent(implicit, list("integer", "Rle", "CompressedIntegerList"))
+  expect_equivalent(implicit, list("integer", "Rle", "CompressedIntegerList", 
+                                   "GRanges"))
   
   restored <- lapply(test, Nightfall)
   expect_identical(cases, restored)
@@ -34,23 +37,43 @@ test_that("WoodenHorse is printed prettily", {
 test_that("WoodenHorse casts correctly", {
   x <- GreekSoldier(Rle(1:3))
   y <- GreekSoldier(IRanges(1:3, width = 3:1))
+  z <- GreekSoldier(GRanges(c("chr1:100-200", "chr2:200-300")))
   
   expect_error(c(x, 1), 
                class = "vctrs_error_incompatible_type")
   expect_s3_class(c(x, x), "WoodenHorse")
+  expect_s3_class(c(x, x), "BeechHorse")
+  expect_s3_class(c(z, z), "OakHorse")
   
   expect_identical(Nightfall(c(x, x)), c(Rle(1:3), Rle(1:3)))
+  expect_identical(Nightfall(c(z, z)), 
+                   c(GRanges(c("chr1:100-200", "chr2:200-300")),
+                     GRanges(c("chr1:100-200", "chr2:200-300"))))
+  
+  w <- GreekSoldier(GRanges(c("chr1:300-400", "chr2:50-100")))
+  expect_identical(Nightfall(c(z, w)), 
+                   c(GRanges(c("chr1:100-200", "chr2:200-300")),
+                     GRanges(c("chr1:300-400", "chr2:50-100"))))
 })
 
 test_that("WoodenHorse is subsetted appropriately", {
   ctrl <- Rle(1:4)
+  ctrl2 <- GRanges("chr1", IRanges(1:4, width = 5))
   test <- GreekSoldier(ctrl)
+  test2 <- GreekSoldier(ctrl2)
   
   expect_identical(ctrl[2:3], Nightfall(test[2:3]))
+  expect_identical(ctrl2[2:3], Nightfall(test2[2:3]))
 })
 
 test_that("WoodenHorse double bracket subsetting works", {
   ctrl <- IRanges::RleList(1:6, 10:15)
+  test <- GreekSoldier(ctrl)
+  expect_identical(Nightfall(test[[1]]), ctrl[[1]])
+  expect_identical(Nightfall(test[[2]]), ctrl[[2]])
+  
+  ctrl <- GRanges(c("chr1:100-200", "chr2:100-200"))
+  ctrl <- GRangesList(ctrl[1], ctrl[2])
   test <- GreekSoldier(ctrl)
   expect_identical(Nightfall(test[[1]]), ctrl[[1]])
   expect_identical(Nightfall(test[[2]]), ctrl[[2]])
@@ -60,6 +83,15 @@ test_that("WoodenHorse single bracket subassignment works", {
   ctrl <- Rle(1:5, 1)
   test <- GreekSoldier(ctrl)
   val <- Rle(10:11)
+  ctrl[3:4] <- val
+  test[3:4] <- val
+  expect_identical(Nightfall(test), ctrl)
+  test[3:4] <- GreekSoldier(val)
+  expect_identical(Nightfall(test), ctrl)
+  
+  ctrl <- GRanges("chr1", IRanges(1:5, width = 10))
+  test <- GreekSoldier(ctrl)
+  val <- GRanges("chr1", IRanges(20:21, width = 2))
   ctrl[3:4] <- val
   test[3:4] <- val
   expect_identical(Nightfall(test), ctrl)
@@ -92,6 +124,10 @@ test_that("setNA sets NAs", {
   y <- setNA(1:3, c(FALSE, TRUE, FALSE))
   expect_identical(is.na(x), c(FALSE, TRUE, FALSE))
   expect_identical(is.na(y), c(FALSE, TRUE, FALSE))
+  
+  x <- GreekSoldier(GRanges("chr1", IRanges(1:3, width = 2)))
+  x <- setNA(x, c(FALSE, TRUE, FALSE))
+  expect_identical(is.na(x), c(FALSE, TRUE, FALSE))
 })
 
 test_that("WoodenHorse NAs are preserved after concatenation", {
@@ -101,10 +137,24 @@ test_that("WoodenHorse NAs are preserved after concatenation", {
   b <- setNA(b, c(FALSE, TRUE))
   ab <- c(a, b)
   expect_identical(is.na(ab), c(TRUE, FALSE, FALSE, TRUE))
+  
+  a <- GreekSoldier(GRanges("chr1", IRanges(c(2, 4), width = 5)))
+  b <- GreekSoldier(GRanges("chr1", IRanges(c(100, 104), width = 10)))
+  a <- setNA(a, c(TRUE, FALSE))
+  b <- setNA(b, c(FALSE, TRUE))
+  ab <- c(a, b)
+  expect_identical(is.na(ab), c(TRUE, FALSE, FALSE, TRUE))
 })
 
 test_that("WoodenHorse NAs are preserved after subsetting", {
   ab <- GreekSoldier(Rle(1:4))
+  ab <- setNA(ab, c(TRUE, FALSE, FALSE, TRUE))
+  a <- ab[1:2]
+  b <- ab[3:4]
+  expect_identical(is.na(a), c(TRUE, FALSE))
+  expect_identical(is.na(b), c(FALSE, TRUE))
+  
+  ab <- GreekSoldier(GRanges("chr1", IRanges(c(1, 10, 100, 1000), width = 20)))
   ab <- setNA(ab, c(TRUE, FALSE, FALSE, TRUE))
   a <- ab[1:2]
   b <- ab[3:4]

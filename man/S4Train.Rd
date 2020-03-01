@@ -2,6 +2,7 @@
 % Please edit documentation in R/range_ggproto.R
 \name{S4Train}
 \alias{S4Train}
+\alias{S4Train,NULL,ANY-method}
 \alias{S4Train,WoodenHorse,ANY-method}
 \alias{S4Train,ANY,ANY-method}
 \alias{S4Train,knownDiscretes,knownDiscretes_OR_missing-method}
@@ -10,6 +11,8 @@
 \title{Scale training}
 \usage{
 S4Train(new, existing = NULL, ..., aes = "z")
+
+\S4method{S4Train}{`NULL`,ANY}(new, existing = NULL, aes = "z")
 
 \S4method{S4Train}{WoodenHorse,ANY}(new, existing = NULL, aes = "z")
 

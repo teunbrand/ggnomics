@@ -49,7 +49,9 @@ setMethod(
   "is_oob",
   signature = c(x = "ANYGenomic", range = "GRanges"),
   function(x, range) {
-    !overlapsAny(x, range, type = "within")
+    seqmatch <- as.vector(match(seqnames(x), seqnames(range)))
+    start(x) < start(range)[seqmatch] | end(x) > end(range)[seqmatch]
+    # !overlapsAny(x, range, type = "within")
   }
 )
 
@@ -141,12 +143,22 @@ setMethod(
   signature = c(x = "WoodenHorse"),
   definition = function(x, range = c(0, 1), only.finite = TRUE, aes = "z") {
     dat <- vec_data(x)
-    x <- callGeneric(Nightfall(x), range)
-    new_vctr(
-      dat,
-      GreekSoldier = x,
-      class = "WoodenHorse"
-    )
+    xclass <- setdiff(class(x), "vctrs_vctr")
+    y <- callGeneric(attr(x, 'GreekSoldier'), range)
+    if ("hsh" %in% names(attributes(x))) {
+      new_vctr(
+        dat,
+        hsh = digest(y),
+        GreekSoldier = y,
+        class = xclass
+      )
+    } else {
+      new_vctr(
+        dat,
+        GreekSoldier = y,
+        class = xclass
+      )
+    }
   }
 )
 
@@ -242,12 +254,22 @@ setMethod(
   signature = c(x = "WoodenHorse", range = "numeric_OR_missing"),
   definition = function(x, range = c(0, 1), aes = "z") {
     dat <- vec_data(x)
-    x <- callGeneric(Nightfall(x), range)
-    new_vctr(
-      dat,
-      GreekSoldier = x,
-      class = "WoodenHorse"
-    )
+    xclass <- setdiff(class(x), "vctrs_vctr")
+    y <- callGeneric(attr(x, 'GreekSoldier'), range)
+    if ("hsh" %in% names(attributes(x))) {
+      new_vctr(
+        dat,
+        hsh = digest(y),
+        GreekSoldier = y,
+        class = xclass
+      )
+    } else {
+      new_vctr(
+        dat,
+        GreekSoldier = y,
+        class = xclass
+      )
+    }
   }
 )
 
@@ -310,7 +332,7 @@ setMethod(
   "discardOob",
   signature = c(x = "WoodenHorse", range = "ANY"),
   definition = function(x, range = c(0, 1), aes = "z") {
-    x <- attr(x, "GreekSoldier")
+    x <- Nightfall(x, na.rm = TRUE)
     x <- x[!is_oob(x, range)]
     x <- GreekSoldier(x)
   }

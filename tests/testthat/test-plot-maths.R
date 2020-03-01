@@ -10,7 +10,38 @@ test_that("Plot arithmetic works on GRanges", {
   )
   # Check class conservation
   classes <- unlist(lapply(lapply(test, class), head, 1))
-  expect_true(all(classes == "WoodenHorse"))
+  expect_true(all(classes == "OakHorse"))
+  
+  test <- lapply(test, Nightfall)
+  starts <- unname(unlist(lapply(test, start)))
+  ends <- unname(unlist(lapply(test, end)))
+  
+  expect_equal(starts, c(200, 300, 0, 100, 200, 400, 50, 100))
+  expect_equal(ends, c(300, 400, 100, 200, 400, 600, 100, 150))
+  
+  # Test unary operations
+  y <- Nightfall(-x)
+  expect_equal(start(y), c(-200, -300))
+  expect_equal(end(y), c(-100, -200))
+  
+  y <- Nightfall(+x)
+  expect_equal(start(y), c(100, 200))
+  expect_equal(end(y), c(200, 300))
+})
+
+test_that("Plot arithmetic works on IRanges", {
+  x <- GreekSoldier(IRanges(c("100-200", "200-300")))
+  
+  # Test operators
+  test <- list(
+    plus = x + 100,
+    minus = x - 100,
+    multiply = x * 2,
+    divide = x / 2
+  )
+  # Check class conservation
+  classes <- unlist(lapply(lapply(test, class), head, 1))
+  expect_true(all(classes == "BeechHorse"))
   
   test <- lapply(test, Nightfall)
   starts <- unname(unlist(lapply(test, start)))
@@ -41,7 +72,7 @@ test_that("Plot arithmetic works on numeric-like classes", {
   )
   # Check class conservation
   classes <- unlist(lapply(lapply(test, class), head, 1))
-  expect_true(all(classes == "WoodenHorse"))
+  expect_true(all(classes == "BeechHorse"))
   
   test <- unname(unlist(lapply(lapply(test, Nightfall), runValue)))
   expect_equal(test, c(200, 300, 0, 100, 200, 400, 50, 100))
@@ -60,7 +91,7 @@ test_that("Plot arithmetic works on numeric-like classes", {
   )
   # Check class conservation
   classes <- unlist(lapply(lapply(test, class), head, 1))
-  expect_true(all(classes == "WoodenHorse"))
+  expect_true(all(classes == "BeechHorse"))
   
   test <- lapply(test, Nightfall)
   test <- unname(unlist(lapply(test, unlist)))

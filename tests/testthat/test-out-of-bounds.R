@@ -41,8 +41,8 @@ test_that("censorThis works as intended", {
   
   # Should retain classes
   classes <- unlist(lapply(lapply(test, class), head, 1))
-  expect_identical(classes, c("WoodenHorse", "WoodenHorse", 
-                              "WoodenHorse", "numeric"))
+  expect_identical(classes, c("OakHorse", "BeechHorse", 
+                              "BeechHorse", "numeric"))
   
   implicit <- unlist(lapply(test, HelenOfTroy))
   expect_identical(implicit, c("GRanges", "IRanges", "Rle", "numeric"))

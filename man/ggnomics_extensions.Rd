@@ -5,6 +5,7 @@
 \docType{data}
 \name{ViewScaleS4}
 \alias{ViewScaleS4}
+\alias{ViewScaleS4Secondary}
 \alias{CoordS4}
 \alias{ggnomics_extensions}
 \alias{RangeS4}
@@ -31,6 +32,9 @@ ggnomics relies on the extension mechanism of ggplot2 through
 \itemize{
 \item \code{ViewScaleS4}: An child to ggplot's ViewScale ggproto that
 has a minor label getter. Note: this class is not exported.
+
+\item \code{ViewScaleS4Secondary}: A child to ViewScaleS4 that has static break
+information. Note: this class is not exported.
 
 \item \code{CoordS4}: See \code{\link[ggnomics]{coord_S4}}
 

@@ -35,7 +35,8 @@ RangeS4Continuous <- ggproto(
   "RangeS4Continuous",
   RangeS4,
   train = function(self, x) {
-    self$range <- S4Train(new = x, existing = self$range,
+    self$range <- S4Train(new = x, 
+                          existing = self$range,
                           aes = self$aes)
   }
 )
@@ -48,7 +49,8 @@ RangeS4Discrete <- ggproto(
   "RangeS4Discrete",
   RangeS4,
   train = function(self, x, drop = FALSE, na.rm = FALSE) {
-    self$range <- S4Train(new = x, existing = self$range,
+    self$range <- S4Train(new = x, 
+                          existing = self$range,
                           drop = drop, na.rm = na.rm,
                           aes = self$aes)
   }
@@ -89,21 +91,26 @@ RangeS4Discrete <- ggproto(
 #'         existing = GRanges(c("chr2:200-300")))
 setGeneric(
   "S4Train",
-  function(new, existing = NULL, ..., aes = "z") {
-    if (is.null(new)) {
-      return(existing)
-    }
-    standardGeneric("S4Train")
-  },
+  function(new, existing = NULL, ..., aes = "z") standardGeneric("S4Train"),
   signature = c("new", "existing")
 )
 
 #' @rdname S4Train
 setMethod(
   "S4Train",
-  signature = c(new = "WoodenHorse"),
+  signature = c(new = "NULL", existing = "ANY"),
   definition = function(new, existing = NULL, aes = "z") {
-    callGeneric(Nightfall(new)[!is.na(new)], Nightfall(existing), aes = aes)
+    return(existing)
+  }
+)
+
+#' @rdname S4Train
+setMethod(
+  "S4Train",
+  signature = c(new = "WoodenHorse", existing = "ANY"),
+  definition = function(new, existing = NULL, aes = "z") {
+    new <- Nightfall(new, na.rm = TRUE)
+    callGeneric()
   }
 )
 
@@ -132,7 +139,7 @@ setMethod(
   signature = c(new = "IntegerRanges", existing = "numeric_OR_missing"),
   definition = function(new, existing = NULL, aes = "z") {
     new <- c(start(new) - 0.5, end(new) + 0.5)
-    callGeneric(new, existing, aes = aes)
+    S4Range(new, existing, aes = aes)
   }
 )
 

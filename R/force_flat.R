@@ -30,7 +30,7 @@ setGeneric(
   "S4ForceFlat",
   function(x, limits = NULL, aes = "z") {
     # Special case for axis training, where orthogonal scale is set to Inf/-Inf
-    if (all(!(check_finite(x)))) {
+    if (is.numeric(x) && all(is.infinite(x))) {
       return(x)
     }
     standardGeneric("S4ForceFlat")

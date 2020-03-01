@@ -17,16 +17,23 @@ test_that("guide_axis_genomic can be trained", {
   sc$train(sc$limits)
   sc <- ggnomics:::view_scales_from_scale_S4(sc)
 
-  b <- guide_train(untrained, sc$x, "x")$key
-  expect_true(all(c("major", "minor") %in% b$.type))
-  expect_true(all(c("chr1", "chr2", "120", "150", "180") %in% b$.label))
-  expect_is(b$x, "WoodenHorse")
-  expect_is(b$.value, "WoodenHorse")
-  expect_true(HelenOfTroy(b$x) == "UnstitchedGPos")
-  expect_true(HelenOfTroy(b$.value) == "UnstitchedGPos")
+  b <- guide_train(untrained, sc$x, "x")
+  expect_true(all(c("key", "key_minor") %in% names(b)))
+  
+  # Major key assumptions
+  expect_true(all(c("chr1", "chr2") %in% b$key$.label))
+  expect_is(b$key$x, "WoodenHorse")
+  expect_is(b$key$.value, "WoodenHorse")
+  expect_true(HelenOfTroy(b$key$x) == "UnstitchedGPos")
+  expect_true(HelenOfTroy(b$key$.value) == "UnstitchedGPos")
+  
+  # Minor key assumptions
+  expect_true(all(c("120", "150", "180") %in% b$key_minor$.label))
+  expect_is(b$key_minor$x, "WoodenHorse")
+  expect_is(b$key_minor$.value, "WoodenHorse")
+  expect_true(HelenOfTroy(b$key_minor$x) == "UnstitchedGPos")
+  expect_true(HelenOfTroy(b$key_minor$.value) == "UnstitchedGPos")
 })
-
-
 
 test_that("guide_axis_genomic training yield axis if non-S4 input", {
   a <- guide_genomic_axis()
@@ -47,7 +54,6 @@ sc$train(sc$limits)
 sc <- ggnomics:::view_scales_from_scale_S4(sc)
 trained <- guide_train(untrained, sc$x, "x")
 
-
 test_that("guide_axis_genomic can be transformed", {
   df <- DataFrame(x = GRanges(c("chr1:100-200", "chr2:100-200")),
                   y = 1:2)
@@ -65,8 +71,12 @@ test_that("guide_axis_genomic can be transformed", {
 
   expect_is(trained$key$x, "WoodenHorse")
   expect_is(transformed$key$x, "numeric")
+  expect_is(trained$key_minor$x, "WoodenHorse")
+  expect_is(transformed$key_minor$x, "numeric")
   expect_false("y" %in% names(trained$key))
   expect_true("y" %in% names(transformed$key))
+  expect_false("y" %in% names(trained$key_minor))
+  expect_true("y" %in% names(transformed$key_minor))
 })
 
 test_that("guide_axis_genomic grob can be made", {

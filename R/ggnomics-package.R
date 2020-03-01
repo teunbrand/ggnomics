@@ -11,6 +11,7 @@
 #' @import IRanges
 #' @import vctrs
 #' @importFrom rlang `%||%`
+#' @importFrom digest digest
 NULL
 
 # The following block is used by usethis to automatically manage

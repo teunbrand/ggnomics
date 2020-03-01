@@ -50,7 +50,8 @@ setMethod(
     "make_labels",            # in ggplot constructor
     "scales_list",            # in ggplot constructor
     "set_sec_axis",           # in scale constructor
-    "view_scale_secondary",   # in viewscales
+    # "view_scale_secondary",   # in viewscales
+    "scale_flip_position",    # in viewscales
     "new_data_frame",         # in guide_axis_genomic
     "axis_label_element_overrides", # in guide_axis genomic
     "draw_axis_labels",       # in guide_axis genomic

@@ -60,7 +60,7 @@ guide_train.genomic_axis <- function(guide, scale, aesthetic = NULL) {
   }
 
   minorbreaks <- scale$get_breaks_minor()
-  breaks <- c(majorbreaks, minorbreaks)
+  # breaks <- c(majorbreaks, minorbreaks)
   lens <- c(length(majorbreaks), length(minorbreaks))
 
   # Make a data.frame for empty ticks
@@ -74,15 +74,20 @@ guide_train.genomic_axis <- function(guide, scale, aesthetic = NULL) {
     warning("genomic_axis guide needs appropriate scales: ", 
             guide$available_aes)
     guide$key <- empty_ticks
-  } else if (length(breaks) == 0) {
+  } else if (length(majorbreaks) == 0) {
     guide$key <- empty_ticks
   } else {
-    mapped_breaks <- if(scale$is_discrete()) scale$map(breaks) else breaks
-    ticks <- .int$new_data_frame(setNames(list(mapped_breaks), aesthetic))
-    ticks$.value <- breaks
-    ticks$.type  <- rep.int(c("major", "minor"), times = lens)
-    ticks$.label <- c(scale$get_labels(majorbreaks),
-                      scale$get_labels_minor(minorbreaks))
+    if (scale$is_discrete()) {
+      mapped_major <- scale$map(majorbreaks)
+      mapped_minor <- scale$map(minorbreaks)
+    } else {
+      mapped_major <- majorbreaks
+      mapped_minor <- minorbreaks
+    }
+
+    ticks <- .int$new_data_frame(setNames(list(mapped_major), aesthetic))
+    ticks$.value <- majorbreaks
+    ticks$.label <- scale$get_labels(majorbreaks)
 
     if (is.list(ticks$.label)) {
       if (any(sapply(ticks$.label, is.language))) {
@@ -92,6 +97,23 @@ guide_train.genomic_axis <- function(guide, scale, aesthetic = NULL) {
       }
     }
     guide$key <- ticks[is.finite(ticks[[aesthetic]]), ]
+  }
+  
+  if (length(minorbreaks) == 0) {
+    guide$key_minor <- empty_ticks
+  } else {
+    ticks <- .int$new_data_frame(setNames(list(mapped_minor), aesthetic))
+    ticks$.value <- minorbreaks
+    ticks$.label <- scale$get_labels_minor(minorbreaks)
+    
+    if (is.list(ticks$.label)) {
+      if (any(sapply(ticks$.label, is.language))) {
+        ticks$.label <- base::do.call(expression, ticks$.label)
+      } else {
+        ticks$.label <- unlist(ticks$.label)
+      }
+    }
+    guide$key_minor <- ticks[is.finite(ticks[[aesthetic]]), ]
   }
 
   guide$name <- paste0(guide$name, "_", aesthetic)
@@ -114,20 +136,20 @@ guide_transform.genomic_axis <- function(guide, coord, panel_params) {
 
   if (all(c("x", "y") %in% aesthetics)) {
     guide$key <- coord$transform(guide$key, panel_params)
+    guide$key_minor <- coord$transform(guide$key_minor, panel_params)
   } else {
     other_aesthetic <- setdiff(c("x", "y"), aesthetics)
     override_value <- if (guide$position %in% c("bottom", "left")) -Inf else Inf
     guide$key[[other_aesthetic]] <- override_value
+    guide$key_minor[[other_aesthetic]] <- override_value
     guide$key <- coord$transform(guide$key, panel_params)
+    guide$key_minor <- coord$transform(guide$key_minor, panel_params)
     .int$warn_for_guide_position(guide)
   }
-  key <- guide$key
-  key$.value <- Nightfall(key$.value)
   
-  # Merge major keys to center over chromosome
-  minor <- key[key$.type == "minor", ]
-  major <- key[key$.type == "major", ]
-  aa <- split(major[aesthetics], factor(major$.label,
+  # Average positions of major labels
+  major <- guide$key
+  aa <- split(major[aesthetics], factor(major$.label, 
                                         levels = unique(major$.label)))
   aa <- matrix(vapply(aa, colMeans, numeric(length(aesthetics)), USE.NAMES = F),
                ncol = length(aesthetics))
@@ -135,11 +157,7 @@ guide_transform.genomic_axis <- function(guide, coord, panel_params) {
   major <- major[!duplicated(major$.label), ]
   major[aesthetics] <- aa
   
-  # Recombine
-  key <- mapply("c", minor, major)
-  class(key) <- "data.frame"
-  attr(key, "row.names") <- seq_len(nrow(major) + nrow(minor))
-  guide$key <- key
+  guide$key <- major
   guide
 }
 
@@ -154,8 +172,9 @@ guide_gengrob.genomic_axis <- function(guide, theme) {
 
   draw_genomic_axis(
     break_positions = guide$key[[aesthetics]],
+    break_pos_minor = guide$key_minor[[aesthetics]],
     break_labels = guide$key$.label,
-    break_types = guide$key$.type,
+    break_lab_minor = guide$key_minor$.label,
     axis_position = guide$position,
     theme = theme,
     check.overlap = guide$check.overlap,
@@ -168,8 +187,9 @@ guide_gengrob.genomic_axis <- function(guide, theme) {
 
 draw_genomic_axis <- function(
   break_positions,
+  break_pos_minor,
   break_labels,
-  break_types,
+  break_lab_minor,
   axis_position,
   theme,
   check.overlap = FALSE,
@@ -255,8 +275,8 @@ draw_genomic_axis <- function(
   )
   
   # Setup breaks
-  is_minor <- break_types == "minor"
-  n_breaks <- sum(is_minor)
+  # is_minor <- break_types == "minor"
+  n_breaks <- length(break_pos_minor) #sum(is_minor)
   opposite_positions <- setNames(c("bottom", "top", "left", "right"),
                                  c("top", "bottom", "right", "left"))
   axis_position_opposite <- unname(opposite_positions[axis_position])
@@ -279,18 +299,25 @@ draw_genomic_axis <- function(
       break_labels <- unlist(break_labels)
     }
   }
+  if (is.list(break_lab_minor)) {
+    if (any(vapply(break_lab_minor, is.language, logical(1)))){
+      break_labels <- base::do.call(expression, break_lab_minor)
+    } else {
+      break_labels <- unlist(break_lab_minor)
+    }
+  }
 
   # Setup dodging
   dodge_pos <- rep(seq_len(n.dodge), length.out = n_breaks)
   dodge_indices <- split(seq_len(n_breaks), dodge_pos)
   
   # Axis labels
-  is_minor <- break_types == "minor"
+  # is_minor <- break_types == "minor"
   # Do minor labels
   label_grobs <- lapply(dodge_indices, function(indices) {
     .int$draw_axis_labels(
-      break_positions = break_positions[is_minor][indices],
-      break_labels = break_labels[is_minor][indices],
+      break_positions = break_pos_minor[indices],
+      break_labels = break_lab_minor[indices],
       label_element = label_element,
       is_vertical = is_vertical,
       check.overlap = check.overlap
@@ -300,8 +327,8 @@ draw_genomic_axis <- function(
   label_grobs <- append(
     label_grobs, list(`2` =
       .int$draw_axis_labels(
-        break_positions = break_positions[!is_minor],
-        break_labels = break_labels[!is_minor],
+        break_positions = break_positions,
+        break_labels = break_labels,
         label_element = label_element,
         is_vertical = is_vertical,
         check.overlap = check.overlap
@@ -315,7 +342,7 @@ draw_genomic_axis <- function(
     setNames(
       list(
         tick_element, 
-        rep(unit(break_positions[is_minor], "native"), each = 2),
+        rep(unit(break_pos_minor, "native"), each = 2),
         rep(grid::unit.c(non_position_panel + (tick_direction * tick_length),
                          non_position_panel)[tick_coordinate_order],
             times = n_breaks), 

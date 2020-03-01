@@ -1,16 +1,16 @@
 setClassUnion(
+  "missing_OR_NULL", 
+  c("NULL", "missing")
+)
+
+setClassUnion(
   "numeric_OR_missing",
-  c("numeric", "missing")
+  c("numeric", "missing_OR_NULL")
 )
 
 setClassUnion(
   "character_OR_NULL",
   c("character", "NULL")
-)
-
-setClassUnion(
-  "missing_OR_NULL", 
-  c("NULL", "missing")
 )
 
 setClassUnion(
@@ -35,5 +35,11 @@ setClassUnion(
 
 setClassUnion(
   "GRanges_OR_missing",
-  c("GRanges", "missing")
+  c("GRanges", "missing", "missing_OR_NULL")
 )
+
+setClassUnion(
+  "WoodenHorse",
+  c("BeechHorse", "OakHorse")
+)
+

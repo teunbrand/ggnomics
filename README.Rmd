@@ -66,6 +66,13 @@ The data retains the S4 classes throughout the vast majority of plot building, a
 layer_data(g)
 ```
 
+## Working classes
+
+Here is a list of classes that I've tested with:
+
+* Rle
+* IRanges
+* GRanges
 
 ## Likely advantages
 
@@ -82,8 +89,8 @@ Here is a list:
 
 Here is a list:
 
-* Cannot evaluate expressions on S4 columns in aesthetics ([work in progress]())
-* Using GRanges as position unit is slow
+* Cannot evaluate expressions on S4 columns in aesthetics ([work in progress](https://github.com/tidyverse/ggplot2/pull/3837))
+* Using GRanges as position unit is a tad slow
 * Currently cannot represent non-integers on genomic scales.
 * Doesn't have a polar coordinate system
 * No working implementation of discrete scales

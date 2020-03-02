@@ -8,8 +8,12 @@ setOldClass("OakHorse")
 # BeechHorse is a simple wrapper around an S4 class, where the vec_data part
 # keeps track of (assigned) NAs
 BeechHorse <- function(x = MISSING()) {
-  if (inherits(x, "CompressedList") || inherits(x, "SimpleList")) {
-    nas <- vapply(x, function(x){any(is.na(x))}, logical(1))
+  if (inherits(x, "DataFrame")) {
+    nas <- is.na(x)
+    nas <- pmin(rowSums(nas), 1)
+  } else if (inherits(x, "CompressedList") || inherits(x, "SimpleList")) {
+    nas <- is.na(x)
+    nas <- vapply(nas, any, logical(1))
   } else {
     nas <- as.vector(is.na(x))
   }
@@ -220,10 +224,11 @@ vec_cast.WoodenHorse.OakHorse <- function(x, to, ...) {
 #' @keywords internal
 #' @importFrom vctrs vec_as_location
 `[.BeechHorse` <- function(x, i, ...) {
-  ii <- vec_as_location(i, length(x), names = names(x), missing = "propagate")
+  dat <- attr(x, "GreekSoldier")
+  ii <- vec_as_location(i, NROW(dat), names = ROWNAMES(dat), missing = "propagate")
   ii[is.na(i)] <- 1L
   new_vctr(vec_data(x)[i],
-           GreekSoldier = attr(x, "GreekSoldier")[ii],
+           GreekSoldier = extractROWS(dat, i = ii),
            class = c("BeechHorse", "WoodenHorse"))
 }
 
@@ -248,11 +253,12 @@ vec_cast.WoodenHorse.OakHorse <- function(x, to, ...) {
     vec <- vec_data(value)
     value <- attr(value, "GreekSoldier")
   } else {
-    vec <- numeric(length(value))
+    vec <- numeric(NROW(value))
   }
   newvec <- `[<-`(vec_data(x), i = i, value = vec)
-  # new <- replaceROWS(attr(x, "GreekSoldier"), i, value)
-  new <- `[<-`(attr(x, "GreekSoldier"), i = i, value = value)
+  i[is.na(i)] <- 1L
+  new <- mergeROWS(attr(x, "GreekSoldier"), i, value)
+  # new <- `[<-`(attr(x, "GreekSoldier"), i = i, value = value)
   new_vctr(
     newvec,
     GreekSoldier = new,

@@ -74,6 +74,14 @@ layer_data(g)
 #> 3     NA  0.1        1    NA     0    0.8
 ```
 
+## Working classes
+
+Here is a list of classes that I’ve tested with:
+
+  - Rle
+  - IRanges
+  - GRanges
+
 ## Likely advantages
 
 Here is a list:
@@ -91,8 +99,8 @@ Here is a list:
 Here is a list:
 
   - Cannot evaluate expressions on S4 columns in aesthetics ([work in
-    progress]())
-  - Using GRanges as position unit is slow
+    progress](https://github.com/tidyverse/ggplot2/pull/3837))
+  - Using GRanges as position unit is a tad slow
   - Currently cannot represent non-integers on genomic scales.
   - Doesn’t have a polar coordinate system
   - No working implementation of discrete scales

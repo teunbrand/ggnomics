@@ -88,7 +88,6 @@ PositionDisjointRanges <- ggplot2::ggproto(
     params
   },
   compute_panel = function(data, params, scales) {
-    # browser()
 
     group <- data[["group"]]
     if (no_unique <- length(unique(group)) == 1 && group[1] == -1) {

@@ -129,7 +129,7 @@ setMethod(
   signature = c(x = "BeechHorse"),
   function(x, na.rm = FALSE) {
     if (isTRUE(na.rm)) {
-      attr(x, "GreekSoldier")[!is.na(x)]
+      extractROWS(attr(x, "GreekSoldier"), i = which(!is.na(x)))
     } else {
       attr(x, "GreekSoldier")
     }
@@ -147,7 +147,7 @@ setMethod(
     } else {
       i <- vec_data(x)
     }
-    attr(x, "GreekSoldier")[i]
+    extractROWS(attr(x, "GreekSoldier"), i = i)
   }
 )
 

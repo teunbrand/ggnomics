@@ -5,17 +5,18 @@ test_that("GreekSoldiers packs appropriately", {
     1:10,
     Rle(1:5),
     IntegerList(1, 2),
-    GRanges("chr1:100-200")
+    GRanges("chr1:100-200"),
+    DataFrame(x = 1:5, y = 2:6)
   )
   
   test <- lapply(cases, GreekSoldier)
   classes <- lapply(test, function(x) head(class(x), 1))
   expect_identical(classes, list("integer", "BeechHorse", 
-                                 "BeechHorse", "OakHorse"))
+                                 "BeechHorse", "OakHorse", "BeechHorse"))
   
   implicit <- lapply(test, HelenOfTroy)
   expect_equivalent(implicit, list("integer", "Rle", "CompressedIntegerList", 
-                                   "GRanges"))
+                                   "GRanges", "DFrame"))
   
   restored <- lapply(test, Nightfall)
   expect_identical(cases, restored)
@@ -38,17 +39,22 @@ test_that("WoodenHorse casts correctly", {
   x <- GreekSoldier(Rle(1:3))
   y <- GreekSoldier(IRanges(1:3, width = 3:1))
   z <- GreekSoldier(GRanges(c("chr1:100-200", "chr2:200-300")))
+  w <- GreekSoldier(DataFrame(x = 1:5, y = 2:6))
   
   expect_error(c(x, 1), 
                class = "vctrs_error_incompatible_type")
   expect_s3_class(c(x, x), "WoodenHorse")
   expect_s3_class(c(x, x), "BeechHorse")
   expect_s3_class(c(z, z), "OakHorse")
+  expect_s3_class(c(w, w), "BeechHorse")
   
   expect_identical(Nightfall(c(x, x)), c(Rle(1:3), Rle(1:3)))
   expect_identical(Nightfall(c(z, z)), 
                    c(GRanges(c("chr1:100-200", "chr2:200-300")),
                      GRanges(c("chr1:100-200", "chr2:200-300"))))
+  expect_identical(Nightfall(c(w, w)),
+                   DataFrame(x = c(1:5, 1:5),
+                             y = c(2:6, 2:6)))
   
   w <- GreekSoldier(GRanges(c("chr1:300-400", "chr2:50-100")))
   expect_identical(Nightfall(c(z, w)), 
@@ -59,11 +65,14 @@ test_that("WoodenHorse casts correctly", {
 test_that("WoodenHorse is subsetted appropriately", {
   ctrl <- Rle(1:4)
   ctrl2 <- GRanges("chr1", IRanges(1:4, width = 5))
+  ctrl3 <- DataFrame(x = 1:5, y = 2:6)
   test <- GreekSoldier(ctrl)
   test2 <- GreekSoldier(ctrl2)
+  test3 <- GreekSoldier(ctrl3)
   
   expect_identical(ctrl[2:3], Nightfall(test[2:3]))
   expect_identical(ctrl2[2:3], Nightfall(test2[2:3]))
+  expect_identical(ctrl3[2:3,], Nightfall(test3[2:3]))
 })
 
 test_that("WoodenHorse double bracket subsetting works", {
@@ -84,6 +93,15 @@ test_that("WoodenHorse single bracket subassignment works", {
   test <- GreekSoldier(ctrl)
   val <- Rle(10:11)
   ctrl[3:4] <- val
+  test[3:4] <- val
+  expect_identical(Nightfall(test), ctrl)
+  test[3:4] <- GreekSoldier(val)
+  expect_identical(Nightfall(test), ctrl)
+  
+  ctrl <- DataFrame(x = 1:5, y = 2:6)
+  test <- GreekSoldier(ctrl)
+  val <- DataFrame(x = 10:11, y = 12:13)
+  ctrl[3:4,] <- val
   test[3:4] <- val
   expect_identical(Nightfall(test), ctrl)
   test[3:4] <- GreekSoldier(val)

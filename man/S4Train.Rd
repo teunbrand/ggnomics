@@ -10,35 +10,35 @@
 \alias{S4Train,GenomicRanges,GRanges_OR_missing-method}
 \title{Scale training}
 \usage{
-S4Train(new, existing = NULL, ..., aes = "z")
+S4Train(new, existing = NULL, drop = FALSE, na.rm = FALSE, ..., aes = "z")
 
-\S4method{S4Train}{`NULL`,ANY}(new, existing = NULL, aes = "z")
+\S4method{S4Train}{`NULL`,ANY}(new, existing = NULL, drop = FALSE, na.rm = FALSE, ..., aes = "z")
 
-\S4method{S4Train}{WoodenHorse,ANY}(new, existing = NULL, aes = "z")
+\S4method{S4Train}{WoodenHorse,ANY}(new, existing = NULL, drop = FALSE, na.rm = FALSE, ..., aes = "z")
 
-\S4method{S4Train}{ANY,ANY}(new, existing = NULL, aes = "z")
+\S4method{S4Train}{ANY,ANY}(new, existing = NULL, drop = FALSE, na.rm = FALSE, ..., aes = "z")
 
 \S4method{S4Train}{knownDiscretes,knownDiscretes_OR_missing}(new, existing = NULL, drop = FALSE, na.rm = FALSE, ..., aes = "z")
 
-\S4method{S4Train}{IntegerRanges,numeric_OR_missing}(new, existing = NULL, aes = "z")
+\S4method{S4Train}{IntegerRanges,numeric_OR_missing}(new, existing = NULL, drop = FALSE, na.rm = FALSE, ..., aes = "z")
 
-\S4method{S4Train}{GenomicRanges,GRanges_OR_missing}(new, existing = NULL, aes = "z")
+\S4method{S4Train}{GenomicRanges,GRanges_OR_missing}(new, existing = NULL, drop = FALSE, na.rm = FALSE, ..., aes = "z")
 }
 \arguments{
 \item{new}{An object representing the current range}
 
 \item{existing}{An object representing the new range}
 
-\item{...}{Arguments passed down to downstream methods. Currently used for
-discrete scales.}
-
-\item{aes}{An aesthetic for which to evaluate the range}
-
 \item{drop}{When \code{TRUE}, will drop factor levels not associated with
 data. Used in discrete scales.}
 
 \item{na.rm}{When \code{TRUE}, will remove missing values. Used in discrete
 scales.}
+
+\item{...}{Arguments passed down to downstream methods. Currently used for
+discrete scales.}
+
+\item{aes}{An aesthetic for which to evaluate the range}
 }
 \value{
 An updated representation of a range

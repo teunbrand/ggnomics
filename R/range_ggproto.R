@@ -91,7 +91,8 @@ RangeS4Discrete <- ggproto(
 #'         existing = GRanges(c("chr2:200-300")))
 setGeneric(
   "S4Train",
-  function(new, existing = NULL, ..., aes = "z") standardGeneric("S4Train"),
+  function(new, existing = NULL, drop = FALSE, 
+           na.rm = FALSE, ..., aes = "z") standardGeneric("S4Train"),
   signature = c("new", "existing")
 )
 
@@ -99,7 +100,7 @@ setGeneric(
 setMethod(
   "S4Train",
   signature = c(new = "NULL", existing = "ANY"),
-  definition = function(new, existing = NULL, aes = "z") {
+  definition = function(new, existing = NULL, ..., aes = "z") {
     return(existing)
   }
 )
@@ -108,7 +109,7 @@ setMethod(
 setMethod(
   "S4Train",
   signature = c(new = "WoodenHorse", existing = "ANY"),
-  definition = function(new, existing = NULL, aes = "z") {
+  definition = function(new, existing = NULL, ..., aes = "z") {
     new <- Nightfall(new, na.rm = TRUE)
     callGeneric()
   }
@@ -118,7 +119,7 @@ setMethod(
 setMethod(
   "S4Train",
   signature = c(new = "ANY", existing = "ANY"),
-  definition = function(new, existing = NULL, aes = "z") {
+  definition = function(new, existing = NULL, ..., aes = "z") {
     S4Range(new, existing, na.rm = TRUE, finite = TRUE, aes = aes)
   }
 )
@@ -137,7 +138,7 @@ setMethod(
 setMethod(
   "S4Train",
   signature = c(new = "IntegerRanges", existing = "numeric_OR_missing"),
-  definition = function(new, existing = NULL, aes = "z") {
+  definition = function(new, existing = NULL, ..., aes = "z") {
     new <- c(start(new) - 0.5, end(new) + 0.5)
     S4Range(new, existing, aes = aes)
   }
@@ -149,7 +150,27 @@ setMethod(
 setMethod(
   "S4Train",
   signature = c(new = "GenomicRanges", existing = "GRanges_OR_missing"),
-  definition = function(new, existing = NULL, aes = "z") {
+  definition = function(new, existing = NULL, ..., aes = "z") {
     suppressWarnings(S4Range(new, existing, aes = aes))
+  }
+)
+
+setMethod(
+  "S4Train",
+  signature = c(new = "Rle", existing = "ANY"),
+  definition = function(new, existing = NULL, drop = FALSE, 
+                        na.rm = FALSE, aes = "z") {
+    new <- runValue(new)
+    callGeneric()
+  }
+)
+
+setMethod(
+  "S4Train",
+  signature = c(new = "Factor", existing = "ANY"),
+  definition = function(new, existing = NULL, drop = FALSE, 
+                        na.rm = FALSE, aes = "z") {
+    new <- levels(new)
+    callGeneric()
   }
 )

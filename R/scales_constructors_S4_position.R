@@ -1,4 +1,7 @@
+# Continuous --------------------------------------------------------------
+
 #' @name scale_S4_continuous
+#' @aliases scale_x_S4_continuous scale_y_S4_continuous
 #'
 #' @title Position scales for S4 continuous data (x & y)
 #'
@@ -113,7 +116,60 @@ scale_y_S4_continuous <- function(
   .int$set_sec_axis(sec.axis, sc)
 }
 
-# Internal Constructor ----------------------------------------------------
+# Discrete ----------------------------------------------------------------
+
+#' @name scale_S4_discrete
+#' @aliases scale_x_S4_discrete scale_y_S4_discrete
+#' @title Position scales for S4 discrete data (x & y)
+#' @description \code{scale_x_S4_discrete} and \code{scale_y_S4_discrete}
+#' are the analogues of \code{\link[ggplot2]{scale_x_discrete}} and
+#'  \code{\link[ggplot2]{scale_y_discrete}}. They are the default scales for S4
+#'  discrete data classes.
+#' @inheritParams ggplot2::scale_x_discrete
+#'
+#' @examples
+#' NULL
+NULL
+
+#' @rdname scale_S4_discrete
+#' @export
+scale_x_S4_discrete <- function(
+  ..., 
+  expand = waiver(), 
+  guide = waiver(), 
+  position = "bottom") {
+  sc <- S4_discrete_scale(c("x", "xmin", "xmax", "xend"),
+                          "position_d",
+                          S4TransIdentity,
+                          ...,
+                          expand = expand,
+                          guide = guide,
+                          position = position,
+                          super = ScaleS4DiscretePosition)
+  sc$range_c <- new_S4_discrete_range(sc$aesthetics[1])
+  sc
+}
+
+#' @rdname scale_S4_discrete
+#' @export
+scale_y_S4_discrete <- function(
+  ..., 
+  expand = waiver(), 
+  guide = waiver(), 
+  position = "left") {
+  sc <- S4_discrete_scale(c("y", "ymin", "ymax", "yend"),
+                          "position_d",
+                          S4TransIdentity,
+                          ...,
+                          expand = expand,
+                          guide = guide,
+                          position = position,
+                          super = ScaleS4DiscretePosition)
+  sc$range_c <- new_S4_discrete_range(sc$aesthetics[1])
+  sc
+}
+
+# Internal Constructors ---------------------------------------------------
 
 S4_continuous_scale <- function(
   aesthetics,
@@ -133,7 +189,7 @@ S4_continuous_scale <- function(
   trans = S4TransIdentity,
   guide = "legend",
   position = "left",
-  super = ScaleS4ContinuousPosition
+  super = ScaleDiscrete
 ) {
   aesthetics <- standardise_aes_names(aesthetics)
   
@@ -173,4 +229,45 @@ S4_continuous_scale <- function(
     guide = guide,
     position = position
   )
+}
+
+S4_discrete_scale <- function(
+  aesthetics,
+  scale_name,
+  palette,
+  name = waiver(),
+  breaks = waiver(),
+  labels = waiver(),
+  limits = NULL,
+  expand = waiver(),
+  na.translate = TRUE,
+  na.value = NA,
+  drop = TRUE,
+  guide = "legend",
+  position = "left",
+  super = ScaleS4Discrete
+) {
+  aesthetics <- standardise_aes_names(aesthetics)
+  .int$check_breaks_labels(breaks, labels)
+  position <- match.arg(position, c("left", "right", "top", "bottom"))
+  if (is.null(breaks) && all(!.int$is_position_aes(aesthetics))) {
+    guide <- "none"
+  }
+  ggproto(NULL, 
+          super, 
+          call = match.call(), 
+          aesthetics = aesthetics,
+          scale_name = scale_name, 
+          palette = palette, 
+          range = new_S4_discrete_range(aesthetics[1]),
+          limits = limits, 
+          na.value = na.value, 
+          na.translate = na.translate,
+          expand = expand,
+          name = name,
+          breaks = breaks,
+          labels = labels,
+          drop = drop,
+          guide = guide,
+          position = position)
 }

@@ -16,6 +16,7 @@
 \alias{ScaleS4Continuous}
 \alias{ScaleS4Discrete}
 \alias{ScaleS4ContinuousPosition}
+\alias{ScaleS4DiscretePosition}
 \alias{ScaleGenomic}
 \title{ggnomics extensions to ggplot2}
 \description{
@@ -63,6 +64,10 @@ ScaleDiscrete
 \item \code{ScaleS4ContinuousPosition}: A child to ScaleS4Continuous and sibling to
 ggplot's ScaleContinuousPosition. See
 \code{\link[ggnomics]{scale_S4_continuous}}.
+
+\item \code{ScaleS4DiscretePosition}: A child to ScaleS4Discrete and sibling to
+ggplot's ScaleDiscretePosition. See
+\code{\link[ggnomics]{scale_S4_discrete}}.
 
 \item \code{ScaleGenomic}: A child to ScaleS4ContinuousPosition for
 genomic coordinates. See \code{\link[ggnomics]{scale_genomic}}.

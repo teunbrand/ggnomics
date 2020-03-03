@@ -41,16 +41,20 @@ expand_scale_limits_S4 <- function(scale, expand = expansion(0, 0),
     scale$get_limits()
   }
   if (is.null(coord_limits)) {
-    coord_limits <- rep(NA_real_, length(limits))
+    if (is_discrete_like(limits)) {
+      coord_limits <- rep(NA_real_, 2)
+    } else {
+      coord_limits <- rep(NA_real_, length(limits))
+    }
   }
 
   if (scale$is_discrete()) {
-    .int$expand_limits_discrete(
+    expand_limits_discrete_S4(
       limits,
       expand,
       coord_limits,
       range_continuous = scale$range_c$range
-    )
+    )$continuous_range
   } else {
     expand_limits_continuous_S4(
       limits,
@@ -85,6 +89,36 @@ expand_limits_continuous_S4 <- function(
 
   list(continuous_range_coord = continuous_range_coord,
        continuous_range = final_scale_limits)
+}
+
+expand_limits_discrete_S4 <- function(
+  limits, expand = expansion(0, 0), 
+  coord_limits = c(NA, NA), range_continuous = NULL,
+  trans = scales::identity_trans()
+) {
+  n_limits <- length(limits)
+  is_empty <- is.null(limits) && is.null(range_continuous)
+  is_only_continuous <- n_limits == 0
+  is_only_discrete <- is.null(range_continuous)
+  if (is_empty) {
+    expand_limits_continuous_S4(c(0, 1), expand, coord_limits, trans)
+  } else if (is_only_continuous) {
+    expand_limits_continuous_S4(c(1, n_limits), expand, coord_limits, trans)
+  } else {
+    limit_info_discrete <- expand_limits_continuous_S4(
+      c(1, n_limits), expand, coord_limits, trans
+    )
+    limit_info_continuous <- expand_limits_continuous_S4(
+      range_continuous, expansion(0, 0), coord_limits, trans
+    )
+    list(continuous_range_coord = range(
+      c(limit_info_discrete$continuous_range_coord,
+        limit_info_continuous$continuous_range_coord)
+    ), continuous_range = range(
+      c(limit_info_discrete$continuous_range,
+        limit_info_continuous$continuous_range)
+    ))
+  }
 }
 
 # Like ggplot2:::expand_range4

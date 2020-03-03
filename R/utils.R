@@ -45,7 +45,7 @@ setMethod(
   objects <- c(
     "check_breaks_labels",    # in scale constructors
     "default_expansion",      # in viewscales
-    "expand_limits_discrete", # in viewscales
+    # "expand_limits_discrete", # in viewscales
     "is_position_aes",        # in scale constructors
     "make_labels",            # in ggplot constructor
     "scales_list",            # in ggplot constructor
@@ -55,7 +55,8 @@ setMethod(
     "new_data_frame",         # in guide_axis_genomic
     "axis_label_element_overrides", # in guide_axis genomic
     "draw_axis_labels",       # in guide_axis genomic
-    "warn_for_guide_position" # in guide_axis genomic
+    "warn_for_guide_position",# in guide_axis genomic
+    "check_transformation"    # in S4 scales
   )
   objects <- setNames(objects, objects)
   out <- lapply(objects, function(i) {
@@ -77,3 +78,13 @@ globalVariables(
 )
 
 # Miscellaneous -----------------------------------------------------------
+
+is_discrete_like <- function(x) {
+  if (inherits(x, "Rle")) {
+    x <- runValue(x)
+  }
+  if (inherits(x, "Factor")) {
+    x <- levels(x)
+  }
+  is.factor(x) || is.character(x) || is.logical(x) || is(x, "knownDiscretes")
+}

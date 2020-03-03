@@ -55,6 +55,15 @@ setMethod(
   }
 )
 
+# setMethod(
+#   "is_oob",
+#   signature = c(x = "Rle", range = "knownDiscretes"),
+#   function(x, range) {
+#     runValue(x) <- runValue(x) %in% as.character(range)
+#     as.vector(x)
+#   }
+# )
+
 # Censoring ---------------------------------------------------------------
 
 # Generic and methods to do the same as scales::censor

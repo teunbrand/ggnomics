@@ -36,6 +36,13 @@ ScaleS4Continuous <- ggproto_sibling(
   oob = censorThis,
   minor_breaks = waiver(),
   minor_labels = waiver(),
+  transform = function(self, x) {
+    x <- GreekSoldier(x)
+    new_x <- self$trans$transform(x)
+    axis <- if ("x" %in% self$aesthetics) "x" else "y"
+    .int$check_transformation(x, new_x, self$scale_name, axis)
+    new_x
+  },
   get_labels_minor = function(self, breaks = self$get_breaks_minor()) {
     if (is.null(breaks)) {
       return(NULL)
@@ -189,53 +196,55 @@ ScaleS4Continuous <- ggproto_sibling(
 
 # ScaleS4Discrete ---------------------------------------------------------
 
-# TODO: find a use case for this, then export.
-
 #' @describeIn ggnomics_extensions A child to ScaleS4 and sibling to ggplot's
 #'   ScaleDiscrete
 #' @usage NULL
 #' @format NULL
+#' @export
 ScaleS4Discrete <- ggproto_sibling(
   class_name = "ScaleS4Discrete",
   parent = ScaleS4,
   sister = ScaleDiscrete,
-  drop = TRUE,
-  na.value = NA,
-  n.breaks.cache = NULL,
-  palette.cache = NULL,
-  map = function(self, x, limits = self$get_limits()) {
-    n <- sum(!is.na(limits))
-
-    # Get palette
-    if (!is.null(self$n.breaks.cache) && self$n.breaks.cache == n) {
-      pal <- self$palette.cache
-    } else {
-      if (!is.null(self$n.breaks.cache)) {
-        warn("Cached palette does not match requested")
-      }
-      pal <- self$palette(n)
-      self$palette.cache <- pal
-      self$n.breaks.cache <- n
-    }
-
-    if (rlang::is_named(pal)) {
-      # If named palette, limits pal by names first,
-      # then limit values by pal
-      idx_nomatch <- is.na(match(names(pal), limits))
-      pal[idx_nomatch] <- NA
-      pal_match <- pal[match(as.character(x), names(pal))]
-      pal_match <- pal_match <- unname(pal_match)
-    } else {
-      # If pal is not named, limit values directly
-      pal_match <- pal[match(as.character(x), limits)]
-    }
-
-    if (self$na.translate) {
-      pal_match <- pal[match(as.character(x), limits)]
-    } else {
-      pal_match
-    }
-  },
+  # drop = TRUE,
+  # na.value = NA,
+  # n.breaks.cache = NULL,
+  # palette.cache = NULL,
+  # transform = function(x) {
+  #   GreekSoldier(x)
+  # },
+  # map = function(self, x, limits = self$get_limits()) {
+  #   n <- sum(!is.na(limits))
+  # 
+  #   # Get palette
+  #   if (!is.null(self$n.breaks.cache) && self$n.breaks.cache == n) {
+  #     pal <- self$palette.cache
+  #   } else {
+  #     if (!is.null(self$n.breaks.cache)) {
+  #       warn("Cached palette does not match requested")
+  #     }
+  #     pal <- self$palette(n)
+  #     self$palette.cache <- pal
+  #     self$n.breaks.cache <- n
+  #   }
+  # 
+  #   if (rlang::is_named(pal)) {
+  #     # If named palette, limits pal by names first,
+  #     # then limit values by pal
+  #     idx_nomatch <- is.na(match(names(pal), limits))
+  #     pal[idx_nomatch] <- NA
+  #     pal_match <- pal[match(as.character(x), names(pal))]
+  #     pal_match <- pal_match <- unname(pal_match)
+  #   } else {
+  #     # If pal is not named, limit values directly
+  #     pal_match <- pal[match(as.character(x), limits)]
+  #   }
+  # 
+  #   if (self$na.translate) {
+  #     pal_match <- pal[match(as.character(x), limits)]
+  #   } else {
+  #     pal_match
+  #   }
+  # },
   clone = function(self) {
     new <- ggproto(NULL, self)
     new$range <- new_S4_discrete_range(new$aesthetics[1])
@@ -260,3 +269,60 @@ ScaleS4ContinuousPosition <- ggproto_sibling(
     scaled
   }
 )
+
+
+# ScaleS4DiscretePosition -------------------------------------------------
+
+#' @describeIn ggnomics_extensions A child to ScaleS4Discrete and sibling to
+#'   ggplot's ScaleDiscretePosition. See
+#'   \code{\link[ggnomics]{scale_S4_discrete}}.
+#' @usage NULL
+#' @format NULL
+#' @export
+ScaleS4DiscretePosition <- ggproto_sibling(
+  class_name = "ScaleS4DiscretePosition",
+  parent = ScaleS4Discrete,
+  sister = ScaleDiscrete,
+  reset = function(self) {
+    self$range_c$reset()
+  },
+  map = function(self, x, limits = self$get_limits()) {
+    if (is_discrete_like(x)) {
+      seq_along(limits)[match(as.character(x), limits)]
+    } else {
+      x
+    }
+  },
+  train = function(self, x) {
+    if (is_discrete_like(x)) {
+      self$range$train(x, drop = self$drop, na.rm = !self$na.translate)
+    } else {
+      self$range_c$train(x)
+    }
+  },
+  rescale = function(self, x, limits = self$get_limits(), 
+                     range = c(1, length(limits))) {
+    S4Rescale(self$map(x, limits = limits), from = range)
+  },
+  get_limits = function(self) {
+    # if scale contains no information, return the default limit
+    if (self$is_empty()) {
+      return(c(0, 1))
+    }
+    
+    # if self$limits is not NULL and is a function, apply it to range
+    if (is.function(self$limits)){
+      return(self$limits(self$range$range))
+    }
+    
+    # self$range$range can be NULL because non-discrete values use self$range_c
+    self$limits %||% self$range$range %||% integer()
+  },
+  is_empty = function(self) {
+    is.null(self$range$range) && is.null(self$limits) && is.null(self$range_c$range)
+  }
+)
+
+
+
+

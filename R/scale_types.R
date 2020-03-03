@@ -19,10 +19,24 @@ scale_type.ANYGenomic <- function(x) {
   "genomic"
 }
 
-# For Factor dispatch on the levels
-# Makes GRangesFactor become genomic.
 #' @export
 #' @method scale_type Factor
 scale_type.Factor <- function(x) {
-  scale_type(levels(x))
+  if (is(levels(x), "knownDiscretes")) {
+    "S4_discrete"
+  } else if (is(levels(x), "ANYGenomic")) {
+    "genomic" 
+  } else {
+    "S4_continuous"
+  }
+}
+
+#' @export
+#' @method scale_type Rle
+scale_type.Rle <- function(x) {
+  if (is(runValue(x), "knownDiscretes")) {
+    "S4_discrete"
+  } else {
+    "S4_continuous"
+  }
 }

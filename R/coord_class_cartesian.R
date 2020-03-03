@@ -9,16 +9,16 @@ NULL
 CoordS4 <- ggproto(
   "CoordS4",
   CoordCartesian,
-  setup_data = function(data, params = list()) {
-    # This is a (hopefully )temporary workaround to protect S4 classes from
-    # contraints on aesthetic evaluation, i.e. the rlang::is_vector and
-    # tibble::as_tibble validation of column data.
-    data <- lapply(data, function(layer_data) {
-      layer_data[] <- lapply(layer_data, GreekSoldier)
-      layer_data
-    })
-    data
-  },
+  # setup_data = function(data, params = list()) {
+  #   # This is a (hopefully )temporary workaround to protect S4 classes from
+  #   # contraints on aesthetic evaluation, i.e. the rlang::is_vector and
+  #   # tibble::as_tibble validation of column data.
+  #   data <- lapply(data, function(layer_data) {
+  #     layer_data[] <- lapply(layer_data, GreekSoldier)
+  #     layer_data
+  #   })
+  #   data
+  # },
   transform = function(data, panel_params) {
     if (!inherits(panel_params$x$scale, "ScaleS4") &&
         !inherits(panel_params$y$scale, "ScaleS4")) {

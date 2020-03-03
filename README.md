@@ -27,12 +27,11 @@ You can install this experimental branch from
 devtools::install_github("teunbrand/ggnomics", ref = "BioC")
 ```
 
-It would probably only work with the current release candidate of
-ggplot2, which you can install as such:
+It depends on a specific PR submitted to ggplot2 to get this to work.
 
 ``` r
 # install.packages("devtools")
-devtools::install_github("tidyverse/ggplot2", ref = "master")
+remotes::install_github("tidyverse/ggplot2", ref = remotes::github_pull("3837"))
 ```
 
 ## Example

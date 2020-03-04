@@ -68,4 +68,4 @@ Collate:
     'scales_constructors_genomic.R'
     'scales_constructors_position.R'
 Remotes:
-    tidyverse/ggplot2@master
+    tidyverse/ggplot2#3837

@@ -99,3 +99,28 @@ test_that("scale_S4Vector can work with IRanges", {
   expect_is(gr, "rect")
   expect_length(gr$x, 3L)
 })
+
+test_that("Continuous S4 scale can work with secondary axis", {
+  df <- DataFrame(x = Rle(1:3), y = 3:1)
+  ctrl <- ggplot(df, aes(x = x, y = y)) +
+    geom_point()
+  test <- ctrl + scale_x_S4_continuous(
+    sec.axis = sec_axis(trans = ~ . + 1)
+  )
+  ctrl <- ctrl + scale_x_S4_continuous()
+  
+  test1 <- layer_scales(test)
+  ctrl1 <- layer_scales(ctrl)
+  
+  expect_is(test1$x$secondary.axis, "AxisSecondary")
+  expect_is(ctrl1$x$secondary.axis, "waiver")
+  
+  test <- ggplotGrob(test)
+  ctrl <- ggplotGrob(ctrl)
+  
+  test <- test$grobs[grepl("axis-t", test$layout$name)][[1]]
+  ctrl <- ctrl$grobs[grepl("axis-t", ctrl$layout$name)][[1]]
+  
+  expect_is(test, "absoluteGrob")
+  expect_is(ctrl, "zeroGrob")
+})

@@ -48,16 +48,19 @@ test_that("S4ExpandRange works", {
   exps <- lapply(seq_len(nrow(exps1)), 
                  function(i){unname(unlist(exps1[i,]))})
   
-  cases <- list(c(10, 20), GRanges(c("chr1:10-20", "chr2:20-30")))
+  cases <- list(c(10, 20), GRanges(c("chr1:10-20", "chr2:20-30")),
+                GRanges(c("chr1:2-1")))
   
   expect_null(S4ExpandRange(NULL))
   
+  # Test simple case
   test <- mapply(S4ExpandRange, limits = rep(cases[1], length(exps)), 
                  expand = exps, SIMPLIFY = FALSE)
   ctrl <- mapply(ggplot2:::expand_range4, limits = rep(cases[1], length(exps)),
                  expand = exps, SIMPLIFY = FALSE)
   expect_equal(test, ctrl)
   
+  # Test GRanges case
   test <- mapply(S4ExpandRange, limits = rep(cases[2], length(exps)), 
                  expand = exps, SIMPLIFY = FALSE)
   test <- unlist(as(test, "GRangesList"))
@@ -71,6 +74,20 @@ test_that("S4ExpandRange works", {
   ctrl <- ctrl + rep(exps1$Var3, each = 2) * 10 + rep(exps1$Var4, each = 2)
   
   expect_equal(end(test), ctrl)
+  
+  # Test zero-width GRanges case
+  test <- mapply(S4ExpandRange, limits = rep(cases[3], length(exps)),
+                 expand = exps, SIMPLIFY = FALSE)
+  test <- unlist(as(test, "GRangesList"))
+  
+  ctrl1 <- rep(start(cases[[3]]), nrow(exps1))
+  ctrl1 <- ctrl1 - exps1$Var1 * 1 - exps1$Var2
+  
+  ctrl <- rep(end(cases[[3]]), nrow(exps1))
+  ctrl <- ctrl + exps1$Var3 * 1 + exps1$Var4
+  
+  expect_equal(start(test), pmin(ctrl, ctrl1))
+  expect_equal(end(test), pmax(ctrl, ctrl1))
 })
 
 

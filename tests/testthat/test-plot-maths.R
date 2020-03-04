@@ -19,6 +19,11 @@ test_that("Plot arithmetic works on GRanges", {
   expect_equal(starts, c(200, 300, 0, 100, 200, 400, 50, 100))
   expect_equal(ends, c(300, 400, 100, 200, 400, 600, 100, 150))
   
+  # Test ranges/ranges operation
+  test <- Nightfall(x + x)
+  expect_equal(start(test), c(200, 400))
+  expect_equal(end(test), c(400, 600))
+  
   # Test unary operations
   y <- Nightfall(-x)
   expect_equal(start(y), c(-200, -300))

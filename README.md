@@ -50,7 +50,7 @@ df <- DataFrame(
   y = 1:3
 )
 
-g <- ggplot(df, aes(x, y, fill)) +
+g <- ggplot(df, aes(x, y, fill = strand(x))) +
   geom_tile(width = 0, height = 0.8)
 g
 ```
@@ -63,10 +63,10 @@ this.
 
 ``` r
 layer_data(g)
-#>                x y PANEL group           xmin           xmax ymin ymax   fill
-#> 1 chr1:100-200:+ 1     1    -1 chr1:100-200:+ chr1:100-200:+  0.6  1.4 grey20
-#> 2 chr1:150-250:- 2     1    -1 chr1:150-250:- chr1:150-250:-  1.6  2.4 grey20
-#> 3 chr2:200-300:* 3     1    -1 chr2:200-300:* chr2:200-300:*  2.6  3.4 grey20
+#>      fill              x y PANEL group           xmin           xmax ymin ymax
+#> 1 #F8766D chr1:100-200:+ 1     1    -1 chr1:100-200:+ chr1:100-200:+  0.6  1.4
+#> 2 #00BA38 chr1:150-250:- 2     1    -1 chr1:150-250:- chr1:150-250:-  1.6  2.4
+#> 3 #619CFF chr2:200-300:* 3     1    -1 chr2:200-300:* chr2:200-300:*  2.6  3.4
 #>   colour size linetype alpha width height
 #> 1     NA  0.1        1    NA     0    0.8
 #> 2     NA  0.1        1    NA     0    0.8
@@ -97,12 +97,12 @@ Here is a list:
 
 Here is a list:
 
-  - Cannot evaluate expressions on S4 columns in aesthetics ([work in
-    progress](https://github.com/tidyverse/ggplot2/pull/3837))
+  - ~~Cannot evaluate expressions on S4 columns in aesthetics~~ ([work
+    in progress](https://github.com/tidyverse/ggplot2/pull/3837))
   - Using GRanges as position unit is a tad slow
   - Currently cannot represent non-integers on genomic scales.
   - Doesn’t have a polar coordinate system
-  - No working implementation of discrete scales
+  - ~~No working implementation of discrete scales~~
   - No working List-like solution yet (e.g. IntegerList etc.)
   - Mostly geared toward IRanges/GRanges and numerical-Rle classes at
     this point, whether anything else will work is anyone’s guess

@@ -189,7 +189,7 @@ S4_continuous_scale <- function(
   trans = S4TransIdentity,
   guide = "legend",
   position = "left",
-  super = ScaleDiscrete
+  super = ScaleS4Continuous
 ) {
   aesthetics <- standardise_aes_names(aesthetics)
   

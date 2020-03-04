@@ -53,6 +53,22 @@ setMethod(
 
 setMethod(
   "plotarith",
+  signature = c("x" = "Ranges", y = "Ranges"),
+  function(x, y, op) {
+    fun <- getGeneric(op)
+    mx <- matrix(c(start(x), end(x)), ncol = 2)
+    my <- matrix(c(start(y), end(y)), ncol = 2)
+    m <- fun(mx, my)
+    update_ranges(
+      x,
+      start = as.integer(pmin.int(m[,1], m[, 2])),
+      end = as.integer(pmax.int(m[, 1], m[, 2]))
+    )
+  }
+)
+
+setMethod(
+  "plotarith",
   signature = c("x" = "Vector", "y" = "missing"),
   function(x, y, op) {
     switch(op, 

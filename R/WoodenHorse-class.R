@@ -385,7 +385,7 @@ vec_arith.WoodenHorse.MISSING <- function(op, x, y, ...) {
 #'   \code{GreekSoldier} attribute of the two vectors.
 #' @usage NULL
 vec_arith.WoodenHorse.WoodenHorse <- function(op, x, y, ...) {
-  dat <- vec_arith_base(op, vec_data(x), vec_data(y))
+  dat <- vec_data(vec_cast(x, y))
   classx <- setdiff(class(x), "vctrs_vctr")
   x <- Nightfall(x)
   y <- Nightfall(y)

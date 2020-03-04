@@ -168,15 +168,21 @@ setMethod(
   signature = c(limits = "Ranges"),
   function(limits, expand = expansion()) {
     if (sum(width(limits)) < 1) {
-      width <- IRanges(1, 1)
+      width <- 1
     } else {
       width <- width(limits) - 1L
     }
-    start <- start(limits) + -1 * (width * expand[1] + expand[2])
-    end <- end(limits) + 1 * (width * expand[3] + expand[4])
-    start(limits) <- round(start)
-    end(limits) <- round(end)
-    return(limits)
+    start <- as.integer(
+      round(start(limits) + -1 * (width * expand[1] + expand[2]))
+    )
+    end <- as.integer(
+      round(end(limits) + 1 * (width * expand[3] + expand[4]))
+    )
+    update_ranges(
+      limits,
+      start = pmin(start, end),
+      end = pmax(start, end)
+    )
   }
 )
 

@@ -40,3 +40,12 @@ setMethod(
     S4ForceFlat(x, limits = from)
   }
 )
+
+setMethod(
+  "S4Rescale",
+  signature = c(x = "Rle", to = "numeric_OR_missing", from = "numeric"),
+  function(x, to = c(0, 1), from = S4Range(x, na.rm = TRUE, finite = TRUE)) {
+    runValue(x) <- scales::rescale(runValue(x), to = to, from = from)
+    as.vector(x)
+  }
+)

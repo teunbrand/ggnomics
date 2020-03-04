@@ -63,7 +63,9 @@ Collate:
     'transforms.R'
     'scales_class_S4.R'
     'scales_class_genomic.R'
-    'scales_constructors_S4_position.R'
+    'scales_constructors_continuous_colour.R'
+    'scales_constructors_discrete_colour.R'
     'scales_constructors_genomic.R'
+    'scales_constructors_position.R'
 Remotes:
     tidyverse/ggplot2@master

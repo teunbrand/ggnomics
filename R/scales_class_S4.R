@@ -85,14 +85,14 @@ ScaleS4Continuous <- ggproto_sibling(
                                                  all(check_finite(self$limits)))
     !has_data && !has_limits
   },
-  map = function(self, x, limits = self$get_limit()) {
+  map = function(self, x, limits = self$get_limits()) {
     x <- self$rescale(self$oob(x, range = limits), limits)
 
     uniq <- unique(x)
     pal <- self$palette(uniq)
     scaled <- pal[match(x, uniq)]
 
-    setNA(scaled, !is.na(scaled))
+    setNA(scaled, is.na(scaled))
   },
   get_limits = function(self) {
     if (self$is_empty()) {
@@ -205,46 +205,39 @@ ScaleS4Discrete <- ggproto_sibling(
   class_name = "ScaleS4Discrete",
   parent = ScaleS4,
   sister = ScaleDiscrete,
-  # drop = TRUE,
-  # na.value = NA,
-  # n.breaks.cache = NULL,
-  # palette.cache = NULL,
-  # transform = function(x) {
-  #   GreekSoldier(x)
-  # },
-  # map = function(self, x, limits = self$get_limits()) {
-  #   n <- sum(!is.na(limits))
-  # 
-  #   # Get palette
-  #   if (!is.null(self$n.breaks.cache) && self$n.breaks.cache == n) {
-  #     pal <- self$palette.cache
-  #   } else {
-  #     if (!is.null(self$n.breaks.cache)) {
-  #       warn("Cached palette does not match requested")
-  #     }
-  #     pal <- self$palette(n)
-  #     self$palette.cache <- pal
-  #     self$n.breaks.cache <- n
-  #   }
-  # 
-  #   if (rlang::is_named(pal)) {
-  #     # If named palette, limits pal by names first,
-  #     # then limit values by pal
-  #     idx_nomatch <- is.na(match(names(pal), limits))
-  #     pal[idx_nomatch] <- NA
-  #     pal_match <- pal[match(as.character(x), names(pal))]
-  #     pal_match <- pal_match <- unname(pal_match)
-  #   } else {
-  #     # If pal is not named, limit values directly
-  #     pal_match <- pal[match(as.character(x), limits)]
-  #   }
-  # 
-  #   if (self$na.translate) {
-  #     pal_match <- pal[match(as.character(x), limits)]
-  #   } else {
-  #     pal_match
-  #   }
-  # },
+  map = function(self, x, limits = self$get_limits()) {
+    n <- sum(!is.na(limits))
+
+    # Get palette
+    if (!is.null(self$n.breaks.cache) && self$n.breaks.cache == n) {
+      pal <- self$palette.cache
+    } else {
+      if (!is.null(self$n.breaks.cache)) {
+        warn("Cached palette does not match requested")
+      }
+      pal <- self$palette(n)
+      self$palette.cache <- pal
+      self$n.breaks.cache <- n
+    }
+
+    if (rlang::is_named(pal)) {
+      # If named palette, limits pal by names first,
+      # then limit values by pal
+      idx_nomatch <- is.na(match(names(pal), limits))
+      pal[idx_nomatch] <- NA
+      pal_match <- pal[match(as.character(x), names(pal))]
+      pal_match <- pal_match <- unname(pal_match)
+    } else {
+      # If pal is not named, limit values directly
+      pal_match <- pal[match(as.character(x), limits)]
+    }
+
+    if (self$na.translate) {
+      pal_match <- pal[match(as.character(x), limits)]
+    } else {
+      pal_match
+    }
+  },
   clone = function(self) {
     new <- ggproto(NULL, self)
     new$range <- new_S4_discrete_range(new$aesthetics[1])

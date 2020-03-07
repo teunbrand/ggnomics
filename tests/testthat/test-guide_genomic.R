@@ -19,14 +19,14 @@ test_that("guide_axis_genomic can be trained", {
 
   b <- guide_train(untrained, sc$x, "x")
   expect_true(all(c("key", "key_minor") %in% names(b)))
-  
+
   # Major key assumptions
   expect_true(all(c("chr1", "chr2") %in% b$key$.label))
   expect_is(b$key$x, "WoodenHorse")
   expect_is(b$key$.value, "WoodenHorse")
   expect_true(HelenOfTroy(b$key$x) == "UnstitchedGPos")
   expect_true(HelenOfTroy(b$key$.value) == "UnstitchedGPos")
-  
+
   # Minor key assumptions
   expect_true(all(c("120", "150", "180") %in% b$key_minor$.label))
   expect_is(b$key_minor$x, "WoodenHorse")
@@ -104,6 +104,28 @@ test_that("guide_axis_genomic grob can be made", {
   expect_equal(labs[[1]], c("chr1", "chr2"))
   expect_equal(labs[[2]], as.character(c(120, 150, 180, 120, 150, 180)))
 
+
+  # Test secondary axis position
+  gt <- ggplotGrob(g + scale_x_genomic(position = "top"))
+  grob <- gt$grobs[[grep("axis-t", gt$layout$name)]]
+  grob <- grob$children$axis
+
+  expect_equal(nrow(grob$layout), 3)
+  grobclass <- unlist(lapply(lapply(grob$grobs, class), head, 1))
+
+  # This should be the ticks
+  expect_true("polyline" %in% grobclass)
+  # Should have 2 'titleGrob's, 1 for chromosome, one for position
+  expect_equal(sum(grepl("titleGrob", grobclass)), 2)
+
+  labs <- lapply(grob$grobs[grobclass != "polyline"], function(x) {
+    x$children[[1]]$label
+  })
+
+  # Order or length, longest should be position, other chromosome
+  labs <- labs[order(lengths(labs))]
+  expect_equal(labs[[1]], c("chr1", "chr2"))
+  expect_equal(labs[[2]], as.character(c(120, 150, 180, 120, 150, 180)))
 })
 
 test_that("guide_axis_genomic can be vertical", {
@@ -113,19 +135,42 @@ test_that("guide_axis_genomic can be vertical", {
   gt <- ggplotGrob(g)
   grob <- gt$grobs[[grep("axis-l", gt$layout$name)]]
   grob <- grob$children$axis
-  
+
   expect_equal(nrow(grob$layout), 3)
   grobclass <- unlist(lapply(lapply(grob$grobs, class), head, 1))
-  
+
   # This should be the ticks
   expect_true("polyline" %in% grobclass)
   # Should have 2 'titleGrob's, 1 for chromosome, one for position
   expect_equal(sum(grepl("titleGrob", grobclass)), 2)
-  
+
   labs <- lapply(grob$grobs[grobclass != "polyline"], function(x) {
     x$children[[1]]$label
   })
-  
+
+  # Order or length, longest should be position, other chromosome
+  labs <- labs[order(lengths(labs))]
+  expect_equal(labs[[1]], c("chr1", "chr2"))
+  expect_equal(labs[[2]], as.character(c(120, 150, 180, 120, 150, 180)))
+
+
+  # Test secondary axis position
+  gt <- ggplotGrob(g + scale_y_genomic(position = "right"))
+  grob <- gt$grobs[[grep("axis-r", gt$layout$name)]]
+  grob <- grob$children$axis
+
+  expect_equal(nrow(grob$layout), 3)
+  grobclass <- unlist(lapply(lapply(grob$grobs, class), head, 1))
+
+  # This should be the ticks
+  expect_true("polyline" %in% grobclass)
+  # Should have 2 'titleGrob's, 1 for chromosome, one for position
+  expect_equal(sum(grepl("titleGrob", grobclass)), 2)
+
+  labs <- lapply(grob$grobs[grobclass != "polyline"], function(x) {
+    x$children[[1]]$label
+  })
+
   # Order or length, longest should be position, other chromosome
   labs <- labs[order(lengths(labs))]
   expect_equal(labs[[1]], c("chr1", "chr2"))

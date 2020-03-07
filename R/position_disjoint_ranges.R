@@ -128,7 +128,7 @@ PositionDisjointRanges <- ggplot2::ggproto(
       tmp <- do.call(rbind, tmp)
 
       tmp <- setNames(as.data.frame(tmp),
-                         c("xmin", "xmax", "group"))
+                      c("xmin", "xmax", "group"))
     }
 
     # Extend and sort ranges
@@ -140,22 +140,19 @@ PositionDisjointRanges <- ggplot2::ggproto(
     # Perform disjoint bins operation similar to IRanges::disjointBins(), but
     # generalized to any ranged numeric data, not just integers.
     track_bins <- tmp$xmax[1]
-    tmp$bin <- c(1, vapply(tail(seq_along(ord), -1), function(i) {
-      dat <- tmp[i, ]
+    tmp$bin <- 1L
+    for (i in tail(seq_along(ord), -1)) {
+      dat <- tmp[i,]
       j <- which(track_bins < dat$xmin)
       if (length(j) > 0) {
-        ans  <- j[1]
-        # If a bin is available, update bin
-        ends <- track_bins
-        ends[ans]  <- dat$xmax
-        track_bins <<- ends
+        ans <- j[1]
+        track_bins[ans] <- dat$xmax
       } else {
-        # Else, make new bin
-        track_bins <<- c(track_bins, dat$xmax)
+        track_bins <- c(track_bins, dat$xmax)
         ans <- length(track_bins)
       }
-      return(ans)
-    }, integer(1)))
+      tmp$bin[i] <- ans
+    }
 
     # Transform
     map <- match(group, tmp$group)

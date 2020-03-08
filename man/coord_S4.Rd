@@ -29,6 +29,9 @@ limits are set via \code{xlim} and \code{ylim} and some data points fall outside
 limits, then those data points may show up in places such as the axes, the
 legend, the plot title, or the plot margins.}
 }
+\value{
+A \code{Coord} ggproto object.
+}
 \description{
 The Cartesian coordinate system is the typical linear coordinate
   system wherein a point on the plane is parameterised by the x- and

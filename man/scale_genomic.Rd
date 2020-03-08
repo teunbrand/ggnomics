@@ -145,6 +145,9 @@ transformation with \code{\link[scales:trans_new]{scales::trans_new()}}.}
 
 \item{sec.axis}{\code{\link[ggplot2:sec_axis]{sec_axis()}} is used to specify a secondary axis.}
 }
+\value{
+A \code{ScaleS4} ggproto object.
+}
 \description{
 \code{scale_x_genomic()} and \code{scale_y_genomic()} are the
   default scales for x and y aesthetics defined as representations of genomic

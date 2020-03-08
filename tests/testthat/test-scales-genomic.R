@@ -191,7 +191,7 @@ test_that("Minor labels work", {
 
   # Test breaks as function
   myfun <- function(x){GreekSoldier(GRanges(seqnames(x), IRanges(end(x))))}
-  
+
   test <- g + scale_x_genomic(minor_breaks = myfun)
   sc <- layer_scales(test)
 

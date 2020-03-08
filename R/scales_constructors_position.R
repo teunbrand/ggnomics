@@ -28,6 +28,8 @@
 #'   scales will \strong{remove} data outside of the limits. Change the
 #'   \code{oob} argument to change this behaviour.
 #'
+#' @return A \code{ScaleS4} object.
+#'
 #' @export
 #'
 #' @examples
@@ -126,6 +128,7 @@ scale_y_S4_continuous <- function(
 #'  \code{\link[ggplot2]{scale_y_discrete}}. They are the default scales for S4
 #'  discrete data classes.
 #' @inheritParams ggplot2::scale_x_discrete
+#' @return A \code{ScaleS4} object.
 #'
 #' @examples
 #' NULL
@@ -134,9 +137,9 @@ NULL
 #' @rdname scale_S4_discrete
 #' @export
 scale_x_S4_discrete <- function(
-  ..., 
-  expand = waiver(), 
-  guide = waiver(), 
+  ...,
+  expand = waiver(),
+  guide = waiver(),
   position = "bottom") {
   sc <- S4_discrete_scale(c("x", "xmin", "xmax", "xend"),
                           "position_d",
@@ -153,9 +156,9 @@ scale_x_S4_discrete <- function(
 #' @rdname scale_S4_discrete
 #' @export
 scale_y_S4_discrete <- function(
-  ..., 
-  expand = waiver(), 
-  guide = waiver(), 
+  ...,
+  expand = waiver(),
+  guide = waiver(),
   position = "left") {
   sc <- S4_discrete_scale(c("y", "ymin", "ymax", "yend"),
                           "position_d",
@@ -192,21 +195,21 @@ S4_continuous_scale <- function(
   super = ScaleS4Continuous
 ) {
   aesthetics <- standardise_aes_names(aesthetics)
-  
+
   .int$check_breaks_labels(breaks, labels)
   .int$check_breaks_labels(minor_breaks, minor_labels)
-  
+
   position <- match.arg(position, c("left", "right", "top", "bottom"))
-  
+
   if (is.null(breaks) && all(!.int$is_position_aes(aesthetics))) {
     guide <- "none"
   }
-  
+
   trans <- scales::as.trans(trans)
   if (!is.null(limits) && !is.function(limits)) {
     limits <- trans$transform(limits)
   }
-  
+
   ggproto(
     NULL, super,
     call = match.call(),
@@ -253,15 +256,15 @@ S4_discrete_scale <- function(
   if (is.null(breaks) && all(!.int$is_position_aes(aesthetics))) {
     guide <- "none"
   }
-  ggproto(NULL, 
-          super, 
-          call = match.call(), 
+  ggproto(NULL,
+          super,
+          call = match.call(),
           aesthetics = aesthetics,
-          scale_name = scale_name, 
-          palette = palette, 
+          scale_name = scale_name,
+          palette = palette,
           range = new_S4_discrete_range(aesthetics[1]),
-          limits = limits, 
-          na.value = na.value, 
+          limits = limits,
+          na.value = na.value,
           na.translate = na.translate,
           expand = expand,
           name = name,

@@ -34,6 +34,8 @@
 #'
 #' @seealso \code{\link[IRanges:inter-range-methods]{disjointBins}}
 #'
+#' @return A \code{Position} ggproto object.
+#'
 #' @examples
 #' # Even though geom_tile() is parametrised by middle-x values, it is
 #' # internally converted to xmin, xmax, ymin, ymax parametrisation so the
@@ -87,21 +89,21 @@ PositionDisjointRanges <- ggplot2::ggproto(
     }
     params
   },
-  compute_panel = function(data, params, scales) {
-
+  setup_data = function(self, data, params) {
+    ggplot2:::check_required_aesthetics(self$required_aes, names(data),
+                                        ggplot2:::snake_class(self))
     group <- data[["group"]]
     if (no_unique <- length(unique(group)) == 1 && group[1] == -1) {
       group <- row(data)[, 1]
     }
 
-    tmp <- list(xmin = Nightfall(data$xmin %||% data$x),
-                xmax = Nightfall(data$xmax %||% data$x))
+    tmp <- list(min = Nightfall(data$xmin %||% data$x),
+                max = Nightfall(data$xmax %||% data$x))
     if (params$ranged_x) {
-      x <- punion(tmp$xmin, tmp$xmax)
+      x <- punion(tmp$min, tmp$max)
       if (inherits(x, "ANYGenomic")) {
-        # Groups shouldn't cross seqlevels
         group <- interaction(
-          group, decode(seqnames(tmp$x %||% tmp$xmin)), drop = TRUE
+          group, decode(seqnames(tmp$min)), drop = TRUE
         )
         maxs <- range(x)
         maxs <- setNames(end(maxs) + params$extend + 1, decode(seqnames(maxs)))
@@ -110,52 +112,61 @@ PositionDisjointRanges <- ggplot2::ggproto(
         seqlengths(x) <- slvl
         x <- absoluteRanges(x)
       }
-      tmp <- list(xmin = start(x), xmax = end(x))
+      tmp <- list(min = start(x), max = end(x))
     } else {
-      tmp <- list(xmin = pmin(tmp$xmin, tmp$xmax),
-                  xmax = pmax(tmp$xmin, tmp$xmax))
+      tmp <- list(min = pmin(tmp$min, tmp$max),
+                  max = pmax(tmp$min, tmp$max))
     }
-    tmp$group <- group
-    class(tmp) <- "data.frame"
-    attr(tmp, "row.names") <- .set_row_names(length(group))
+
+    data[["zmin"]] <- tmp$min
+    data[["zmax"]] <- tmp$max
+    data[["altgroup"]] <- group
+    data
+  },
+  compute_panel = function(data, params, scales) {
+
+    no_unique <- length(unique(data$group)) == 1 && data$group[1] == -1
+
+    tmp <- data[c("altgroup", "zmin", "zmax")]
+    tmpgroup <- tmp[["altgroup"]]
 
     # Simplify groups to ranges
     if (!no_unique) {
       # group <- data$group
-      tmp <- by(tmp, group, function(dat){
-        c(min(dat$xmin), max(dat$xmax), dat$group[1])
+      tmp <- by(tmp, tmpgroup, function(dat){
+        c(min(dat$zmin), max(dat$zmax), dat$altgroup[1])
       })
       tmp <- do.call(rbind, tmp)
 
       tmp <- setNames(as.data.frame(tmp),
-                      c("xmin", "xmax", "group"))
+                      c("zmin", "zmax", "altgroup"))
     }
 
     # Extend and sort ranges
-    tmp$xmin <- tmp$xmin - 0.5 * params$extend
-    tmp$xmax <- tmp$xmax + 0.5 * params$extend
-    ord <- order(tmp$xmin)
+    tmp$zmin <- tmp$zmin - 0.5 * params$extend
+    tmp$zmax <- tmp$zmax + 0.5 * params$extend
+    ord <- order(tmp$zmin)
     tmp <- tmp[ord, ]
 
     # Perform disjoint bins operation similar to IRanges::disjointBins(), but
     # generalized to any ranged numeric data, not just integers.
-    track_bins <- tmp$xmax[1]
+    track_bins <- tmp$zmax[1]
     tmp$bin <- 1L
     for (i in tail(seq_along(ord), -1)) {
       dat <- tmp[i,]
-      j <- which(track_bins < dat$xmin)
+      j <- which(track_bins < dat$zmin)
       if (length(j) > 0) {
         ans <- j[1]
-        track_bins[ans] <- dat$xmax
+        track_bins[ans] <- dat$zmax
       } else {
-        track_bins <- c(track_bins, dat$xmax)
+        track_bins <- c(track_bins, dat$zmax)
         ans <- length(track_bins)
       }
       tmp$bin[i] <- ans
     }
 
     # Transform
-    map <- match(group, tmp$group)
+    map <- match(tmpgroup, tmp$altgroup)
     if (all(c("ymin", "ymax") %in% names(data))) {
       data$ymax <- data$ymax + params$stepsize * (tmp$bin[map] - 1)
       data$ymin <- data$ymin + params$stepsize * (tmp$bin[map] - 1)
@@ -163,6 +174,7 @@ PositionDisjointRanges <- ggplot2::ggproto(
     if ("y" %in% names(data)) {
       data$y <- data$y + params$stepsize * (tmp$bin[map] - 1)
     }
+    data <- data[!colnames(data) %in% c("zmin", "zmax", "altgroup")]
 
     return(data)
   }

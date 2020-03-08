@@ -144,6 +144,9 @@ transformation with \code{\link[scales:trans_new]{scales::trans_new()}}.}
 
 \item{sec.axis}{\code{\link[ggplot2:sec_axis]{sec_axis()}} is used to specify a secondary axis.}
 }
+\value{
+A \code{ScaleS4} object.
+}
 \description{
 \code{scale_x_S4_continuous} and \code{scale_y_S4_continuous}
 are the analogues of \code{\link[ggplot2]{scale_x_continuous}} and

@@ -39,6 +39,9 @@ top-to-bottom), if more than one  guide must be drawn at the same location.}
 \item{position}{Where this guide should be drawn: one of top, bottom,
 left, or right.}
 }
+\value{
+A \code{guide} object.
+}
 \description{
 This axis guide is the genomic equivalent of
 \code{\link[ggplot2]{guide_axis}} to pair with the genomic position scales

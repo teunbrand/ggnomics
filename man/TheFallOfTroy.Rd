@@ -31,6 +31,11 @@ object.}
 \item{na.rm}{For \code{Nightfall()}, should the result be returned for
 non-NA entries?}
 }
+\value{
+For \code{Nightfall()}, a \code{Vector} object. For
+  \code{GreekSoldier()}, a \code{WoodenHorse} object. For
+  \code{HelenaOfTroy()}, a \code{character},
+}
 \description{
 There are some limitations to getting S4 objects past the
   internals of the ggplot2 system. One of these is a hard check with

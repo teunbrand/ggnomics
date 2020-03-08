@@ -51,6 +51,8 @@
 #' @seealso The \code{\link[GenomicRanges]{GRanges}} class and
 #'   \code{\link[GenomicRanges]{GPos}} class.
 #'
+#' @return A \code{ScaleS4} ggproto object.
+#'
 #' @examples
 #' require(GenomicRanges)
 #'

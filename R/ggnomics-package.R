@@ -4,8 +4,10 @@
 #' @import S4Vectors
 #' @import ggplot2
 #' @import GenomicRanges
-#' @importFrom GenomeInfoDb seqinfo seqlengths seqlevels seqinfo<- seqlengths<- seqlevels<-
-#' @importFrom methods selectMethod callGeneric is .valueClassTest getGeneric as validObject
+#' @importFrom GenomeInfoDb seqinfo seqlengths seqlevels seqinfo<- seqlengths<-
+#'   seqlevels<-
+#' @importFrom methods selectMethod callGeneric is .valueClassTest getGeneric as
+#'   validObject
 #' @importFrom stats setNames
 #' @importFrom utils getFromNamespace globalVariables
 #' @import IRanges

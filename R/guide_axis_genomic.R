@@ -13,6 +13,8 @@
 #'   and places label for minor breaks at positions along the sequences.
 #'   Defaults to \code{guide_axis} behaviour if not exposed to genomic data.
 #'
+#' @return A \code{guide} object.
+#'
 #' @export
 #'
 #' @examples

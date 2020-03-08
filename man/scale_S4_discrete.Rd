@@ -78,6 +78,9 @@ expand the scale by 5\% on each side for continuous variables, and by
 \item{position}{For position scales, The position of the axis.
 \code{left} or \code{right} for y axes, \code{top} or \code{bottom} for x axes.}
 }
+\value{
+A \code{ScaleS4} object.
+}
 \description{
 \code{scale_x_S4_discrete} and \code{scale_y_S4_discrete}
 are the analogues of \code{\link[ggplot2]{scale_x_discrete}} and

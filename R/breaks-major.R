@@ -7,11 +7,11 @@
 #' @param ... Arguments passed to downstream functions
 #'
 #' @return A vector with major breaks positions
-#' 
+#'
 #' @details The downstream function that arguments are typically passed to is
 #' the \code{\link[labeling]{extended}} function, except when ranges
 #' are given as \code{\linkS4class{GenomicRanges}}.
-#' 
+#'
 #' @export
 #'
 #' @examples
@@ -29,7 +29,7 @@ setGeneric(
 )
 
 # Equivalent to the scales::extended_breaks() method
-# S4 classes that have a projection on the real number line, e.g. IRanges or 
+# S4 classes that have a projection on the real number line, e.g. IRanges or
 # numeric-Rle should give limits in numeric terms, so they also go through this
 # breaks method.
 

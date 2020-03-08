@@ -2,7 +2,7 @@
 
 #' @name S4LabelFormat
 #' @title Format labels for S4 classes
-#' 
+#'
 #' @description Attempts to figure out appropriate labels for S4 classes.
 #'
 #' @param x A vector to format
@@ -21,11 +21,11 @@
 #' # Regular atomic vectors
 #' S4LabelFormat(1:10)
 #' S4LabelFormat(LETTERS[1:5])
-#' 
+#'
 #' require(GenomicRanges)
 #' # GenomicRanges major labels are seqnames
 #' S4LabelFormat(GPos("chr1", 1:10))
-#' 
+#'
 #' # GenomicRanges minor labels are positions formatted as basepairs
 #' S4LabelFormat(GPos("chr1", 1:10), type = "minor")
 setGeneric(
@@ -112,34 +112,34 @@ setMethod(
 #'
 #' # When the label 'bp' is preffered over 'b'
 #' demo_continuous(c(1, 1e9), label = label_basepair(unit = "bp"))
-label_basepair <- function(accuracy = NULL, unit = "b", 
+label_basepair <- function(accuracy = NULL, unit = "b",
                            sep = NULL, labelsmall = FALSE, ...) {
   sep <- if (is.null(unit)) "" else " "
   # Force arguments
   force(accuracy)
   force(labelsmall)
   dots <- list(...)
-  
+
   function(x) {
     if (missing(x) || is.null(x) || length(x) < 1L) {
       return(character(0))
     }
-    
+
     breaks <- c(0, 10^c("k" = 3, "M" = 6, "G" = 9, "T" = 12))
-    
+
     if (inherits(x, "WoodenHorse")) {
       x <- Nightfall(x)
     }
     if (inherits(x, "ANYGenomic")) {
       x <- start(x)
     }
-    
+
     n_suffix <- cut(abs(x),
                     breaks = c(unname(breaks), Inf),
                     labels = c(names(breaks)),
                     right = FALSE)
     n_suffix[is.na(n_suffix)] <- ""
-    
+
     if (labelsmall) {
       suffix <- paste0(sep, n_suffix, unit)
     } else {
@@ -150,22 +150,15 @@ label_basepair <- function(accuracy = NULL, unit = "b",
 
     scale <- 1 / breaks[n_suffix]
     scale[which(scale %in% c(Inf, NA))] <- 1
-    
+
     if (is.null(accuracy)) {
       accuracy <- est_accuracy(x * scale)
     }
-    
+
     args <- c(list(x = x, accuracy = accuracy, scale = unname(scale),
                    suffix = suffix), dots)
-    
+
     do.call(scales::number, args)
-    # scales::number(
-    #   x,
-    #   accuracy = accuracy,
-    #   scale = unname(scale),
-    #   suffix = suffix,
-    #   ...
-    # )
   }
 }
 
@@ -180,8 +173,8 @@ est_accuracy <- function(x) {
     return(1)
   }
   small_diff <- min(diff(sort(unique(x))), 0)
-  
-  
+
+
   if (small_diff < sqrt(.Machine$double.eps) | !is.finite(small_diff)) {
     1
   } else {

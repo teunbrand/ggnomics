@@ -25,6 +25,10 @@
 #'   us to pass the \code{rlang::is_vector} check and gives us nice options to
 #'   preserve attributes over subsetting and concatenation operations.
 #'
+#' @return For \code{Nightfall()}, a \code{Vector} object. For
+#'   \code{GreekSoldier()}, a \code{WoodenHorse} object. For
+#'   \code{HelenaOfTroy()}, a \code{character},
+#'
 #' @examples
 #' # Making an S4 object
 #' Anticlus <- Rle(1:10, 10:1)
@@ -173,30 +177,3 @@ HelenOfTroy <- function(x) {
     return(class(x)[[1]])
   }
 }
-#'
-#' #' @rdname TheFallOfTroy
-#' #' @export
-#' setGeneric(
-#'   "HelenOfTroy",
-#'   function(x) {
-#'     standardGeneric("HelenOfTroy")
-#'   }
-#' )
-#'
-#' #' @describeIn TheFallOfTroy Equivalent to calling \code{class(x)} for
-#' #'   non-\code{WoodenHorse} objects.
-#' #' @usage NULL
-#' setMethod(
-#'   "HelenOfTroy",
-#'   signature = c(x = "ANY"),
-#'   function(x) class(x)
-#' )
-#'
-#' #' @describeIn TheFallOfTroy Returns the \code{class} of the \code{GreekSoldier}
-#' #'   attribute of the \code{WoodenHorse}.
-#' #' @usage NULL
-#' setMethod(
-#'   "HelenOfTroy",
-#'   signature = c(x = "WoodenHorse"),
-#'   function(x) {class(attr(x, "GreekSoldier"))}
-#' )

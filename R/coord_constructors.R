@@ -13,6 +13,8 @@
 #'   As a temporary workaround, when the coordinates are set up, all S4 Vector
 #'   classes are disguised as the \code{WoodenHorse} class.
 #'
+#' @return A \code{Coord} ggproto object.
+#'
 #' @export
 #'
 #' @examples

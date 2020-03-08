@@ -99,6 +99,14 @@ setMethod(
   definition = function(x) OakHorse(x)
 )
 
+#' @rdname TheFallOfTroy
+#' @usage NULL
+setMethod(
+  "GreekSoldier",
+  signature = c(x = "matrix"),
+  definition = function(x) BeechHorse(x)
+)
+
 # Night falls over Troy ---------------------------------------------------
 
 #' @rdname TheFallOfTroy
@@ -165,7 +173,7 @@ HelenOfTroy <- function(x) {
     return(class(x)[[1]])
   }
 }
-#' 
+#'
 #' #' @rdname TheFallOfTroy
 #' #' @export
 #' setGeneric(
@@ -174,7 +182,7 @@ HelenOfTroy <- function(x) {
 #'     standardGeneric("HelenOfTroy")
 #'   }
 #' )
-#' 
+#'
 #' #' @describeIn TheFallOfTroy Equivalent to calling \code{class(x)} for
 #' #'   non-\code{WoodenHorse} objects.
 #' #' @usage NULL
@@ -183,7 +191,7 @@ HelenOfTroy <- function(x) {
 #'   signature = c(x = "ANY"),
 #'   function(x) class(x)
 #' )
-#' 
+#'
 #' #' @describeIn TheFallOfTroy Returns the \code{class} of the \code{GreekSoldier}
 #' #'   attribute of the \code{WoodenHorse}.
 #' #' @usage NULL

@@ -9,6 +9,7 @@
 \alias{GreekSoldier,Vector-method}
 \alias{GreekSoldier,AtomicList-method}
 \alias{GreekSoldier,ANYGenomic-method}
+\alias{GreekSoldier,matrix-method}
 \alias{Nightfall,ANY-method}
 \alias{Nightfall,BeechHorse-method}
 \alias{Nightfall,OakHorse-method}

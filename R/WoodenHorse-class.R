@@ -8,7 +8,7 @@ setOldClass("OakHorse")
 # BeechHorse is a simple wrapper around an S4 class, where the vec_data part
 # keeps track of (assigned) NAs
 BeechHorse <- function(x = MISSING()) {
-  if (inherits(x, "DataFrame")) {
+  if (inherits(x, "DataFrame") || inherits(x, "matrix")) {
     nas <- is.na(x)
     nas <- pmin(rowSums(nas), 1)
   } else if (inherits(x, "CompressedList") || inherits(x, "SimpleList")) {

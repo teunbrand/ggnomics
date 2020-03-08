@@ -1,21 +1,26 @@
 Package: ggnomics
 Type: Package
 Title: ggnomics
-Version: 0.1.1
+Version: 0.1.2
 Date: 2019-04-03
-Author: Teun van den Brand
-Maintainer: Teun van den Brand <tahvdbrand@gmail.com>
-Description: This package contains some extensions to ggplot2 and convenience functions.
+Authors@R: 
+    person(given = "Teun",
+           family = "van den Brand",
+           role = c("aut", "cre"),
+           email = "tahvdbrand@gmail.com",
+           comment = c(ORCID = "0000-0002-9335-7468"))
+Description: Provides tools for the integration of Bioconductor S4 classes and 
+    the popular 'ggplot2' plotting package.
 License: file LICENSE
 Encoding: UTF-8
 LazyData: true
 RoxygenNote: 7.0.2
 URL: https://github.com/teunbrand/ggnomics
+biocViews: Visualization
 Suggests: 
     testthat (>= 2.1.0),
     knitr,
     rmarkdown,
-    stats,
     labeling,
     covr
 VignetteBuilder: knitr
@@ -28,6 +33,7 @@ Imports:
     IRanges,
     scales,
     vctrs,
+    stats,
     data.table,
     methods,
     BiocGenerics,
@@ -55,8 +61,10 @@ Collate:
     'out_of_bounds.R'
     'plot_maths.R'
     'position_disjoint_ranges.R'
+    'range_expansion.R'
     'range_ggproto.R'
     'range_operations.R'
+    'range_training.R'
     'rescaling.R'
     'scale_types.R'
     'utils.R'

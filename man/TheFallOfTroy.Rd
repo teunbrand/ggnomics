@@ -21,15 +21,18 @@ Nightfall(x, na.rm = FALSE)
 
 \S4method{Nightfall}{OakHorse}(x, na.rm = FALSE)
 
-HelenOfTroy(x)
+HelenOfTroy(x, what = NULL)
 }
 \arguments{
 \item{x}{For \code{GreekSoldier()}, an S4 Vector class object.\cr For
 \code{Nightfall()} and \code{HelenOfTroy()}, an S3 \code{WoodenHorse} class
 object.}
 
-\item{na.rm}{For \code{Nightfall()}, should the result be returned for
-non-NA entries?}
+\item{na.rm}{For \code{Nightfall()}, should the result be returned for non-NA
+entries?}
+
+\item{what}{For \code{HelenaOfTroy}, an optional class name to check for
+inheritance.}
 }
 \value{
 For \code{Nightfall()}, a \code{Vector} object. For

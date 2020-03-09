@@ -13,8 +13,10 @@
 #' @param x For \code{GreekSoldier()}, an S4 Vector class object.\cr For
 #'   \code{Nightfall()} and \code{HelenOfTroy()}, an S3 \code{WoodenHorse} class
 #'   object.
-#' @param na.rm For \code{Nightfall()}, should the result be returned for
-#'   non-NA entries?
+#' @param na.rm For \code{Nightfall()}, should the result be returned for non-NA
+#'   entries?
+#' @param what For \code{HelenaOfTroy}, an optional class name to check for
+#'   inheritance.
 #'
 #' @details Calling \code{GreekSoldier()} on an S4 Vector object will generate
 #'   an object of the class \code{WoodenHorse} of the same length as the input,
@@ -170,10 +172,21 @@ setMethod(
 
 #' @rdname TheFallOfTroy
 #' @export
-HelenOfTroy <- function(x) {
-  if (inherits(x, "WoodenHorse")) {
-    return(class(attr(x, "GreekSoldier"))[[1]])
-  } else {
+HelenOfTroy <- function(x, what = NULL) {
+  if (is.null(x)) {
     return(class(x)[[1]])
+  }
+  if (is.null(what)) {
+    if (inherits(x, "WoodenHorse")) {
+      return(class(attr(x, "GreekSoldier"))[[1]])
+    } else {
+      return(class(x)[[1]])
+    }
+  } else {
+    if (inherits(x, "WoodenHorse")) {
+      return(inherits(attr(x, "GreekSoldier"), what))
+    } else {
+      return(inherits(x, what))
+    }
   }
 }

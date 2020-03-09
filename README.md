@@ -27,11 +27,12 @@ You can install this experimental branch from
 devtools::install_github("teunbrand/ggnomics", ref = "BioC")
 ```
 
-It depends on a specific PR submitted to ggplot2 to get this to work.
+It only works with ‘ggplot2’ version \>3.3.0.9000, i.e. their master
+branch.
 
 ``` r
 # install.packages("devtools")
-remotes::install_github("tidyverse/ggplot2", ref = remotes::github_pull("3837"))
+devtools::install_github("tidyverse/ggplot2")
 ```
 
 ## Example
@@ -97,12 +98,9 @@ Here is a list:
 
 Here is a list:
 
-  - ~~Cannot evaluate expressions on S4 columns in aesthetics~~ ([work
-    in progress](https://github.com/tidyverse/ggplot2/pull/3837))
   - Using GRanges as position unit is a tad slow
   - Currently cannot represent non-integers on genomic scales.
   - Doesn’t have a polar coordinate system
-  - ~~No working implementation of discrete scales~~
   - No working List-like solution yet (e.g. IntegerList etc.)
   - Mostly geared toward IRanges/GRanges and numerical-Rle classes at
     this point, whether anything else will work is anyone’s guess

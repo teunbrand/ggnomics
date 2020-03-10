@@ -22,7 +22,8 @@ Suggests:
     knitr,
     rmarkdown,
     labeling,
-    covr
+    covr,
+    BiocStyle
 VignetteBuilder: knitr
 Depends: 
     ggplot2 (>= 3.3.0),
@@ -34,7 +35,6 @@ Imports:
     scales,
     vctrs,
     stats,
-    data.table,
     methods,
     BiocGenerics,
     utils,
@@ -50,14 +50,15 @@ Collate:
     'coord_class_cartesian.R'
     'coord_constructors.R'
     'force_flat.R'
-    'fortify-methods.R'
+    'geom_range.R'
     'ggnomics-package.R'
     'ggnomics_extensions.R'
-    'ggplot_methods.R'
     'ggproto_sibling.R'
     'greek_soldier.R'
     'guide_axis_genomic.R'
     'labels-format.R'
+    'methods_fortify.R'
+    'methods_ggplot.R'
     'out_of_bounds.R'
     'plot_maths.R'
     'position_disjoint_ranges.R'

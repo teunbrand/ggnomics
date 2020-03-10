@@ -151,7 +151,8 @@ A \code{ScaleS4} ggproto object.
 \description{
 \code{scale_x_genomic()} and \code{scale_y_genomic()} are the
   default scales for x and y aesthetics defined as representations of genomic
-  positions such as \linkS4class{GPos} and \linkS4class{GRanges} (sub)-classes.
+  positions such as \linkS4class{GPos} and \linkS4class{GRanges}
+  (sub)-classes.
 }
 \details{
 It is important to note that the scale operates in genomic space

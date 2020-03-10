@@ -36,8 +36,8 @@ The \code{x} argument, but with out-of-bounds values squished to the
   range.
 }
 \description{
-This function follows the \code{\link[scales]{squish}} function, but allows
-extentions that work with objects other than numeric vectors.
+This function follows the \code{\link[scales]{squish}} function,
+  but allows extentions that work with objects other than numeric vectors.
 }
 \examples{
 # For regular numeric vectors

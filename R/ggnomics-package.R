@@ -7,7 +7,7 @@
 #' @importFrom GenomeInfoDb seqinfo seqlengths seqlevels seqinfo<- seqlengths<-
 #'   seqlevels<-
 #' @importFrom methods selectMethod callGeneric is .valueClassTest getGeneric as
-#'   validObject
+#'   validObject hasMethod
 #' @importFrom stats setNames
 #' @importFrom utils getFromNamespace globalVariables
 #' @import IRanges

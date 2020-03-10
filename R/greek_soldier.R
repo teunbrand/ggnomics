@@ -57,19 +57,19 @@ NULL
 #' @rdname TheFallOfTroy
 #' @export
 setGeneric(
-  "GreekSoldier",
-  function(x) {
-    standardGeneric("GreekSoldier")
-  }
+    "GreekSoldier",
+    function(x) {
+        standardGeneric("GreekSoldier")
+    }
 )
 
 #' @describeIn TheFallOfTroy By default, don't disguise object as
 #'   \code{WoodenHorse} and return the input.
 #' @usage NULL
 setMethod(
-  "GreekSoldier",
-  signature = c(x = "ANY"),
-  function(x) x
+    "GreekSoldier",
+    signature = c(x = "ANY"),
+    function(x) x
 )
 
 #' @describeIn TheFallOfTroy If an object inherits from \linkS4class{Vector},
@@ -77,40 +77,40 @@ setMethod(
 #'   the vector.
 #' @usage NULL
 setMethod(
-  "GreekSoldier",
-  signature = c(x = "Vector"),
-  definition = function(x) BeechHorse(x)
+    "GreekSoldier",
+    signature = c(x = "Vector"),
+    definition = function(x) BeechHorse(x)
 )
 
 #' @rdname TheFallOfTroy
 #' @usage NULL
 setMethod(
-  "GreekSoldier",
-  signature = c(x = "AtomicList"),
-  definition = function(x) {
-    nas <- vapply(x, function(x){any(is.na(x))}, logical(1))
-    new_vctr(
-      c(0, NA_real_)[nas + 1],
-      class = c("BeechHorse", "WoodenHorse"),
-      GreekSoldier = x
-    )
-  }
+    "GreekSoldier",
+    signature = c(x = "AtomicList"),
+    definition = function(x) {
+        nas <- vapply(x, function(x){any(is.na(x))}, logical(1))
+        new_vctr(
+            c(0, NA_real_)[nas + 1],
+            class = c("BeechHorse", "WoodenHorse"),
+            GreekSoldier = x
+        )
+    }
 )
 
 #' @rdname TheFallOfTroy
 #' @usage NULL
 setMethod(
-  "GreekSoldier",
-  signature = c(x = "ANYGenomic"),
-  definition = function(x) OakHorse(x)
+    "GreekSoldier",
+    signature = c(x = "ANYGenomic"),
+    definition = function(x) OakHorse(x)
 )
 
 #' @rdname TheFallOfTroy
 #' @usage NULL
 setMethod(
-  "GreekSoldier",
-  signature = c(x = "matrix"),
-  definition = function(x) BeechHorse(x)
+    "GreekSoldier",
+    signature = c(x = "matrix"),
+    definition = function(x) BeechHorse(x)
 )
 
 # Night falls over Troy ---------------------------------------------------
@@ -118,19 +118,19 @@ setMethod(
 #' @rdname TheFallOfTroy
 #' @export
 setGeneric(
-  "Nightfall",
-  function(x, na.rm = FALSE) {
-    standardGeneric("Nightfall")
-  }
+    "Nightfall",
+    function(x, na.rm = FALSE) {
+        standardGeneric("Nightfall")
+    }
 )
 
 #' @describeIn TheFallOfTroy If the object is not a \code{WoodenHorse} return
 #'   the input unaltered.
 #' @usage NULL
 setMethod(
-  "Nightfall",
-  signature = c(x = "ANY"),
-  function(x, na.rm = FALSE) x
+    "Nightfall",
+    signature = c(x = "ANY"),
+    function(x, na.rm = FALSE) x
 )
 
 # Return GreekSoldier if WoodenHorse
@@ -139,30 +139,30 @@ setMethod(
 #'   \code{GreekSoldier} attribute within the \code{WoodenHorse}.
 #' @usage NULL
 setMethod(
-  "Nightfall",
-  signature = c(x = "BeechHorse"),
-  function(x, na.rm = FALSE) {
-    if (isTRUE(na.rm)) {
-      extractROWS(attr(x, "GreekSoldier"), i = which(!is.na(x)))
-    } else {
-      attr(x, "GreekSoldier")
+    "Nightfall",
+    signature = c(x = "BeechHorse"),
+    function(x, na.rm = FALSE) {
+        if (isTRUE(na.rm)) {
+            extractROWS(attr(x, "GreekSoldier"), i = which(!is.na(x)))
+        } else {
+            attr(x, "GreekSoldier")
+        }
     }
-  }
 )
 
 #' @describeIn TheFallOfTroy If the object is a \code{WoodenHorse} return the
 #'   \code{GreekSoldier} attribute within the \code{WoodenHorse}.
 setMethod(
-  "Nightfall",
-  signature = c(x = "OakHorse"),
-  function(x, na.rm = FALSE) {
-    if (isTRUE(na.rm)) {
-      i <- vec_data(x)[!is.na(x)]
-    } else {
-      i <- vec_data(x)
+    "Nightfall",
+    signature = c(x = "OakHorse"),
+    function(x, na.rm = FALSE) {
+        if (isTRUE(na.rm)) {
+            i <- vec_data(x)[!is.na(x)]
+        } else {
+            i <- vec_data(x)
+        }
+        extractROWS(attr(x, "GreekSoldier"), i = i)
     }
-    extractROWS(attr(x, "GreekSoldier"), i = i)
-  }
 )
 
 # Helen of Troy ----------------------------------------------------------
@@ -173,20 +173,20 @@ setMethod(
 #' @rdname TheFallOfTroy
 #' @export
 HelenOfTroy <- function(x, what = NULL) {
-  if (is.null(x)) {
-    return(class(x)[[1]])
-  }
-  if (is.null(what)) {
-    if (inherits(x, "WoodenHorse")) {
-      return(class(attr(x, "GreekSoldier"))[[1]])
-    } else {
-      return(class(x)[[1]])
+    if (is.null(x)) {
+        return(class(x)[[1]])
     }
-  } else {
-    if (inherits(x, "WoodenHorse")) {
-      return(inherits(attr(x, "GreekSoldier"), what))
+    if (is.null(what)) {
+        if (inherits(x, "WoodenHorse")) {
+            return(class(attr(x, "GreekSoldier"))[[1]])
+        } else {
+            return(class(x)[[1]])
+        }
     } else {
-      return(inherits(x, what))
+        if (inherits(x, "WoodenHorse")) {
+            return(inherits(attr(x, "GreekSoldier"), what))
+        } else {
+            return(inherits(x, what))
+        }
     }
-  }
 }

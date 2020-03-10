@@ -4,39 +4,39 @@
 #' @export
 #' @method scale_type Vector
 scale_type.Vector <- function(x) {
-  "S4_continuous"
+    "S4_continuous"
 }
 
 #' @export
 #' @method scale_type WoodenHorse
 scale_type.WoodenHorse <- function(x) {
-  scale_type(Nightfall(x))
+    scale_type(Nightfall(x))
 }
 
 #' @export
 #' @method scale_type ANYGenomic
 scale_type.ANYGenomic <- function(x) {
-  "genomic"
+    "genomic"
 }
 
 #' @export
 #' @method scale_type Factor
 scale_type.Factor <- function(x) {
-  if (is(levels(x), "knownDiscretes")) {
-    "S4_discrete"
-  } else if (is(levels(x), "ANYGenomic")) {
-    "genomic" 
-  } else {
-    "S4_continuous"
-  }
+    if (is(levels(x), "knownDiscretes")) {
+        "S4_discrete"
+    } else if (is(levels(x), "ANYGenomic")) {
+        "genomic"
+    } else {
+        "S4_continuous"
+    }
 }
 
 #' @export
 #' @method scale_type Rle
 scale_type.Rle <- function(x) {
-  if (is(runValue(x), "knownDiscretes")) {
-    "S4_discrete"
-  } else {
-    "S4_continuous"
-  }
+    if (is(runValue(x), "knownDiscretes")) {
+        "S4_discrete"
+    } else {
+        "S4_continuous"
+    }
 }

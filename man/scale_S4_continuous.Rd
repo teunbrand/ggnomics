@@ -150,8 +150,8 @@ A \code{ScaleS4} object.
 \description{
 \code{scale_x_S4_continuous} and \code{scale_y_S4_continuous}
 are the analogues of \code{\link[ggplot2]{scale_x_continuous}} and
- \code{\link[ggplot2]{scale_y_continuous}}. They are the default scales for S4
- data classes.
+ \code{\link[ggplot2]{scale_y_continuous}}. They are the default scales for
+ S4 data classes.
 }
 \note{
 Note that by default, setting limits on positional
@@ -160,5 +160,4 @@ Note that by default, setting limits on positional
 }
 \examples{
 NULL
-
 }

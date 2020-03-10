@@ -7,8 +7,8 @@
 #'
 #' @description \code{scale_x_S4_continuous} and \code{scale_y_S4_continuous}
 #' are the analogues of \code{\link[ggplot2]{scale_x_continuous}} and
-#'  \code{\link[ggplot2]{scale_y_continuous}}. They are the default scales for S4
-#'  data classes.
+#'  \code{\link[ggplot2]{scale_y_continuous}}. They are the default scales for
+#'  S4 data classes.
 #'
 #' @inheritParams ggplot2::scale_x_continuous
 #' @param minor_labels One of:
@@ -30,92 +30,88 @@
 #'
 #' @return A \code{ScaleS4} object.
 #'
-#' @export
-#'
 #' @examples
 #' NULL
-#'
+NULL
 
 #' @export
 #' @rdname scale_S4_continuous
 scale_x_S4_continuous <- function(
-  name   = waiver(),
-  breaks = waiver(),
-  minor_breaks = waiver(),
-  n.breaks = NULL,
-  labels = waiver(),
-  minor_labels = waiver(),
-  limits = NULL,
-  expand = waiver(),
-  oob = censorThis,
-  na.value = NA_real_,
-  trans = S4TransIdentity,
-  guide = waiver(),
-  position = "bottom",
-  sec.axis = waiver()
+    name   = waiver(),
+    breaks = waiver(),
+    minor_breaks = waiver(),
+    n.breaks = NULL,
+    labels = waiver(),
+    minor_labels = waiver(),
+    limits = NULL,
+    expand = waiver(),
+    oob = censorThis,
+    na.value = NA_real_,
+    trans = S4TransIdentity,
+    guide = waiver(),
+    position = "bottom",
+    sec.axis = waiver()
 ) {
-  sc <- S4_continuous_scale(
-    aesthetics = c("x", "xmin", "xmax", "xend", "xintercept", "xmin_final",
-                   "xmax_final", "xlower", "xmiddle", "xupper", "x0", "xrange"),
-    scale_name = "position_c",
-    palette = identity,
-    name = name,
-    breaks = breaks,
-    n.breaks = n.breaks,
-    minor_breaks = minor_breaks,
-    labels = labels,
-    minor_labels = minor_labels,
-    limits = limits,
-    expand = expand,
-    oob = oob,
-    na.value = na.value,
-    trans = trans,
-    guide = guide,
-    position = position,
-    super = ScaleS4ContinuousPosition
-  )
-  .int$set_sec_axis(sec.axis, sc)
+    sc <- S4_continuous_scale(
+        aesthetics = .glob$x_aes,
+        scale_name = "position_c",
+        palette = identity,
+        name = name,
+        breaks = breaks,
+        n.breaks = n.breaks,
+        minor_breaks = minor_breaks,
+        labels = labels,
+        minor_labels = minor_labels,
+        limits = limits,
+        expand = expand,
+        oob = oob,
+        na.value = na.value,
+        trans = trans,
+        guide = guide,
+        position = position,
+        super = ScaleS4ContinuousPosition
+    )
+    .int$set_sec_axis(sec.axis, sc)
 }
 
 #' @export
 #' @rdname scale_S4_continuous
 scale_y_S4_continuous <- function(
-  name   = waiver(),
-  breaks = waiver(),
-  minor_breaks = waiver(),
-  n.breaks = NULL,
-  minor_labels = waiver(),
-  labels = waiver(),
-  limits = NULL,
-  expand = waiver(),
-  oob = censorThis,
-  na.value = NA_real_,
-  trans = S4TransIdentity,
-  guide = waiver(),
-  position = "left",
-  sec.axis = waiver()
+    name   = waiver(),
+    breaks = waiver(),
+    minor_breaks = waiver(),
+    n.breaks = NULL,
+    minor_labels = waiver(),
+    labels = waiver(),
+    limits = NULL,
+    expand = waiver(),
+    oob = censorThis,
+    na.value = NA_real_,
+    trans = S4TransIdentity,
+    guide = waiver(),
+    position = "left",
+    sec.axis = waiver()
 ) {
-  sc <- S4_continuous_scale(
-    aesthetics = c("y", "ymin", "ymax", "yend", "yintercept", "ymin_final",
-                   "ymax_final", "lower", "middle", "upper", "y0", "yrange"),
-    scale_name = "position_c",
-    palette = identity,
-    name = name,
-    breaks = breaks,
-    n.breaks = n.breaks,
-    minor_breaks = minor_breaks,
-    labels = labels,
-    minor_labels = minor_labels,
-    limits = limits,
-    expand = expand,
-    oob = oob,
-    na.value = na.value,
-    trans = trans,
-    guide = guide,
-    position = position,
-    super = ScaleS4ContinuousPosition
-  )
-  .int$set_sec_axis(sec.axis, sc)
+    sc <- S4_continuous_scale(
+        aesthetics = .glob$y_aes,
+        scale_name = "position_c",
+        palette = identity,
+        name = name,
+        breaks = breaks,
+        n.breaks = n.breaks,
+        minor_breaks = minor_breaks,
+        labels = labels,
+        minor_labels = minor_labels,
+        limits = limits,
+        expand = expand,
+        oob = oob,
+        na.value = na.value,
+        trans = trans,
+        guide = guide,
+        position = position,
+        super = ScaleS4ContinuousPosition
+    )
+    .int$set_sec_axis(sec.axis, sc)
 }
 
 # Discrete ----------------------------------------------------------------
@@ -137,140 +133,140 @@ NULL
 #' @rdname scale_S4_discrete
 #' @export
 scale_x_S4_discrete <- function(
-  ...,
-  expand = waiver(),
-  guide = waiver(),
-  position = "bottom") {
-  sc <- S4_discrete_scale(c("x", "xmin", "xmax", "xend"),
-                          "position_d",
-                          S4TransIdentity,
-                          ...,
-                          expand = expand,
-                          guide = guide,
-                          position = position,
-                          super = ScaleS4DiscretePosition)
-  sc$range_c <- new_S4_discrete_range(sc$aesthetics[1])
-  sc
+    ...,
+    expand = waiver(),
+    guide = waiver(),
+    position = "bottom") {
+    sc <- S4_discrete_scale(c("x", "xmin", "xmax", "xend"),
+                            "position_d",
+                            S4TransIdentity,
+                            ...,
+                            expand = expand,
+                            guide = guide,
+                            position = position,
+                            super = ScaleS4DiscretePosition)
+    sc$range_c <- new_S4_discrete_range(sc$aesthetics[1])
+    sc
 }
 
 #' @rdname scale_S4_discrete
 #' @export
 scale_y_S4_discrete <- function(
-  ...,
-  expand = waiver(),
-  guide = waiver(),
-  position = "left") {
-  sc <- S4_discrete_scale(c("y", "ymin", "ymax", "yend"),
-                          "position_d",
-                          S4TransIdentity,
-                          ...,
-                          expand = expand,
-                          guide = guide,
-                          position = position,
-                          super = ScaleS4DiscretePosition)
-  sc$range_c <- new_S4_discrete_range(sc$aesthetics[1])
-  sc
+    ...,
+    expand = waiver(),
+    guide = waiver(),
+    position = "left") {
+    sc <- S4_discrete_scale(c("y", "ymin", "ymax", "yend"),
+                            "position_d",
+                            S4TransIdentity,
+                            ...,
+                            expand = expand,
+                            guide = guide,
+                            position = position,
+                            super = ScaleS4DiscretePosition)
+    sc$range_c <- new_S4_discrete_range(sc$aesthetics[1])
+    sc
 }
 
 # Internal Constructors ---------------------------------------------------
 
 S4_continuous_scale <- function(
-  aesthetics,
-  scale_name,
-  palette,
-  name = waiver(),
-  breaks = waiver(),
-  minor_breaks = waiver(),
-  n.breaks = NULL,
-  labels = waiver(),
-  minor_labels = waiver(),
-  limits = NULL,
-  rescaler = S4Rescale,
-  oob = censorThis,
-  expand = waiver(),
-  na.value = NA_real_,
-  trans = S4TransIdentity,
-  guide = "legend",
-  position = "left",
-  super = ScaleS4Continuous
+    aesthetics,
+    scale_name,
+    palette,
+    name = waiver(),
+    breaks = waiver(),
+    minor_breaks = waiver(),
+    n.breaks = NULL,
+    labels = waiver(),
+    minor_labels = waiver(),
+    limits = NULL,
+    rescaler = S4Rescale,
+    oob = censorThis,
+    expand = waiver(),
+    na.value = NA_real_,
+    trans = S4TransIdentity,
+    guide = "legend",
+    position = "left",
+    super = ScaleS4Continuous
 ) {
-  aesthetics <- standardise_aes_names(aesthetics)
+    aesthetics <- standardise_aes_names(aesthetics)
 
-  .int$check_breaks_labels(breaks, labels)
-  .int$check_breaks_labels(minor_breaks, minor_labels)
+    .int$check_breaks_labels(breaks, labels)
+    .int$check_breaks_labels(minor_breaks, minor_labels)
 
-  position <- match.arg(position, c("left", "right", "top", "bottom"))
+    position <- match.arg(position, c("left", "right", "top", "bottom"))
 
-  if (is.null(breaks) && all(!.int$is_position_aes(aesthetics))) {
-    guide <- "none"
-  }
+    if (is.null(breaks) && all(!.int$is_position_aes(aesthetics))) {
+        guide <- "none"
+    }
 
-  trans <- scales::as.trans(trans)
-  if (!is.null(limits) && !is.function(limits)) {
-    limits <- trans$transform(limits)
-  }
+    trans <- scales::as.trans(trans)
+    if (!is.null(limits) && !is.function(limits)) {
+        limits <- trans$transform(limits)
+    }
 
-  ggproto(
-    NULL, super,
-    call = match.call(),
-    aesthetics = aesthetics,
-    scale_name = scale_name,
-    palette = palette,
-    range = new_S4_continuous_range(aesthetics[1]),
-    limits = limits,
-    trans = trans,
-    na.value = na.value,
-    expand = expand,
-    rescaler = rescaler,
-    oob = oob,
-    name = name,
-    breaks = GreekSoldier(breaks),
-    minor_breaks = GreekSoldier(minor_breaks),
-    n.breaks = n.breaks,
-    labels = labels,
-    minor_labels = minor_labels,
-    guide = guide,
-    position = position
-  )
+    ggproto(
+        NULL, super,
+        call = match.call(),
+        aesthetics = aesthetics,
+        scale_name = scale_name,
+        palette = palette,
+        range = new_S4_continuous_range(aesthetics[1]),
+        limits = limits,
+        trans = trans,
+        na.value = na.value,
+        expand = expand,
+        rescaler = rescaler,
+        oob = oob,
+        name = name,
+        breaks = GreekSoldier(breaks),
+        minor_breaks = GreekSoldier(minor_breaks),
+        n.breaks = n.breaks,
+        labels = labels,
+        minor_labels = minor_labels,
+        guide = guide,
+        position = position
+    )
 }
 
 S4_discrete_scale <- function(
-  aesthetics,
-  scale_name,
-  palette,
-  name = waiver(),
-  breaks = waiver(),
-  labels = waiver(),
-  limits = NULL,
-  expand = waiver(),
-  na.translate = TRUE,
-  na.value = NA,
-  drop = TRUE,
-  guide = "legend",
-  position = "left",
-  super = ScaleS4Discrete
+    aesthetics,
+    scale_name,
+    palette,
+    name = waiver(),
+    breaks = waiver(),
+    labels = waiver(),
+    limits = NULL,
+    expand = waiver(),
+    na.translate = TRUE,
+    na.value = NA,
+    drop = TRUE,
+    guide = "legend",
+    position = "left",
+    super = ScaleS4Discrete
 ) {
-  aesthetics <- standardise_aes_names(aesthetics)
-  .int$check_breaks_labels(breaks, labels)
-  position <- match.arg(position, c("left", "right", "top", "bottom"))
-  if (is.null(breaks) && all(!.int$is_position_aes(aesthetics))) {
-    guide <- "none"
-  }
-  ggproto(NULL,
-          super,
-          call = match.call(),
-          aesthetics = aesthetics,
-          scale_name = scale_name,
-          palette = palette,
-          range = new_S4_discrete_range(aesthetics[1]),
-          limits = limits,
-          na.value = na.value,
-          na.translate = na.translate,
-          expand = expand,
-          name = name,
-          breaks = breaks,
-          labels = labels,
-          drop = drop,
-          guide = guide,
-          position = position)
+    aesthetics <- standardise_aes_names(aesthetics)
+    .int$check_breaks_labels(breaks, labels)
+    position <- match.arg(position, c("left", "right", "top", "bottom"))
+    if (is.null(breaks) && all(!.int$is_position_aes(aesthetics))) {
+        guide <- "none"
+    }
+    ggproto(NULL,
+            super,
+            call = match.call(),
+            aesthetics = aesthetics,
+            scale_name = scale_name,
+            palette = palette,
+            range = new_S4_discrete_range(aesthetics[1]),
+            limits = limits,
+            na.value = na.value,
+            na.translate = na.translate,
+            expand = expand,
+            name = name,
+            breaks = breaks,
+            labels = labels,
+            drop = drop,
+            guide = guide,
+            position = position)
 }

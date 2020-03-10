@@ -64,7 +64,7 @@ automatically determines the orientation from the aesthetics mapping. In
 the rare event that this fails, it can be given explicitly by setting
 \code{orientation} to either \code{"x"} or \code{"y"}. See the
 \emph{Orientation} section of
-\code{\link[ggplot2]{geom_density}()}..}
+\code{\link[ggplot2]{geom_density}()}.}
 
 \item{show.legend}{logical. Should this layer be included in the legends?
 \code{NA}, the default, includes if any aesthetics are mapped.
@@ -102,7 +102,7 @@ aesthetics (required aesthetics are in bold, optional in italic).
  \item colour
  \item fill
  \item group
- \item linteype
+ \item linetype
  \item size
  \item weight
 }
@@ -118,14 +118,17 @@ aesthetics (required aesthetics are in bold, optional in italic).
 }
 
 \examples{
-Computing coverage on numeric data
+# Computing coverage on numeric data
 df <- data.frame(min = c(1, 6, 11),
                  max = c(9, 13, 15))
 ggplot(df, aes(x = min, xend = max)) +
   stat_coverage()
 
 # Computing coverage on Ranges data
-df <- DataFrame(x = GRanges(c("chr1:100-200", "chr1:140-260", "chr2:50-100")))
+require(GenomicRanges)
+
+df <- DataFrame(x = GRanges(c("chr1:100-200", "chr1:140-260",
+                              "chr2:50-100")))
 ggplot(df, aes(x)) +
   stat_coverage()
 }

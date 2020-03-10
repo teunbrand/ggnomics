@@ -21,6 +21,6 @@
 #' NULL
 coord_S4 <- function(xlim = NULL, ylim = NULL, expand = TRUE, default = FALSE,
                      clip = "on") {
-  ggproto(NULL, CoordS4, limits = list(x = xlim, y = ylim),
-          expand = expand, default = default, clip = clip)
+    ggproto(NULL, CoordS4, limits = list(x = xlim, y = ylim),
+            expand = expand, default = default, clip = clip)
 }

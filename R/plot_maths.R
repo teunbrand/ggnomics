@@ -27,55 +27,55 @@
 setGeneric("plotarith", function(x, y, op) standardGeneric("plotarith"))
 
 setMethod(
-  "plotarith",
-  signature = c("x" = "Vector"),
-  function(x, y, op) {
-    op <- getGeneric(op)
-    return(op(x, y))
-  }
+    "plotarith",
+    signature = c("x" = "Vector"),
+    function(x, y, op) {
+        op <- getGeneric(op)
+        return(op(x, y))
+    }
 )
 
 #' @importFrom BiocGenerics start end
 setMethod(
-  "plotarith",
-  signature = c("x" = "Ranges", "y" = "numeric"),
-  function(x, y, op)  {
-    fun <- getGeneric(op)
-    m <- matrix(c(start(x), end(x)), ncol = 2)
-    m <- fun(m, y)
-    update_ranges(
-      x,
-      start = as.integer(pmin.int(m[, 1], m[, 2])),
-      end = as.integer(pmax.int(m[, 1], m[, 2]))
-    )
-  }
+    "plotarith",
+    signature = c("x" = "Ranges", "y" = "numeric"),
+    function(x, y, op)  {
+        fun <- getGeneric(op)
+        m <- matrix(c(start(x), end(x)), ncol = 2)
+        m <- fun(m, y)
+        update_ranges(
+            x,
+            start = as.integer(pmin.int(m[, 1], m[, 2])),
+            end = as.integer(pmax.int(m[, 1], m[, 2]))
+        )
+    }
 )
 
 setMethod(
-  "plotarith",
-  signature = c("x" = "Ranges", y = "Ranges"),
-  function(x, y, op) {
-    fun <- getGeneric(op)
-    mx <- matrix(c(start(x), end(x)), ncol = 2)
-    my <- matrix(c(start(y), end(y)), ncol = 2)
-    m <- fun(mx, my)
-    update_ranges(
-      x,
-      start = as.integer(pmin.int(m[,1], m[, 2])),
-      end = as.integer(pmax.int(m[, 1], m[, 2]))
-    )
-  }
+    "plotarith",
+    signature = c("x" = "Ranges", y = "Ranges"),
+    function(x, y, op) {
+        fun <- getGeneric(op)
+        mx <- matrix(c(start(x), end(x)), ncol = 2)
+        my <- matrix(c(start(y), end(y)), ncol = 2)
+        m <- fun(mx, my)
+        update_ranges(
+            x,
+            start = as.integer(pmin.int(m[,1], m[, 2])),
+            end = as.integer(pmax.int(m[, 1], m[, 2]))
+        )
+    }
 )
 
 setMethod(
-  "plotarith",
-  signature = c("x" = "Vector", "y" = "missing"),
-  function(x, y, op) {
-    switch(op, 
-           "+" = x,
-           "-" = plotarith(x, -1, "*"),
-           stop("No arithmetic method know to do this operation."))
-  }
+    "plotarith",
+    signature = c("x" = "Vector", "y" = "missing"),
+    function(x, y, op) {
+        switch(op,
+               "+" = x,
+               "-" = plotarith(x, -1, "*"),
+               stop("No arithmetic method know to do this operation."))
+    }
 )
 
 # Mathematics -------------------------------------------------------------
@@ -85,10 +85,10 @@ setMethod(
 setGeneric("plotmaths", function(x, .fn, ...) standardGeneric("plotmaths"))
 
 setMethod(
-  "plotmaths",
-  signature = c("x" = "Vector"),
-  function(x, .fn, ...) {
-    .fn <- getGeneric(.fn)
-    return(.fn(x))
-  }
+    "plotmaths",
+    signature = c("x" = "Vector"),
+    function(x, .fn, ...) {
+        .fn <- getGeneric(.fn)
+        return(.fn(x))
+    }
 )

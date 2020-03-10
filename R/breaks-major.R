@@ -22,10 +22,10 @@
 #' require(GenomicRanges)
 #' S4BreaksMajor(GRanges(c("chr1:100-200", "chr2:140-260")))
 setGeneric(
-  "S4BreaksMajor",
-  function(x, n = 5L, ...) {
-    standardGeneric("S4BreaksMajor")
-  }
+    "S4BreaksMajor",
+    function(x, n = 5L, ...) {
+        standardGeneric("S4BreaksMajor")
+    }
 )
 
 # Equivalent to the scales::extended_breaks() method
@@ -35,31 +35,32 @@ setGeneric(
 
 #' @rdname S4BreaksMajor
 setMethod(
-  "S4BreaksMajor",
-  signature(x = "numeric"),
-  function(x, n = 5L, ...) {
-    x <- x[is.finite(x)]
-    if (length(x) == 0) {
-      return(numeric())
+    "S4BreaksMajor",
+    signature(x = "numeric"),
+    function(x, n = 5L, ...) {
+        x <- x[is.finite(x)]
+        if (length(x) == 0) {
+            return(numeric())
+        }
+        rng <- range(x)
+        labeling::extended(rng[1], rng[2], n, ...)
     }
-    rng <- range(x)
-    labeling::extended(rng[1], rng[2], n, ...)
-  }
 )
+
 
 # Takes chromosome starts and ends as breaks. Should thus give appropriate
 # positions for major gridlines.
 
 #' @rdname S4BreaksMajor
 setMethod(
-  "S4BreaksMajor",
-  signature(x = "GRanges"),
-  function(x, n = 5L, ...) {
-    if (length(x) == 0) {
-      return(GreekSoldier(GRanges()))
+    "S4BreaksMajor",
+    signature(x = "GRanges"),
+    function(x, n = 5L, ...) {
+        if (length(x) == 0) {
+            return(GreekSoldier(GRanges()))
+        }
+        br <- sort(GPos(seqnames = rep(seqnames(x), 2),
+                        pos = c(start(x), end(x))))
+        GreekSoldier(br)
     }
-    br <- sort(GPos(seqnames = rep(seqnames(x), 2),
-                    pos = c(start(x), end(x))))
-    GreekSoldier(br)
-  }
 )

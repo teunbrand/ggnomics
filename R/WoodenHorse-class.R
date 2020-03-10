@@ -8,30 +8,30 @@ setOldClass("OakHorse")
 # BeechHorse is a simple wrapper around an S4 class, where the vec_data part
 # keeps track of (assigned) NAs
 BeechHorse <- function(x = MISSING()) {
-  if (inherits(x, "DataFrame") || inherits(x, "matrix")) {
-    nas <- is.na(x)
-    nas <- pmin(rowSums(nas), 1)
-  } else if (inherits(x, "CompressedList") || inherits(x, "SimpleList")) {
-    nas <- is.na(x)
-    nas <- vapply(nas, any, logical(1))
-  } else {
-    nas <- as.vector(is.na(x))
-  }
-  new_vctr(
-    c(0, NA_real_)[nas + 1],
-    GreekSoldier = x,
-    class = c("BeechHorse", "WoodenHorse")
-  )
+    if (inherits(x, "DataFrame") || inherits(x, "matrix")) {
+        nas <- is.na(x)
+        nas <- pmin(rowSums(nas), 1)
+    } else if (inherits(x, "CompressedList") || inherits(x, "SimpleList")) {
+        nas <- is.na(x)
+        nas <- vapply(nas, any, logical(1))
+    } else {
+        nas <- as.vector(is.na(x))
+    }
+    new_vctr(
+        c(0, NA_real_)[nas + 1],
+        GreekSoldier = x,
+        class = c("BeechHorse", "WoodenHorse")
+    )
 }
 
 # OakHorse is an index into an S4 class
 OakHorse <- function(x = MISSING()) {
-  new_vctr(
-    seq_along(x),
-    hsh = digest(x),
-    GreekSoldier = x,
-    class = c("OakHorse", "WoodenHorse")
-  )
+    new_vctr(
+        seq_along(x),
+        hsh = digest(x),
+        GreekSoldier = x,
+        class = c("OakHorse", "WoodenHorse")
+    )
 }
 
 # Wooden Horse boilerplate ------------------------------------------------
@@ -56,14 +56,14 @@ NULL
 #' @method format BeechHorse
 #' @export
 format.BeechHorse <- function(x, ...) {
-  ifelse(is.na(x), "NA", format(attr(x, "GreekSoldier")))
+    ifelse(is.na(x), "NA", format(attr(x, "GreekSoldier")))
 }
 
 #' @method format OakHorse
 #' @export
 format.OakHorse <- function(x, ...) {
-  d <- vec_data(x)
-  ifelse(is.na(d), "NA", format(attr(x, "GreekSoldier"))[d])
+    d <- vec_data(x)
+    ifelse(is.na(d), "NA", format(attr(x, "GreekSoldier"))[d])
 }
 
 #' @importFrom vctrs obj_print_header
@@ -72,11 +72,11 @@ format.OakHorse <- function(x, ...) {
 #' @describeIn WoodenHorse-vctr See \code{\link[vctrs]{obj_print_header}}
 #' @usage NULL
 obj_print_header.WoodenHorse <- function(x, ...) {
-  cat(paste0("<", vec_ptype_full(x), ": ",
-             classNameForDisplay(attr(x, "GreekSoldier")),
-             "[", vec_size(x), "]>" ),
-             "\n", collapse = "")
-  invisible(x)
+    cat(paste0("<", vec_ptype_full(x), ": ",
+               classNameForDisplay(attr(x, "GreekSoldier")),
+               "[", vec_size(x), "]>" ),
+        "\n", collapse = "")
+    invisible(x)
 }
 
 #' @importFrom vctrs vec_ptype_full
@@ -85,7 +85,7 @@ obj_print_header.WoodenHorse <- function(x, ...) {
 #' @describeIn WoodenHorse-vctr See \code{\link[vctrs]{vec_ptype_full}}
 #' @usage NULL
 vec_ptype_full.WoodenHorse <- function(x, ...) {
-  "WoodenHorse"
+    "WoodenHorse"
 }
 
 #' @importFrom vctrs vec_ptype_abbr
@@ -94,7 +94,7 @@ vec_ptype_full.WoodenHorse <- function(x, ...) {
 #' @describeIn WoodenHorse-vctr See \code{\link[vctrs]{vec_ptype_abbr}}
 #' @usage NULL
 vec_ptype_abbr.WoodenHorse <- function(x, ...) {
-  "WHrse"
+    "WHrse"
 }
 
 # Wooden Horse prototyping ------------------------------------------------
@@ -106,7 +106,7 @@ vec_ptype_abbr.WoodenHorse <- function(x, ...) {
 #' @describeIn WoodenHorse-vctr Generic for \code{\link[vctrs]{vec_ptype2}}
 #' @usage NULL
 vec_ptype2.WoodenHorse <- function(x, y, ...) {
-  UseMethod("vec_ptype2.WoodenHorse", y)
+    UseMethod("vec_ptype2.WoodenHorse", y)
 }
 
 #' @method vec_ptype2.WoodenHorse default
@@ -114,8 +114,9 @@ vec_ptype2.WoodenHorse <- function(x, y, ...) {
 #' @describeIn WoodenHorse-vctr Default method for
 #'   \code{vec_ptype2.WoodenHorse}: there are no common types.
 #' @usage NULL
-vec_ptype2.WoodenHorse.default <- function(x, y, ..., x_arg = "x", y_arg = "y") {
-  vctrs::vec_default_ptype2(x, y, x_arg = x_arg, y_arg = y_arg)
+vec_ptype2.WoodenHorse.default <- function(x, y, ...,
+                                           x_arg = "x", y_arg = "y") {
+    vctrs::vec_default_ptype2(x, y, x_arg = x_arg, y_arg = y_arg)
 }
 
 #' @method vec_ptype2.WoodenHorse BeechHorse
@@ -125,13 +126,13 @@ vec_ptype2.WoodenHorse.default <- function(x, y, ..., x_arg = "x", y_arg = "y") 
 #'   \code{GreekSoldier} attributes.
 #' @usage NULL
 vec_ptype2.WoodenHorse.BeechHorse <- function(x, y, ...) {
-  new_vctr(
-    numeric(0),
-    GreekSoldier = bindROWS(
-      attr(x, "GreekSoldier"),
-      list(attr(y, "GreekSoldier")),
-      use.names = FALSE, ignore.mcols = TRUE, check = FALSE),
-    class = c("BeechHorse", "WoodenHorse"))
+    new_vctr(
+        numeric(0),
+        GreekSoldier = bindROWS(
+            attr(x, "GreekSoldier"),
+            list(attr(y, "GreekSoldier")),
+            use.names = FALSE, ignore.mcols = TRUE, check = FALSE),
+        class = c("BeechHorse", "WoodenHorse"))
 }
 
 #' @method vec_ptype2.WoodenHorse OakHorse
@@ -141,27 +142,27 @@ vec_ptype2.WoodenHorse.BeechHorse <- function(x, y, ...) {
 #'   when necessary.
 #' @usage NULL
 vec_ptype2.WoodenHorse.OakHorse <- function(x, y, ...) {
-  if (attr(x, "hsh") == attr(y, "hsh")) {
-    return(y)
-  } else if (length(y) == 0) {
-    return(x)
-  } else if (all(attr(x, "GreekSoldier") %in% attr(y, "GreekSoldier"))) {
-    return(y)
-  } else if (all(a <- attr(y, "GreekSoldier") %in% attr(x, "GreekSoldier"))) {
-    return(x)
-  } else {
-    new <- bindROWS(
-      attr(x, "GreekSoldier"),
-      list(attr(y, "GreekSoldier")[!a]),
-      use.names = FALSE, ignore.mcols = TRUE, check = FALSE
-    )
-    new_vctr(
-      integer(0),
-      hsh = digest(new),
-      GreekSoldier = new,
-      class = c("OakHorse", "WoodenHorse")
-    )
-  }
+    if (attr(x, "hsh") == attr(y, "hsh")) {
+        return(y)
+    } else if (length(y) == 0) {
+        return(x)
+    } else if (all(attr(x, "GreekSoldier") %in% attr(y, "GreekSoldier"))) {
+        return(y)
+    } else if (all(a <- attr(y, "GreekSoldier") %in% attr(x, "GreekSoldier"))) {
+        return(x)
+    } else {
+        new <- bindROWS(
+            attr(x, "GreekSoldier"),
+            list(attr(y, "GreekSoldier")[!a]),
+            use.names = FALSE, ignore.mcols = TRUE, check = FALSE
+        )
+        new_vctr(
+            integer(0),
+            hsh = digest(new),
+            GreekSoldier = new,
+            class = c("OakHorse", "WoodenHorse")
+        )
+    }
 }
 
 # Wooden Horse casting ----------------------------------------------------
@@ -173,7 +174,7 @@ vec_ptype2.WoodenHorse.OakHorse <- function(x, y, ...) {
 #' @describeIn WoodenHorse-vctr Generic for \code{\link[vctrs]{vec_cast}}
 #' @usage NULL
 vec_cast.WoodenHorse <- function(x, to, ...) {
-  UseMethod("vec_cast.WoodenHorse")
+    UseMethod("vec_cast.WoodenHorse")
 }
 
 #' @method vec_cast.WoodenHorse default
@@ -182,7 +183,7 @@ vec_cast.WoodenHorse <- function(x, to, ...) {
 #'   it should not be casted.
 #' @usage NULL
 vec_cast.WoodenHorse.default <- function(x, to, ...) {
-  vctrs::vec_default_cast(x, to)
+    vctrs::vec_default_cast(x, to)
 }
 
 #' @method vec_cast.WoodenHorse BeechHorse
@@ -192,9 +193,9 @@ vec_cast.WoodenHorse.default <- function(x, to, ...) {
 #'   attribute is similar.
 #' @usage NULL
 vec_cast.WoodenHorse.BeechHorse <- function(x, to, ...) {
-  new_vctr(vec_data(x),
-           GreekSoldier = attr(to, "GreekSoldier"),
-           class = c("BeechHorse", "WoodenHorse"))
+    new_vctr(vec_data(x),
+             GreekSoldier = attr(to, "GreekSoldier"),
+             class = c("BeechHorse", "WoodenHorse"))
 }
 
 #' @method vec_cast.WoodenHorse OakHorse
@@ -203,17 +204,17 @@ vec_cast.WoodenHorse.BeechHorse <- function(x, to, ...) {
 #'   \code{vec_cast.WoodenHorse}: only refactor when hashes don't match
 #' @usage NULL
 vec_cast.WoodenHorse.OakHorse <- function(x, to, ...) {
-  if (attr(x, "hsh") == attr(to, "hsh")) {
-    return(x)
-  } else {
-    new <- match(attr(x, "GreekSoldier"), attr(to, "GreekSoldier"))
-    new_vctr(
-      new[vec_data(x)],
-      hsh = attr(to, "hsh"),
-      GreekSoldier = attr(to, "GreekSoldier"),
-      class = c("OakHorse", "WoodenHorse")
-    )
-  }
+    if (attr(x, "hsh") == attr(to, "hsh")) {
+        return(x)
+    } else {
+        new <- match(attr(x, "GreekSoldier"), attr(to, "GreekSoldier"))
+        new_vctr(
+            new[vec_data(x)],
+            hsh = attr(to, "hsh"),
+            GreekSoldier = attr(to, "GreekSoldier"),
+            class = c("OakHorse", "WoodenHorse")
+        )
+    }
 }
 
 # Wooden Horse subsetting -------------------------------------------------
@@ -224,12 +225,13 @@ vec_cast.WoodenHorse.OakHorse <- function(x, to, ...) {
 #' @keywords internal
 #' @importFrom vctrs vec_as_location
 `[.BeechHorse` <- function(x, i, ...) {
-  dat <- attr(x, "GreekSoldier")
-  ii <- vec_as_location(i, NROW(dat), names = ROWNAMES(dat), missing = "propagate")
-  ii[is.na(i)] <- 1L
-  new_vctr(vec_data(x)[i],
-           GreekSoldier = extractROWS(dat, i = ii),
-           class = c("BeechHorse", "WoodenHorse"))
+    dat <- attr(x, "GreekSoldier")
+    ii <- vec_as_location(i, NROW(dat), names = ROWNAMES(dat),
+                          missing = "propagate")
+    ii[is.na(i)] <- 1L
+    new_vctr(vec_data(x)[i],
+             GreekSoldier = extractROWS(dat, i = ii),
+             class = c("BeechHorse", "WoodenHorse"))
 }
 
 #' @method `[[` BeechHorse
@@ -237,9 +239,9 @@ vec_cast.WoodenHorse.OakHorse <- function(x, to, ...) {
 #' @noRd
 #' @keywords internal
 `[[.BeechHorse` <- function(x, i, ...) {
-  new_vctr(vec_data(x)[[i]],
-           GreekSoldier = attr(x, "GreekSoldier")[[i]],
-           class = c("BeechHorse", "WoodenHorse"))
+    new_vctr(vec_data(x)[[i]],
+             GreekSoldier = attr(x, "GreekSoldier")[[i]],
+             class = c("BeechHorse", "WoodenHorse"))
 }
 
 # Subassignment -----------------------------------------------------------
@@ -249,21 +251,20 @@ vec_cast.WoodenHorse.OakHorse <- function(x, to, ...) {
 #' @noRd
 #' @keywords internal
 `[<-.BeechHorse` <- function(x, i, value) {
-  if (inherits(value, "WoodenHorse")) {
-    vec <- vec_data(value)
-    value <- attr(value, "GreekSoldier")
-  } else {
-    vec <- numeric(NROW(value))
-  }
-  newvec <- `[<-`(vec_data(x), i = i, value = vec)
-  i[is.na(i)] <- 1L
-  new <- mergeROWS(attr(x, "GreekSoldier"), i, value)
-  # new <- `[<-`(attr(x, "GreekSoldier"), i = i, value = value)
-  new_vctr(
-    newvec,
-    GreekSoldier = new,
-    class = c("BeechHorse", "WoodenHorse")
-  )
+    if (inherits(value, "WoodenHorse")) {
+        vec <- vec_data(value)
+        value <- attr(value, "GreekSoldier")
+    } else {
+        vec <- numeric(NROW(value))
+    }
+    newvec <- `[<-`(vec_data(x), i = i, value = vec)
+    i[is.na(i)] <- 1L
+    new <- mergeROWS(attr(x, "GreekSoldier"), i, value)
+    new_vctr(
+        newvec,
+        GreekSoldier = new,
+        class = c("BeechHorse", "WoodenHorse")
+    )
 }
 
 #' @method `[<-` OakHorse
@@ -271,11 +272,11 @@ vec_cast.WoodenHorse.OakHorse <- function(x, to, ...) {
 #' @noRd
 #' @keywords internal
 `[<-.OakHorse` <- function(x, i, value) {
-  value <- GreekSoldier(value)
-  ptype <- vec_ptype2(x, value)
-  value <- vec_cast(value, ptype)
-  x <- vec_cast(x, ptype)
-  NextMethod()
+    value <- GreekSoldier(value)
+    ptype <- vec_ptype2(x, value)
+    value <- vec_cast(value, ptype)
+    x <- vec_cast(x, ptype)
+    NextMethod()
 }
 
 #' @method `[[<-` BeechHorse
@@ -283,17 +284,17 @@ vec_cast.WoodenHorse.OakHorse <- function(x, to, ...) {
 #' @noRd
 #' @keywords internal
 `[[<-.BeechHorse` <- function(x, i, value) {
-  vec <- c(0, NA_real_)[any(is.na(value)) + 1]
-  if (inherits(value, "WoodenHorse")) {
-    value <- Nightfall(value)
-  }
-  newvec <- `[[<-`(vec_data(x), i = i, value = vec)
-  new <- `[[<-`(attr(x, "GreekSoldier"), i = i, value = value)
-  new_vctr(
-    vec,
-    GreekSoldier = new,
-    class = c("BeechHorse", "WoodenHorse")
-  )
+    vec <- c(0, NA_real_)[any(is.na(value)) + 1]
+    if (inherits(value, "WoodenHorse")) {
+        value <- Nightfall(value)
+    }
+    newvec <- `[[<-`(vec_data(x), i = i, value = vec)
+    new <- `[[<-`(attr(x, "GreekSoldier"), i = i, value = value)
+    new_vctr(
+        vec,
+        GreekSoldier = new,
+        class = c("BeechHorse", "WoodenHorse")
+    )
 }
 
 # Mathy functions ---------------------------------------------------------
@@ -306,21 +307,21 @@ vec_cast.WoodenHorse.OakHorse <- function(x, to, ...) {
 #'   \code{is.finite()} and \code{is.infinite()}.
 #' @usage NULL
 vec_math.WoodenHorse <- function(.fn, .x, ...) {
-  dat <- vec_data(.x)
-  classx <- setdiff(class(.x), "vctrs_vctr")
-  .x <- Nightfall(.x)
-  .x <- plotmaths(x = .x, .fn, ...)
-  if (inherits(.x, "Vector")) {
-    .x <- new_vctr(
-      dat[seq_along(.x)],
-      GreekSoldier = .x,
-      class = classx
-    )
-  }
-  if (inherits(.x, "OakHorse")) {
-    attr(.x, "hsh") <- digest(attr(.x, "GreekSoldier"))
-  }
-  return(.x)
+    dat <- vec_data(.x)
+    classx <- setdiff(class(.x), "vctrs_vctr")
+    .x <- Nightfall(.x)
+    .x <- plotmaths(x = .x, .fn, ...)
+    if (inherits(.x, "Vector")) {
+        .x <- new_vctr(
+            dat[seq_along(.x)],
+            GreekSoldier = .x,
+            class = classx
+        )
+    }
+    if (inherits(.x, "OakHorse")) {
+        attr(.x, "hsh") <- digest(attr(.x, "GreekSoldier"))
+    }
+    return(.x)
 }
 
 #' @importFrom vctrs vec_arith
@@ -330,7 +331,7 @@ vec_math.WoodenHorse <- function(.fn, .x, ...) {
 #' @describeIn WoodenHorse-vctr Generic for \code{\link[vctrs]{vec_arith}}
 #' @usage NULL
 vec_arith.WoodenHorse <- function(op, x, y, ...) {
-  UseMethod("vec_arith.WoodenHorse", y)
+    UseMethod("vec_arith.WoodenHorse", y)
 }
 
 #' @export
@@ -339,19 +340,19 @@ vec_arith.WoodenHorse <- function(op, x, y, ...) {
 #'   try and apply arithmatic to the \code{GreekSoldier} attribute.
 #' @usage NULL
 vec_arith.WoodenHorse.default <- function(op, x, y, ...) {
-  dat <- vec_data(x)
-  classx <- setdiff(class(x), "vctrs_vctr")
-  x <- Nightfall(x)
-  x <- plotarith(x, y, op)
-  x <- new_vctr(
-    dat,
-    GreekSoldier = x,
-    class = classx
-  )
-  if (inherits(x, "OakHorse")) {
-    attr(x, "hsh") <- digest(attr(x, "GreekSoldier"))
-  }
-  x
+    dat <- vec_data(x)
+    classx <- setdiff(class(x), "vctrs_vctr")
+    x <- Nightfall(x)
+    x <- plotarith(x, y, op)
+    x <- new_vctr(
+        dat,
+        GreekSoldier = x,
+        class = classx
+    )
+    if (inherits(x, "OakHorse")) {
+        attr(x, "hsh") <- digest(attr(x, "GreekSoldier"))
+    }
+    x
 }
 
 #' @export
@@ -361,21 +362,21 @@ vec_arith.WoodenHorse.default <- function(op, x, y, ...) {
 #'   try and apply unary arithmatic to the \code{GreekSoldier} attribute.
 #' @usage NULL
 vec_arith.WoodenHorse.MISSING <- function(op, x, y, ...) {
-  dat <- vec_data(x)
-  classx <- setdiff(class(x), "vctrs_vctr")
-  x <- Nightfall(x)
-  x <- plotarith(x, op = op)
-  if (inherits(x, "Vector")) {
-    x <- new_vctr(
-      dat,
-      GreekSoldier = x,
-      class = classx
-    )
-  }
-  if (inherits(x, "OakHorse")) {
-    attr(x, "hsh") <- digest(attr(x, "GreekSoldier"))
-  }
-  return(x)
+    dat <- vec_data(x)
+    classx <- setdiff(class(x), "vctrs_vctr")
+    x <- Nightfall(x)
+    x <- plotarith(x, op = op)
+    if (inherits(x, "Vector")) {
+        x <- new_vctr(
+            dat,
+            GreekSoldier = x,
+            class = classx
+        )
+    }
+    if (inherits(x, "OakHorse")) {
+        attr(x, "hsh") <- digest(attr(x, "GreekSoldier"))
+    }
+    return(x)
 }
 
 #' @export
@@ -385,20 +386,20 @@ vec_arith.WoodenHorse.MISSING <- function(op, x, y, ...) {
 #'   \code{GreekSoldier} attribute of the two vectors.
 #' @usage NULL
 vec_arith.WoodenHorse.WoodenHorse <- function(op, x, y, ...) {
-  dat <- vec_data(vec_cast(x, y))
-  classx <- setdiff(class(x), "vctrs_vctr")
-  x <- Nightfall(x)
-  y <- Nightfall(y)
-  res <- plotarith(x, y, op)
-  x <- new_vctr(
-    dat,
-    GreekSoldier = res,
-    class = classx
-  )
-  if (inherits(x, "OakHorse")) {
-    attr(x, "hsh") <- digest(attr(x, "GreekSoldier"))
-  }
-  x
+    dat <- vec_data(vec_cast(x, y))
+    classx <- setdiff(class(x), "vctrs_vctr")
+    x <- Nightfall(x)
+    y <- Nightfall(y)
+    res <- plotarith(x, y, op)
+    x <- new_vctr(
+        dat,
+        GreekSoldier = res,
+        class = classx
+    )
+    if (inherits(x, "OakHorse")) {
+        attr(x, "hsh") <- digest(attr(x, "GreekSoldier"))
+    }
+    x
 }
 
 # is.finite / is.infinite and is.na are 'Math' group functions through the vctrs
@@ -412,12 +413,12 @@ vec_arith.WoodenHorse.WoodenHorse <- function(op, x, y, ...) {
 #' @noRd
 #' @keywords internal
 is.finite.WoodenHorse <- function(x) {
-  fun <- selectMethod("is.finite", HelenOfTroy(x))
-  if (is.primitive(fun) || is.null(fun)) {
-    return(rep(TRUE, length(x)) & is.finite(vec_data(x)))
-  }
-  ans <- fun(attr(x, "GreekSoldier")) & is.finite(vec_data(x))
-  return(as.vector(ans))
+    fun <- selectMethod("is.finite", HelenOfTroy(x))
+    if (is.primitive(fun) || is.null(fun)) {
+        return(rep(TRUE, length(x)) & is.finite(vec_data(x)))
+    }
+    ans <- fun(attr(x, "GreekSoldier")) & is.finite(vec_data(x))
+    return(as.vector(ans))
 }
 
 #' @method is.infinite WoodenHorse
@@ -425,12 +426,12 @@ is.finite.WoodenHorse <- function(x) {
 #' @noRd
 #' @keywords internal
 is.infinite.WoodenHorse <- function(x) {
-  fun <- selectMethod("is.infinite", HelenOfTroy(x))
-  if (is.primitive(fun) || is.null(fun)) {
-    return(rep(FALSE, length(x)) | is.infinite(vec_data(x)))
-  }
-  ans <- fun(attr(x, "GreekSoldier")) & is.infinite(vec_data(x))
-  return(ans)
+    fun <- selectMethod("is.infinite", HelenOfTroy(x))
+    if (is.primitive(fun) || is.null(fun)) {
+        return(rep(FALSE, length(x)) | is.infinite(vec_data(x)))
+    }
+    ans <- fun(attr(x, "GreekSoldier")) & is.infinite(vec_data(x))
+    return(ans)
 }
 
 #' @method is.na BeechHorse
@@ -438,19 +439,21 @@ is.infinite.WoodenHorse <- function(x) {
 #' @noRd
 #' @keywords internal
 is.na.BeechHorse <- function(x) {
-  ans <- is.na(attr(x, "GreekSoldier"))
-  ans <- as.vector(ans) | is.na(vec_data(x))
-  return(ans)
+    ans <- is.na(attr(x, "GreekSoldier"))
+    ans <- as.vector(ans) | is.na(vec_data(x))
+    return(ans)
 }
 
 is.na.OakHorse <- function(x) {
-  d <- vec_data(x)
-  ans <- is.na(attr(x, "GreekSoldier"))
-  ans <- as.vector(ans)[d] | is.na(vec_data(x))
-  return(ans)
+    d <- vec_data(x)
+    ans <- is.na(attr(x, "GreekSoldier"))
+    ans <- as.vector(ans)[d] | is.na(vec_data(x))
+    return(ans)
 }
 
 # Functions ---------------------------------------------------------------
+
+# Protection against some silly mishap in rbind_dfs
 
 #' @export
 #' @method levels WoodenHorse
@@ -461,57 +464,59 @@ levels.WoodenHorse <- function(x) NULL
 #' @description Not all S4 Vectors subclasses support having NAs.
 #'
 #' @param x An object to set NAs on
-#' @param i A logical of \code{length(x)}, indicating which positions to set NAs.
+#' @param i A logical of \code{length(x)}, indicating which positions to set
+#'   NAs.
 #'
-#' @return The \code{x} argument with NAs set at positions where \code{i == TRUE}.
+#' @return The \code{x} argument with NAs set at positions where \code{i ==
+#'   TRUE}.
 #' @noRd
 #'
 #' @examples
 #' NULL
 setGeneric(
-  "setNA",
-  function(x, i) {
-    standardGeneric("setNA")
-  }
+    "setNA",
+    function(x, i) {
+        standardGeneric("setNA")
+    }
 )
 
 setMethod(
-  "setNA",
-  signature = c(x = "ANY"),
-  definition = function(x, i) {
-    vec_assert(i, logical(), size = length(x))
-    x[i] <- NA
-    x
-  }
+    "setNA",
+    signature = c(x = "ANY"),
+    definition = function(x, i) {
+        vec_assert(i, logical(), size = length(x))
+        x[i] <- NA
+        x
+    }
 )
 
 setMethod(
-  "setNA",
-  signature = c(x = "BeechHorse", i = "logical"),
-  definition = function(x, i) {
-    vec_assert(i, logical(), size = length(x))
-    dat <- vec_data(x)
-    dat[i] <- NA_real_
-    new_vctr(
-      dat,
-      GreekSoldier = attr(x, "GreekSoldier"),
-      class = c("BeechHorse", "WoodenHorse")
-    )
-  }
+    "setNA",
+    signature = c(x = "BeechHorse", i = "logical"),
+    definition = function(x, i) {
+        vec_assert(i, logical(), size = length(x))
+        dat <- vec_data(x)
+        dat[i] <- NA_real_
+        new_vctr(
+            dat,
+            GreekSoldier = attr(x, "GreekSoldier"),
+            class = c("BeechHorse", "WoodenHorse")
+        )
+    }
 )
 
 setMethod(
-  "setNA",
-  signature = c(x = "OakHorse", i = "logical"),
-  definition = function(x, i) {
-    vec_assert(i, logical(), size = length(x))
-    dat <- vec_data(x)
-    dat[i] <- NA_integer_
-    new_vctr(
-      dat,
-      hsh = attr(x, "hsh"),
-      GreekSoldier = attr(x, "GreekSoldier"),
-      class = c("OakHorse", "WoodenHorse")
-    )
-  }
+    "setNA",
+    signature = c(x = "OakHorse", i = "logical"),
+    definition = function(x, i) {
+        vec_assert(i, logical(), size = length(x))
+        dat <- vec_data(x)
+        dat[i] <- NA_integer_
+        new_vctr(
+            dat,
+            hsh = attr(x, "hsh"),
+            GreekSoldier = attr(x, "GreekSoldier"),
+            class = c("OakHorse", "WoodenHorse")
+        )
+    }
 )

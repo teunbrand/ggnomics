@@ -67,7 +67,8 @@ setMethod(
 #' @rdname S4Train
 setMethod(
     "S4Train",
-    signature = c(new = "knownDiscretes", existing = "knownDiscretes_OR_missing"),
+    signature = c(new = "knownDiscretes",
+                  existing = "knownDiscretes_OR_missing"),
     definition = function(new, existing = NULL, drop = FALSE,
                           na.rm = FALSE, ..., aes = "z") {
         discrete_training(existing, new, drop = drop, na.rm = na.rm)

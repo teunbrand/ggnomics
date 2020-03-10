@@ -20,26 +20,26 @@
 #' @examples
 #' NULL
 guide_genomic_axis <- function(
-  title = waiver(),
-  check.overlap = FALSE,
-  angle = NULL,
-  n.dodge = 1,
-  order = 0,
-  position = waiver()
+    title = waiver(),
+    check.overlap = FALSE,
+    angle = NULL,
+    n.dodge = 1,
+    order = 0,
+    position = waiver()
 ) {
-  structure(
-    list(
-      title = title,
-      check.overlap = check.overlap,
-      angle = angle,
-      n.dodge = n.dodge,
-      order = order,
-      position = position,
-      available_aes = c("x", "y"),
-      name = "genomic_axis"
-    ),
-    class = c("guide", "genomic_axis", "axis")
-  )
+    structure(
+        list(
+            title = title,
+            check.overlap = check.overlap,
+            angle = angle,
+            n.dodge = n.dodge,
+            order = order,
+            position = position,
+            available_aes = c("x", "y"),
+            name = "genomic_axis"
+        ),
+        class = c("guide", "genomic_axis", "axis")
+    )
 }
 
 # Trainer -----------------------------------------------------------------
@@ -101,37 +101,41 @@ guide_train.genomic_axis <- function(guide, scale, aesthetic = NULL) {
 #'   \code{\link[ggplot2]{guide-exts}}.
 #' @usage NULL
 guide_transform.genomic_axis <- function(guide, coord, panel_params) {
-  if (is.null(guide$position) || nrow(guide$key) == 0) {
-    return(guide)
-  }
-  aesthetics <- names(guide$key)[!grepl("^\\.", names(guide$key))]
+    if (is.null(guide$position) || nrow(guide$key) == 0) {
+        return(guide)
+    }
+    aesthetics <- names(guide$key)[!grepl("^\\.", names(guide$key))]
 
-  if (all(c("x", "y") %in% aesthetics)) {
-    guide$key <- coord$transform(guide$key, panel_params)
-    guide$key_minor <- coord$transform(guide$key_minor, panel_params)
-  } else {
-    other_aesthetic <- setdiff(c("x", "y"), aesthetics)
-    override_value <- if (guide$position %in% c("bottom", "left")) -Inf else Inf
-    guide$key[[other_aesthetic]] <- override_value
-    guide$key_minor[[other_aesthetic]] <- override_value
-    guide$key <- coord$transform(guide$key, panel_params)
-    guide$key_minor <- coord$transform(guide$key_minor, panel_params)
-    .int$warn_for_guide_position(guide)
-  }
+    if (all(c("x", "y") %in% aesthetics)) {
+        guide$key <- coord$transform(guide$key, panel_params)
+        guide$key_minor <- coord$transform(guide$key_minor, panel_params)
+    } else {
+        other_aesthetic <- setdiff(c("x", "y"), aesthetics)
+        override_value <- if (guide$position %in% c("bottom", "left")) {
+            -Inf
+        } else {
+            Inf
+        }
+        guide$key[[other_aesthetic]] <- override_value
+        guide$key_minor[[other_aesthetic]] <- override_value
+        guide$key <- coord$transform(guide$key, panel_params)
+        guide$key_minor <- coord$transform(guide$key_minor, panel_params)
+        .int$warn_for_guide_position(guide)
+    }
 
-  # Average positions of major labels
-  major <- guide$key
-  aa <- split(major[aesthetics], factor(major$.label,
-                                        levels = unique(major$.label)))
-  aa <- matrix(vapply(aa, colMeans, numeric(length(aesthetics)),
-                      USE.NAMES = FALSE),
-               ncol = length(aesthetics))
-  aa <- lapply(seq_along(aesthetics), function(i){aa[,i]})
-  major <- major[!duplicated(major$.label), ]
-  major[aesthetics] <- aa
+    # Average positions of major labels
+    major <- guide$key
+    aa <- split(major[aesthetics], factor(major$.label,
+                                          levels = unique(major$.label)))
+    aa <- matrix(vapply(aa, colMeans, numeric(length(aesthetics)),
+                        USE.NAMES = FALSE),
+                 ncol = length(aesthetics))
+    aa <- lapply(seq_along(aesthetics), function(i){aa[,i]})
+    major <- major[!duplicated(major$.label), ]
+    major[aesthetics] <- aa
 
-  guide$key <- major
-  guide
+    guide$key <- major
+    guide
 }
 
 # Grob generator ----------------------------------------------------------
@@ -169,100 +173,101 @@ draw_genomic_axis <- function(
     angle = NULL,
     n.dodge = 1
 ) {
-  # Setup assumptions
-  axis_position <- match.arg(axis_position, c("top", "bottom", "right", "left"))
-  aesthetic <- if (axis_position %in% c("top", "bottom")) "x" else "y"
-  labels_first_gtable <- axis_position %in% c("left", "top")
+    # Setup assumptions
+    axis_position <- match.arg(axis_position, c("top", "bottom",
+                                                "right", "left"))
+    aesthetic <- if (axis_position %in% c("top", "bottom")) "x" else "y"
+    labels_first_gtable <- axis_position %in% c("left", "top")
 
-  # Do vertical vs horizontal
-  is_vertical <- axis_position %in% c("left", "right")
-  if (is_vertical) {
-    position_size <- "height"
-    non_position_size <- "width"
-    gtable_element <- gtable::gtable_row
-    measure_gtable <- gtable::gtable_width
-    measure_labels_non_pos <- grid::grobWidth
-  } else {
-    position_size <- "width"
-    non_position_size <- "height"
-    gtable_element <- gtable::gtable_col
-    measure_gtable <- gtable::gtable_width
-    measure_labels_non_pos <- grid::grobHeight
-  }
+    # Do vertical vs horizontal
+    is_vertical <- axis_position %in% c("left", "right")
+    if (is_vertical) {
+        position_size <- "height"
+        non_position_size <- "width"
+        gtable_element <- gtable::gtable_row
+        measure_gtable <- gtable::gtable_width
+        measure_labels_non_pos <- grid::grobWidth
+    } else {
+        position_size <- "width"
+        non_position_size <- "height"
+        gtable_element <- gtable::gtable_col
+        measure_gtable <- gtable::gtable_width
+        measure_labels_non_pos <- grid::grobHeight
+    }
 
-  # Do primary vs secondary
-  if (axis_position %in% c("right", "top")) {
-    non_position_panel <- unit(0, "npc")
-  } else {
-    non_position_panel <- unit(1, "npc")
-  }
+    # Do primary vs secondary
+    if (axis_position %in% c("right", "top")) {
+        non_position_panel <- unit(0, "npc")
+    } else {
+        non_position_panel <- unit(1, "npc")
+    }
 
-  # Build axis line
-  line_grob <- setup_axis_line(axis_position, theme)
+    # Build axis line
+    line_grob <- setup_axis_line(axis_position, theme)
 
-  # Setup breaks
-  n_breaks <- length(break_pos_minor)
-  opposite_positions <- setNames(c("bottom", "top", "left", "right"),
-                                 c("top", "bottom", "right", "left"))
-  axis_position_opposite <- unname(opposite_positions[axis_position])
+    # Setup breaks
+    n_breaks <- length(break_pos_minor)
+    opposite_positions <- setNames(c("bottom", "top", "left", "right"),
+                                   c("top", "bottom", "right", "left"))
+    axis_position_opposite <- unname(opposite_positions[axis_position])
 
-  # Return empty
-  if (n_breaks == 0) {
-    return(grid::gTree(
-      children = grid::gList(line_grob),
-      width = grid::grobWidth(line_grob),
-      height = grid::grobHeight(line_grob),
-      cl = "abosluteGrob"
-    ))
-  }
+    # Return empty
+    if (n_breaks == 0) {
+        return(grid::gTree(
+            children = grid::gList(line_grob),
+            width = grid::grobWidth(line_grob),
+            height = grid::grobHeight(line_grob),
+            cl = "abosluteGrob"
+        ))
+    }
 
-  # Setup labels
-  label_grobs <- setup_axis_labels(
-      major = break_labels, minor = break_lab_minor,
-      major_pos = break_positions, minor_pos = break_pos_minor,
-      position = axis_position, theme = theme,
-      check.overlap = check.overlap,
-      angle = angle, n.dodge = 1
-  )
+    # Setup labels
+    label_grobs <- setup_axis_labels(
+        major = break_labels, minor = break_lab_minor,
+        major_pos = break_positions, minor_pos = break_pos_minor,
+        position = axis_position, theme = theme,
+        check.overlap = check.overlap,
+        angle = angle, n.dodge = 1
+    )
 
-  # Setup tickmarks
-  ticks <- setup_tickmarks(break_pos_minor, axis_position, theme)
+    # Setup tickmarks
+    ticks <- setup_tickmarks(break_pos_minor, axis_position, theme)
 
-  # Combine ticks and labels
-  non_position_sizes <- paste0(non_position_size, "s")
-  label_dims <- base::do.call(grid::unit.c, lapply(label_grobs,
-                                                   measure_labels_non_pos))
-  grobs <- c(list(ticks$grob), label_grobs)
-  grob_dims <- grid::unit.c(ticks$size, label_dims)
+    # Combine ticks and labels
+    non_position_sizes <- paste0(non_position_size, "s")
+    label_dims <- base::do.call(grid::unit.c, lapply(label_grobs,
+                                                     measure_labels_non_pos))
+    grobs <- c(list(ticks$grob), label_grobs)
+    grob_dims <- grid::unit.c(ticks$size, label_dims)
 
-  if (labels_first_gtable) {
-    grobs <- rev(grobs)
-    grob_dims <- rev(grob_dims)
-  }
+    if (labels_first_gtable) {
+        grobs <- rev(grobs)
+        grob_dims <- rev(grob_dims)
+    }
 
-  # Build final grob
-  gt <- base::do.call(
-    gtable_element,
-    setNames(list("axis", grobs, grob_dims, unit(1, "npc")),
-             c("name", "grobs", non_position_sizes, position_size))
-  )
+    # Build final grob
+    gt <- base::do.call(
+        gtable_element,
+        setNames(list("axis", grobs, grob_dims, unit(1, "npc")),
+                 c("name", "grobs", non_position_sizes, position_size))
+    )
 
-  # Build viewport for text justification
-  justvp <- base::do.call(
-    grid::viewport,
-    setNames(list(non_position_panel, measure_gtable(gt),
-                  axis_position_opposite),
-             c(setdiff(c("x", "y"), aesthetic), non_position_size, "just"))
-  )
+    # Build viewport for text justification
+    justvp <- base::do.call(
+        grid::viewport,
+        setNames(list(non_position_panel, measure_gtable(gt),
+                      axis_position_opposite),
+                 c(setdiff(c("x", "y"), aesthetic), non_position_size, "just"))
+    )
 
-  # Comine the lot
-  grid::gTree(
-    children = grid::gList(line_grob, gt),
-    width = gtable::gtable_width(gt),
-    height = gtable::gtable_height(gt),
-    vp = justvp,
-    cl = "absoluteGrob"
-  )
+    # Comine the lot
+    grid::gTree(
+        children = grid::gList(line_grob, gt),
+        width = gtable::gtable_width(gt),
+        height = gtable::gtable_height(gt),
+        vp = justvp,
+        cl = "absoluteGrob"
+    )
 }
 
 # Helper functions --------------------------------------------------------
@@ -307,27 +312,28 @@ validate_labels <- function(labels) {
 
 # Helper for axis line in draw function
 setup_axis_line <- function(
-  position, theme
+    position, theme
 ) {
-  aesthetic <- if (position %in% c("top", "bottom")) "x" else "y"
+    aesthetic <- if (position %in% c("top", "bottom")) "x" else "y"
 
-  alt <- if (position %in% c("right", "top")) unit(0, "npc") else unit(1, "npc")
+    alt <- if (position %in% c("right", "top")) 0 else 1
+    alt <- unit(alt, "npc")
 
-  # Resolve elements
-  line_element_name <- paste0("axis.line.", aesthetic, ".", position)
-  element <- calc_element(line_element_name, theme)
+    # Resolve elements
+    line_element_name <- paste0("axis.line.", aesthetic, ".", position)
+    element <- calc_element(line_element_name, theme)
 
-  line_grob <- base::do.call(
-    element_grob,
-    setNames(
-      list(
-        element,
-        unit(c(0, 1), "npc"),
-        grid::unit.c(alt, alt)
-      ),
-      c("element", aesthetic, setdiff(c("x", "y"), aesthetic))
+    line_grob <- base::do.call(
+        element_grob,
+        setNames(
+            list(
+                element,
+                unit(c(0, 1), "npc"),
+                grid::unit.c(alt, alt)
+            ),
+            c("element", aesthetic, setdiff(c("x", "y"), aesthetic))
+        )
     )
-  )
 }
 
 # Helper for tickmarks in draw function

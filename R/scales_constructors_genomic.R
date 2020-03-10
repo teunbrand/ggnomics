@@ -4,7 +4,8 @@
 #'
 #' @description \code{scale_x_genomic()} and \code{scale_y_genomic()} are the
 #'   default scales for x and y aesthetics defined as representations of genomic
-#'   positions such as \linkS4class{GPos} and \linkS4class{GRanges} (sub)-classes.
+#'   positions such as \linkS4class{GPos} and \linkS4class{GRanges}
+#'   (sub)-classes.
 #'
 #' @inheritParams scale_S4_continuous
 #' @param limits One of:
@@ -81,85 +82,84 @@
 #'   minor_breaks =  GPos(c("chr1:2000", "chr2:3500", "chr3:4000")),
 #'   minor_labels = LETTERS[1:3]
 #' )
+NULL
 
 #' @rdname scale_genomic
 #' @export
 scale_x_genomic <- function(
-  name   = waiver(),
-  breaks = waiver(),
-  minor_breaks = waiver(),
-  n.breaks = NULL,
-  labels = waiver(),
-  minor_labels = waiver(),
-  limits = NULL,
-  expand = waiver(),
-  oob = censorThis,
-  na.value = NA_real_,
-  trans = S4TransIdentity,
-  guide = "genomic_axis",
-  position = "bottom",
-  sec.axis = waiver()
+    name   = waiver(),
+    breaks = waiver(),
+    minor_breaks = waiver(),
+    n.breaks = NULL,
+    labels = waiver(),
+    minor_labels = waiver(),
+    limits = NULL,
+    expand = waiver(),
+    oob = censorThis,
+    na.value = NA_real_,
+    trans = S4TransIdentity,
+    guide = "genomic_axis",
+    position = "bottom",
+    sec.axis = waiver()
 ) {
-  sc <- S4_continuous_scale(
-    aesthetics = c("x", "xmin", "xmax", "xend", "xintercept", "xmin_final",
-                   "xmax_final", "xlower", "xmiddle", "xupper", "x0"),
-    scale_name = "genomic",
-    palette = identity,
-    name = name,
-    breaks = breaks,
-    n.breaks = n.breaks,
-    minor_breaks = minor_breaks,
-    labels = labels,
-    minor_labels = minor_labels,
-    limits = limits,
-    expand = expand,
-    oob = oob,
-    na.value = na.value,
-    trans = trans,
-    guide = guide,
-    position = position,
-    super = ScaleGenomic
-  )
-  .int$set_sec_axis(sec.axis, sc)
+    sc <- S4_continuous_scale(
+        aesthetics = .glob$x_aes,
+        scale_name = "genomic",
+        palette = identity,
+        name = name,
+        breaks = breaks,
+        n.breaks = n.breaks,
+        minor_breaks = minor_breaks,
+        labels = labels,
+        minor_labels = minor_labels,
+        limits = limits,
+        expand = expand,
+        oob = oob,
+        na.value = na.value,
+        trans = trans,
+        guide = guide,
+        position = position,
+        super = ScaleGenomic
+    )
+    .int$set_sec_axis(sec.axis, sc)
 }
 
 #' @rdname scale_genomic
 #' @export
 scale_y_genomic <- function(
-  name   = waiver(),
-  breaks = waiver(),
-  minor_breaks = waiver(),
-  n.breaks = NULL,
-  labels = waiver(),
-  minor_labels = waiver(),
-  limits = NULL,
-  expand = waiver(),
-  oob = censorThis,
-  na.value = NA_real_,
-  trans = S4TransIdentity,
-  guide = "genomic_axis",
-  position = "left",
-  sec.axis = waiver()
+    name   = waiver(),
+    breaks = waiver(),
+    minor_breaks = waiver(),
+    n.breaks = NULL,
+    labels = waiver(),
+    minor_labels = waiver(),
+    limits = NULL,
+    expand = waiver(),
+    oob = censorThis,
+    na.value = NA_real_,
+    trans = S4TransIdentity,
+    guide = "genomic_axis",
+    position = "left",
+    sec.axis = waiver()
 ) {
-  sc <- S4_continuous_scale(
-    aesthetics = c("y", "ymin", "ymax", "yend", "yintercept", "ymin_final",
-                   "ymax_final", "lower", "middle", "upper", "y0"),
-    scale_name = "genomic",
-    palette = identity,
-    name = name,
-    breaks = breaks,
-    n.breaks = n.breaks,
-    minor_breaks = minor_breaks,
-    labels = labels,
-    minor_labels = minor_labels,
-    limits = limits,
-    expand = expand,
-    oob = oob,
-    na.value = na.value,
-    trans = trans,
-    guide = guide,
-    position = position,
-    super = ScaleGenomic
-  )
-  .int$set_sec_axis(sec.axis, sc)
+    sc <- S4_continuous_scale(
+        aesthetics = .glob$y_aes,
+        scale_name = "genomic",
+        palette = identity,
+        name = name,
+        breaks = breaks,
+        n.breaks = n.breaks,
+        minor_breaks = minor_breaks,
+        labels = labels,
+        minor_labels = minor_labels,
+        limits = limits,
+        expand = expand,
+        oob = oob,
+        na.value = na.value,
+        trans = trans,
+        guide = guide,
+        position = position,
+        super = ScaleGenomic
+    )
+    .int$set_sec_axis(sec.axis, sc)
 }

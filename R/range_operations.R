@@ -3,8 +3,8 @@
 #' @name S4Range
 #' @title Range of Values
 #'
-#' @description Returns a vector containing the minimum and maximum of all the given
-#' arguments.
+#' @description Returns a vector containing the minimum and maximum of all the
+#'   given arguments.
 #'
 #' @param x An object to determine the range of.
 #' @param ... Optionally, more objects of the same class as \code{x} to include
@@ -28,72 +28,73 @@
 #' require(GenomicRanges)
 #' S4Range(GRanges(c("chr1:100-200", "chr2:200-300", "chr2:500-600")))
 setGeneric(
-  "S4Range",
-  function(x, ..., na.rm = FALSE,
-           finite = FALSE, aes = "z") standardGeneric("S4Range"),
-  signature = "x"
+    "S4Range",
+    function(x, ..., na.rm = FALSE,
+             finite = FALSE, aes = "z") standardGeneric("S4Range"),
+    signature = "x"
 )
 
 #' @rdname S4Range
 setMethod(
-  "S4Range",
-  signature = c(x = "knownContinuous"),
-  definition = function(x, ..., na.rm = FALSE, finite = FALSE, aes = "z") {
-    range(x, ..., na.rm = na.rm, finite = finite)
-  }
-)
-
-#' @rdname S4Range
-setMethod(
-  "S4Range",
-  signature = c(x = "Rle"),
-  definition = function(x, ..., na.rm = FALSE, finite = FALSE, aes = "z") {
-    x <- bindROWS(x, list(...), use.names = FALSE,
-                  ignore.mcols = TRUE, check = FALSE)
-    range(runValue(x), na.rm = na.rm, finite = finite)
-  }
-)
-
-#' @rdname S4Range
-setMethod(
-  "S4Range",
-  signature = c(x = "Ranges"),
-  definition = function(x, ..., na.rm = FALSE, finite = FALSE, aes = "z") {
-    x <- bindROWS(x, list(...), use.names = FALSE,
-                  ignore.mcols = TRUE, check = FALSE)
-    range(c(start(x), end(x)))
-  }
-)
-
-#' @rdname S4Range
-setMethod(
-  "S4Range",
-  signature = c(x = "GenomicRanges"),
-  definition = function(x, ..., na.rm = FALSE, finite = FALSE, aes = "z") {
-    x <- bindROWS(granges(x), list(...),
-                  use.names = FALSE, ignore.mcols = TRUE, check = FALSE)
-    y <- base::vapply(base::split(c(start(x), end(x)),
-                                  decode(rep(seqnames(x), 2)), drop = TRUE),
-                      function(z) {c(min(z), max(z))}, integer(2))
-    GRanges(colnames(y), IRanges(y[1,], y[2,]), seqinfo = seqinfo(x))
-  }
-)
-
-#' @rdname S4Range
-setMethod(
-  "S4Range",
-  signature = c("x" = "WoodenHorse"),
-  definition = function(x, ..., na.rm = FALSE, finite = FALSE, aes = "z") {
-    x <- Nightfall(x)[!is.na(x)]
-    dots <- list(...)
-    if (length(dots) > 0) {
-      dots <- unlist(as(lapply(dots, function(y){Nightfall(y)[!is.na(y)]}),
-                        "List"))
-      callGeneric(x, dots)
-    } else {
-      callGeneric(x)
+    "S4Range",
+    signature = c(x = "knownContinuous"),
+    definition = function(x, ..., na.rm = FALSE, finite = FALSE, aes = "z") {
+        range(x, ..., na.rm = na.rm, finite = finite)
     }
-  }
+)
+
+#' @rdname S4Range
+setMethod(
+    "S4Range",
+    signature = c(x = "Rle"),
+    definition = function(x, ..., na.rm = FALSE, finite = FALSE, aes = "z") {
+        x <- bindROWS(x, list(...), use.names = FALSE,
+                      ignore.mcols = TRUE, check = FALSE)
+        range(runValue(x), na.rm = na.rm, finite = finite)
+    }
+)
+
+#' @rdname S4Range
+setMethod(
+    "S4Range",
+    signature = c(x = "Ranges"),
+    definition = function(x, ..., na.rm = FALSE, finite = FALSE, aes = "z") {
+        x <- bindROWS(x, list(...), use.names = FALSE,
+                      ignore.mcols = TRUE, check = FALSE)
+        range(c(start(x), end(x)))
+    }
+)
+
+#' @rdname S4Range
+setMethod(
+    "S4Range",
+    signature = c(x = "GenomicRanges"),
+    definition = function(x, ..., na.rm = FALSE, finite = FALSE, aes = "z") {
+        x <- bindROWS(granges(x), list(...),
+                      use.names = FALSE, ignore.mcols = TRUE, check = FALSE)
+        y <- base::vapply(base::split(c(start(x), end(x)),
+                                      decode(rep(seqnames(x), 2)), drop = TRUE),
+                          function(z) {c(min(z), max(z))}, integer(2))
+        GRanges(colnames(y), IRanges(y[1,], y[2,]), seqinfo = seqinfo(x))
+    }
+)
+
+#' @rdname S4Range
+setMethod(
+    "S4Range",
+    signature = c("x" = "WoodenHorse"),
+    definition = function(x, ..., na.rm = FALSE, finite = FALSE, aes = "z") {
+        x <- Nightfall(x)[!is.na(x)]
+        dots <- list(...)
+        if (length(dots) > 0) {
+            dots <- unlist(as(lapply(dots,
+                                     function(y){Nightfall(y)[!is.na(y)]}),
+                              "List"))
+            callGeneric(x, dots)
+        } else {
+            callGeneric(x)
+        }
+    }
 )
 
 # Zero range --------------------------------------------------------------
@@ -117,24 +118,24 @@ setMethod(
 #' S4ZeroRange(c(10, 11)) # FALSE
 #' S4ZeroRange(c(NA, 10)) # NA
 setGeneric(
-  "S4ZeroRange",
-  function(x, tol = 1000 * .Machine$double.eps) standardGeneric("S4ZeroRange")
+    "S4ZeroRange",
+    function(x, tol = 1000 * .Machine$double.eps) standardGeneric("S4ZeroRange")
 )
 
 #' @rdname S4ZeroRange
 setMethod(
-  "S4ZeroRange",
-  signature = c(x = "numeric"),
-  definition = function(x, tol = 1000 * .Machine$double.eps) {
-    scales::zero_range(x, tol = tol)
-  }
+    "S4ZeroRange",
+    signature = c(x = "numeric"),
+    definition = function(x, tol = 1000 * .Machine$double.eps) {
+        scales::zero_range(x, tol = tol)
+    }
 )
 
 #' @rdname S4ZeroRange
 setMethod(
-  "S4ZeroRange",
-  signature = c(x = "Ranges"),
-  definition = function(x, tol = 1000 * .Machine$double.eps) {
-    sum(width(x)) < tol
-  }
+    "S4ZeroRange",
+    signature = c(x = "Ranges"),
+    definition = function(x, tol = 1000 * .Machine$double.eps) {
+        sum(width(x)) < tol
+    }
 )

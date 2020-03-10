@@ -29,43 +29,43 @@
 #' # GenomicRanges minor labels are positions formatted as basepairs
 #' S4LabelFormat(GPos("chr1", 1:10), type = "minor")
 setGeneric(
-  "S4LabelFormat",
-  function(x, type = "major", ...) standardGeneric("S4LabelFormat"),
-  signature = "x"
+    "S4LabelFormat",
+    function(x, type = "major", ...) standardGeneric("S4LabelFormat"),
+    signature = "x"
 )
 
 #' @rdname S4LabelFormat
 setMethod(
-  "S4LabelFormat",
-  signature(x = "ANY"),
-  function(x, ...) {
-    if (!is.null(names(x)))
-      return(names(x))
-    ret <- as.character(format(x, trim = TRUE, justify = "left"))
-    ret[as.vector(is.na(x))] <- NA
-    ret
-  }
+    "S4LabelFormat",
+    signature(x = "ANY"),
+    function(x, ...) {
+        if (!is.null(names(x)))
+            return(names(x))
+        ret <- as.character(format(x, trim = TRUE, justify = "left"))
+        ret[as.vector(is.na(x))] <- NA
+        ret
+    }
 )
 
 #' @rdname S4LabelFormat
 setMethod(
-  "S4LabelFormat",
-  signature(x = "WoodenHorse"),
-  function(x, ...) {
-    callGeneric(Nightfall(x), type = type)
-  }
+    "S4LabelFormat",
+    signature(x = "WoodenHorse"),
+    function(x, ...) {
+        callGeneric(Nightfall(x), type = type)
+    }
 )
 
 #' @rdname S4LabelFormat
 setMethod(
-  "S4LabelFormat",
-  signature(x = "ANYGenomic"),
-  function(x, type = "major", ...) {
-    x <- switch(type,
-                "major" = as.character(seqnames(x)),
-                "minor" = basepair_label(start(x)))
-    callGeneric(x)
-  }
+    "S4LabelFormat",
+    signature(x = "ANYGenomic"),
+    function(x, type = "major", ...) {
+        x <- switch(type,
+                    "major" = as.character(seqnames(x)),
+                    "minor" = basepair_label(start(x)))
+        callGeneric(x)
+    }
 )
 
 
@@ -114,52 +114,52 @@ setMethod(
 #' demo_continuous(c(1, 1e9), label = label_basepair(unit = "bp"))
 label_basepair <- function(accuracy = NULL, unit = "b",
                            sep = NULL, labelsmall = FALSE, ...) {
-  sep <- if (is.null(unit)) "" else " "
-  # Force arguments
-  force(accuracy)
-  force(labelsmall)
-  dots <- list(...)
+    sep <- if (is.null(unit)) "" else " "
+    # Force arguments
+    force(accuracy)
+    force(labelsmall)
+    dots <- list(...)
 
-  function(x) {
-    if (missing(x) || is.null(x) || length(x) < 1L) {
-      return(character(0))
+    function(x) {
+        if (missing(x) || is.null(x) || length(x) < 1L) {
+            return(character(0))
+        }
+
+        breaks <- c(0, 10^c("k" = 3, "M" = 6, "G" = 9, "T" = 12))
+
+        if (inherits(x, "WoodenHorse")) {
+            x <- Nightfall(x)
+        }
+        if (inherits(x, "ANYGenomic")) {
+            x <- start(x)
+        }
+
+        n_suffix <- cut(abs(x),
+                        breaks = c(unname(breaks), Inf),
+                        labels = c(names(breaks)),
+                        right = FALSE)
+        n_suffix[is.na(n_suffix)] <- ""
+
+        if (labelsmall) {
+            suffix <- paste0(sep, n_suffix, unit)
+        } else {
+            # Don't suffix basepairs unless >= kb
+            suffix <- ifelse(nzchar(as.character(n_suffix)),
+                             paste0(sep, n_suffix, unit), "")
+        }
+
+        scale <- 1 / breaks[n_suffix]
+        scale[which(scale %in% c(Inf, NA))] <- 1
+
+        if (is.null(accuracy)) {
+            accuracy <- est_accuracy(x * scale)
+        }
+
+        args <- c(list(x = x, accuracy = accuracy, scale = unname(scale),
+                       suffix = suffix), dots)
+
+        do.call(scales::number, args)
     }
-
-    breaks <- c(0, 10^c("k" = 3, "M" = 6, "G" = 9, "T" = 12))
-
-    if (inherits(x, "WoodenHorse")) {
-      x <- Nightfall(x)
-    }
-    if (inherits(x, "ANYGenomic")) {
-      x <- start(x)
-    }
-
-    n_suffix <- cut(abs(x),
-                    breaks = c(unname(breaks), Inf),
-                    labels = c(names(breaks)),
-                    right = FALSE)
-    n_suffix[is.na(n_suffix)] <- ""
-
-    if (labelsmall) {
-      suffix <- paste0(sep, n_suffix, unit)
-    } else {
-      # Don't suffix basepairs unless >= kb
-      suffix <- ifelse(nzchar(as.character(n_suffix)),
-                       paste0(sep, n_suffix, unit), "")
-    }
-
-    scale <- 1 / breaks[n_suffix]
-    scale[which(scale %in% c(Inf, NA))] <- 1
-
-    if (is.null(accuracy)) {
-      accuracy <- est_accuracy(x * scale)
-    }
-
-    args <- c(list(x = x, accuracy = accuracy, scale = unname(scale),
-                   suffix = suffix), dots)
-
-    do.call(scales::number, args)
-  }
 }
 
 #' @export
@@ -169,15 +169,15 @@ basepair_label <- label_basepair()
 # Estimating the needed accuracy
 # Mainly to get around r-lib/scales#251 issue
 est_accuracy <- function(x) {
-  if (all(!is.finite(x)) || length(x) == 1) {
-    return(1)
-  }
-  small_diff <- min(diff(sort(unique(x))), 0)
+    if (all(!is.finite(x)) || length(x) == 1) {
+        return(1)
+    }
+    small_diff <- min(diff(sort(unique(x))), 0)
 
 
-  if (small_diff < sqrt(.Machine$double.eps) | !is.finite(small_diff)) {
-    1
-  } else {
-    pmin(10^(floor(log10(small_diff))), 1)
-  }
+    if (small_diff < sqrt(.Machine$double.eps) | !is.finite(small_diff)) {
+        1
+    } else {
+        pmin(10^(floor(log10(small_diff))), 1)
+    }
 }

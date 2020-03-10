@@ -4,7 +4,7 @@
 \alias{position_disjoint_ranges}
 \title{Segregrating overlapping ranges}
 \usage{
-position_disjoint_ranges(extend = 1, stepsize = 1)
+position_disjoint_ranges(extend = 1, stepsize = 1, dir = NULL)
 }
 \arguments{
 \item{extend}{a \code{numeric} of length 1 indicating how far a range should
@@ -15,6 +15,11 @@ positive number leaves some space between ranges in the same bin.}
 is added between bins in the y-direction. A positive value grows the bins
 from bottom to top, while a negative value grows the bins from top to
 bottom.}
+
+\item{dir}{A \code{character} of length 1, either \code{"x"} or \code{"y"},
+naming the direction to consider the range. \code{NULL} (the default) tries
+to sniff which direction to take, but internally defaults to \code{"x"}
+when it can't decide}
 }
 \value{
 A \code{Position} ggproto object.

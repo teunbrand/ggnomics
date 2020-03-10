@@ -115,6 +115,22 @@ test_that("position_disjoint_ranges stepsize works", {
   expect_equal(large$ymin, large$ymax - 1)
 })
 
+test_that("position_disjoint_ranges can reposition y", {
+
+  base2 <- ggplot(df, aes(ymin = xmin, ymax = xmax, xmin = ymin, xmax = ymax))
+
+  ctrl <- base2 + geom_rect()
+  test <- base2 + geom_rect(position = position_disjoint_ranges(dir = "y"))
+
+  ctrl <- layer_data(ctrl)
+  test <- layer_data(test)
+
+  expect_equal(ctrl[, c("ymin", "ymax")], test[, c("ymin", "ymax")])
+  expect_false(identical(ctrl[, c("xmin", "xmax")], test[, c("xmin", "xmax")]))
+  expect_equal(test$xmin, c(1,2,1,1,1))
+  expect_equal(test$xmax, c(2,3,2,2,2))
+})
+
 
 # Bioconductor classes ----------------------------------------------------
 
@@ -130,6 +146,15 @@ test_that("position_disjoint_ranges work on IRanges", {
 
   ctrl <- disjointBins(df$x)
   expect_equal(ctrl, test$ymin)
+
+  # Test also for y-direction
+  base <- ggplot(df, aes(ymin = x, ymax = x, xmin = ymin, xmax = ymax))
+
+  test <- base + geom_rect(position = position_disjoint_ranges())
+  test <- layer_data(test)
+
+  ctrl <- disjointBins(df$x)
+  expect_equal(ctrl, test$xmin)
 })
 
 test_that("position_disjoint_ranges work on GRanges", {

@@ -85,15 +85,14 @@ aesthetics (required aesthetics are in bold, optional in italic).
 \itemize{
  \item \strong{x}
  \item \strong{y}
- \item \emph{xend} (if data is numeric)
- \item \emph{yend} (if data is numeric)
+ \item \emph{xend} (if data is \code{numeric})
+ \item \emph{yend} (if data is \code{numeric})
  \item alpha
  \item colour
  \item fill
  \item group
  \item linetype
  \item size
- \item weight
 }
 }
 

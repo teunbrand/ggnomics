@@ -21,15 +21,14 @@
 #' \itemize{
 #'  \item \strong{x}
 #'  \item \strong{y}
-#'  \item \emph{xend} (if data is numeric)
-#'  \item \emph{yend} (if data is numeric)
+#'  \item \emph{xend} (if data is \code{numeric})
+#'  \item \emph{yend} (if data is \code{numeric})
 #'  \item alpha
 #'  \item colour
 #'  \item fill
 #'  \item group
 #'  \item linetype
 #'  \item size
-#'  \item weight
 #' }
 #'
 #' @examples
@@ -61,6 +60,11 @@ geom_range <- function(
 }
 
 
+#' @export
+#' @usage NULL
+#' @describeIn ggnomics_extensions A child to GeomRects. See
+#'   \code{\link[ggnomics]{geom_range}}.
+#' @format NULL
 GeomRange <- ggproto(
     "GeomRange",
     GeomRect,
@@ -74,27 +78,26 @@ GeomRange <- ggproto(
         } else {
             required_aes <- .flatstrsplit(self$required_aes, "|")
         }
-        if (is.null(self$optional_aes)) {
+        if (is.null(self$option_aes)) {
             optional_aes <- NULL
         } else {
-            optional_aes <- .flatstrsplit(self$required_aes, "|")
+            optional_aes <- .flatstrsplit(self$optional_aes, "|")
         }
-
-        c(union(required_aes, names(self$default_aes)),
-          self$optional_aes, "group")
+        c(union(union(required_aes, names(self$default_aes)), optional_aes),
+          "group")
     },
     setup_data = function(data, params) {
         if (is.null(data$x)) {
             data$x <- -0.4
         }
         if (is.numeric(data$x)) {
-            data$xend <- data$xend %||% data$x + 0.8
+            data$xend <- data$xend %||% (data$x + 0.8)
         }
         if (is.null(data$y)) {
             data$y <- -0.4
         }
         if (is.numeric(data$y)) {
-            data$yend <- data$yend %||% data$y + 0.8
+            data$yend <- data$yend %||% (data$y + 0.8)
         }
         if (HelenOfTroy(data$x, "Ranges")) {
             data$xend <- NULL

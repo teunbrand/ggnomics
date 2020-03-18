@@ -226,19 +226,18 @@ ScaleS4Discrete <- ggproto_sibling(
         }
 
         if (rlang::is_named(pal)) {
-            # If named palette, limits pal by names first,
-            # then limit values by pal
             idx_nomatch <- is.na(match(names(pal), limits))
             pal[idx_nomatch] <- NA
-            pal_match <- pal[match(as.character(x), names(pal))]
-            pal_match <- pal_match <- unname(pal_match)
+            pal_match <- pal[match(as.character(Nightfall(x)), names(pal))]
+            pal_match <- unname(pal_match)
         } else {
             # If pal is not named, limit values directly
-            pal_match <- pal[match(as.character(x), limits)]
+            pal_match <- pal[match(as.character(Nightfall(x)), limits)]
         }
 
         if (self$na.translate) {
-            pal_match <- pal[match(as.character(x), limits)]
+            pal_match[is.na(pal_match) | as.vector(is.na(x))] <- self$na.value
+            return(pal_match)
         } else {
             pal_match
         }
@@ -247,6 +246,9 @@ ScaleS4Discrete <- ggproto_sibling(
         new <- ggproto(NULL, self)
         new$range <- new_S4_discrete_range(new$aesthetics[1])
         new
+    },
+    transform = function(x) {
+        GreekSoldier(x)
     }
 )
 
@@ -286,7 +288,7 @@ ScaleS4DiscretePosition <- ggproto_sibling(
     },
     map = function(self, x, limits = self$get_limits()) {
         if (is_discrete_like(x)) {
-            seq_along(limits)[match(as.character(x), limits)]
+            seq_along(limits)[match(as.character(Nightfall(x)), limits)]
         } else {
             x
         }

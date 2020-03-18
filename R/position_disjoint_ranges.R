@@ -78,8 +78,8 @@ PositionDisjointRanges <- ggplot2::ggproto(
         if (is.null(dir)) {
             x_aes <- intersect(names(data), .glob$x_aes)
             y_aes <- intersect(names(data), .glob$y_aes)
-            has_x <- length(x_aes) > 1L
-            has_y <- length(y_aes) > 1L
+            has_x <- length(x_aes) > 0L
+            has_y <- length(y_aes) > 0L
             if (!has_y) {
                 params$dir <- "x"
             } else if (!has_x) {
@@ -141,9 +141,9 @@ PositionDisjointRanges <- ggplot2::ggproto(
         if (HelenOfTroy(tmp$min, "Ranges")) {
             x <- punion(tmp$min, tmp$max)
             if (HelenOfTroy(tmp$min, "ANYGenomic")) {
-                mygroup <- interaction(
+                mygroup <- as.integer(interaction(
                     mygroup, decode(seqnames(tmp$min)), drop = TRUE
-                )
+                ))
                 x <- seqlevels_from_max(x, params$extend + 1)
                 x <- absoluteRanges(x)
             }
@@ -220,7 +220,7 @@ PositionDisjointRanges <- ggplot2::ggproto(
 # some extension.
 # Useful when GRanges are to be flattened by absoluteRanges
 seqlevels_from_max <- function(x, extend = 0L) {
-  maxs <- range(x)
+  maxs <- S4Range(x)
   maxs <- setNames(end(maxs) + extend, decode(seqnames(maxs)))
   slvl <- pmax(seqlengths(x), 0, na.rm = TRUE)
   slvl[names(maxs)] <- maxs

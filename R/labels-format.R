@@ -169,10 +169,11 @@ basepair_label <- label_basepair()
 # Estimating the needed accuracy
 # Mainly to get around r-lib/scales#251 issue
 est_accuracy <- function(x) {
-    if (all(!is.finite(x)) || length(x) == 1) {
+    x <- x[!is.na(x)]
+    if (all(!is.finite(x)) || length(x) < 2) {
         return(1)
     }
-    small_diff <- min(diff(sort(unique(x))), 0)
+    small_diff <- max(min(diff(sort(unique(x)))), 0)
 
 
     if (small_diff < sqrt(.Machine$double.eps) | !is.finite(small_diff)) {

@@ -90,6 +90,9 @@ globalVariables(
 # Miscellaneous -----------------------------------------------------------
 
 is_discrete_like <- function(x) {
+    if (inherits(x, "WoodenHorse")) {
+        x <- Nightfall(x)
+    }
     if (inherits(x, "Rle")) {
         x <- runValue(x)
     }
@@ -98,3 +101,4 @@ is_discrete_like <- function(x) {
     }
     is.factor(x) || is.character(x) || is.logical(x) || is(x, "knownDiscretes")
 }
+

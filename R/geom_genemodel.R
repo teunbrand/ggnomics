@@ -141,9 +141,11 @@ GeomGenemodel <- ggproto(
     setup_data = function(self, data, params) {
         if (!is.null(data[["strand"]])) {
             data[["strand"]] <- as.character(data[["strand"]])
-        } else if (HelenOfTroy(data[["x"]], "ANYGenomic")) {
+        } else if (!is.null(data[["x"]]) &&
+                   HelenOfTroy(data[["x"]], "ANYGenomic")) {
             data[["strand"]] <- as.character(strand(Nightfall(data[["x"]])))
-        } else if (HelenOfTroy(data[["y"]], "ANYGenomic")) {
+        } else if (!is.null(data[["y"]]) &&
+                   HelenOfTroy(data[["y"]], "ANYGenomic")) {
             data[["strand"]] <- as.character(strand(Nightfall(data[["y"]])))
         }
         ggproto_parent(GeomRange, self)$setup_data(data, params)

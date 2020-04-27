@@ -248,7 +248,7 @@ style_intron_arrowline <- function(
         data = data,
         arrow.template = arrow.template,
         arrow_freq_number = as.numeric(arrow.freq),
-        arrow_freq_unit = attr(arrow.freq, "unit"),
+        arrow_freq_unit = unit_type(arrow.freq),
         gp = grid::gpar(
             col  = data$colour,
             fill = data$fill,
@@ -374,7 +374,7 @@ makeContent.arrowline <- function(x) {
 
     arrow <- x$arrow.template
     arrow$length <- unit(dat$arrow_length * as.numeric(arrow$length),
-                         attr(arrow$length, "unit"))
+                         unit_type(arrow$length))
 
     # Update grob
     x$gp <- grid::gpar(

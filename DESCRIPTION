@@ -80,5 +80,6 @@ Collate:
     'scales_constructors_misc.R'
     'scales_constructors_position.R'
     'stat_coverage.R'
+    'zzz.R'
 Remotes:
     tidyverse/ggplot2

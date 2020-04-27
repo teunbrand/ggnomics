@@ -81,4 +81,4 @@ Collate:
     'scales_constructors_position.R'
     'stat_coverage.R'
 Remotes:
-    tidyverse/ggplot2#3837
+    tidyverse/ggplot2

@@ -1,0 +1,83 @@
+Package: ggnomics
+Type: Package
+Title: ggnomics
+Version: 0.1.2
+Date: 2019-04-03
+Authors@R: 
+    person(given = "Teun",
+           family = "van den Brand",
+           role = c("aut", "cre"),
+           email = "tahvdbrand@gmail.com",
+           comment = c(ORCID = "0000-0002-9335-7468"))
+Description: Provides tools for the integration of Bioconductor S4 classes and 
+    the popular 'ggplot2' plotting package.
+License: file LICENSE
+Encoding: UTF-8
+LazyData: true
+RoxygenNote: 7.1.0
+URL: https://github.com/teunbrand/ggnomics
+biocViews: Visualization
+Suggests: 
+    testthat (>= 2.1.0),
+    knitr,
+    rmarkdown,
+    labeling,
+    covr,
+    BiocStyle
+VignetteBuilder: knitr
+Depends: 
+    ggplot2 (>= 3.3.2),
+    S4Vectors
+Imports: 
+    GenomeInfoDb,
+    GenomicRanges,
+    IRanges,
+    scales,
+    vctrs,
+    stats,
+    methods,
+    BiocGenerics,
+    utils,
+    rlang,
+    digest,
+    gtable
+Collate: 
+    'WoodenHorse-class.R'
+    'all-class-unions.R'
+    'breaks-major.R'
+    'breaks-minor.R'
+    'viewscales.R'
+    'coord_class_cartesian.R'
+    'coord_constructors.R'
+    'examples.R'
+    'force_flat.R'
+    'geom_range.R'
+    'geom_genemodel.R'
+    'ggnomics-package.R'
+    'ggnomics_extensions.R'
+    'ggproto_sibling.R'
+    'greek_soldier.R'
+    'guide_axis_genomic.R'
+    'labels-format.R'
+    'methods_fortify.R'
+    'methods_ggplot.R'
+    'out_of_bounds.R'
+    'plot_maths.R'
+    'position_disjoint_ranges.R'
+    'range_expansion.R'
+    'range_ggproto.R'
+    'range_operations.R'
+    'range_training.R'
+    'rescaling.R'
+    'scale_types.R'
+    'utils.R'
+    'transforms.R'
+    'scales_class_S4.R'
+    'scales_class_genomic.R'
+    'scales_constructors_continuous_colour.R'
+    'scales_constructors_discrete_colour.R'
+    'scales_constructors_genomic.R'
+    'scales_constructors_misc.R'
+    'scales_constructors_position.R'
+    'stat_coverage.R'
+    'zzz.R'

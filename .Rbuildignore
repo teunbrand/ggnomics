@@ -1,0 +1,7 @@
+^.*\.Rproj$
+^\.Rproj\.user$
+^README.Rmd$
+^.gitignore.save$
+^\.travis\.yml$
+^codecov\.yml$
+^README\.Rmd$

@@ -55,7 +55,7 @@ setMethod(
 #' @usage NULL
 setMethod(
     "S4ForceFlat",
-    signature = c(x = "numeric", limits = "numeric"),
+    signature = c(x = "knownContinuous", limits = "numeric"),
     function(x, limits = NULL, aes = "z") {
         scales::rescale(x, to = c(0, 1), from = limits)
     }

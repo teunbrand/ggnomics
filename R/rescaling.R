@@ -7,7 +7,7 @@ setGeneric(
 
 setMethod(
     "S4Rescale",
-    signature = c(x = "numeric"),
+    signature = c(x = "knownContinuous"),
     function(x, to = c(0, 1), from = range(x, na.rm = TRUE, finite = TRUE),
              aes = "z") {
         scales::rescale(x, to = to, from = from)

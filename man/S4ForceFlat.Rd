@@ -3,7 +3,7 @@
 \name{S4ForceFlat}
 \alias{S4ForceFlat}
 \alias{S4ForceFlat,WoodenHorse,ANY-method}
-\alias{S4ForceFlat,numeric,numeric-method}
+\alias{S4ForceFlat,knownContinuous,numeric-method}
 \alias{S4ForceFlat,Vector,numeric-method}
 \alias{S4ForceFlat,IntegerRanges,numeric-method}
 \alias{S4ForceFlat,ANYGenomic,GRanges-method}
@@ -37,7 +37,7 @@ When using a ranged class as \code{x} argument, the result can be
 \item \code{S4ForceFlat,WoodenHorse,ANY-method}: Releases the \code{GreekSoldier} attribute and call
 the generic on the result.
 
-\item \code{S4ForceFlat,numeric,numeric-method}: Calls \code{scales::rescale}.
+\item \code{S4ForceFlat,knownContinuous,numeric-method}: Calls \code{scales::rescale}.
 
 \item \code{S4ForceFlat,Vector,numeric-method}: Attempts to coerce to a vector first.
 

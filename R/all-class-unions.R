@@ -1,3 +1,5 @@
+setOldClass("mapped_discrete")
+
 setClassUnion(
     "missing_OR_NULL",
     c("NULL", "missing")
@@ -25,7 +27,8 @@ setClassUnion(
 
 setClassUnion(
     "knownContinuous",
-    c("integer", "double", "numeric", "complex", "POSIXt", "Date", "dist")
+    c("integer", "double", "numeric", "complex", "POSIXt", "Date", "dist",
+      "mapped_discrete")
 )
 
 setClassUnion(
@@ -42,4 +45,5 @@ setClassUnion(
     "WoodenHorse",
     c("BeechHorse", "OakHorse")
 )
+
 

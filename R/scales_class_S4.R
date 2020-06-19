@@ -287,11 +287,15 @@ ScaleS4DiscretePosition <- ggproto_sibling(
         self$range_c$reset()
     },
     map = function(self, x, limits = self$get_limits()) {
-        if (is_discrete_like(x)) {
+        x <- if (is_discrete_like(x)) {
             seq_along(limits)[match(as.character(Nightfall(x)), limits)]
         } else {
             x
         }
+        if (is.numeric(x) && !is.null(x)) {
+            class(x) <- c("mapped_discrete", "numeric")
+        }
+        return(x)
     },
     train = function(self, x) {
         if (is_discrete_like(x)) {

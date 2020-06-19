@@ -8,14 +8,13 @@
 [![Lifecycle:
 experimental](https://img.shields.io/badge/lifecycle-experimental-orange.svg)](https://www.tidyverse.org/lifecycle/#experimental)
 [![Travis build
-status](https://travis-ci.org/teunbrand/ggnomics.svg?branch=BioC)](https://travis-ci.org/teunbrand/ggnomics)
+status](https://travis-ci.org/teunbrand/ggnomics.svg)](https://travis-ci.org/teunbrand/ggnomics)
 [![Codecov test
-coverage](https://codecov.io/gh/teunbrand/ggnomics/branch/BioC/graph/badge.svg)](https://codecov.io/gh/teunbrand/ggnomics?branch=BioC)
+coverage](https://codecov.io/gh/teunbrand/ggnomics/branch/BioC/graph/badge.svg)](https://codecov.io/gh/teunbrand/ggnomics)
 <!-- badges: end -->
 
-This branch of ggnomics explores how to integrate Bioconductor S4 class
-constructions and ggplot2 plotting system. Ideally, this would be made
-near seamless at some point. Practically, it is still a buggy mess.
+This packages offers tools to integrate Bioconductor S4 classes and the
+ggplot2 plotting system.
 
 ## Installation
 
@@ -24,21 +23,15 @@ You can install this experimental branch from
 
 ``` r
 # install.packages("devtools")
-devtools::install_github("teunbrand/ggnomics", ref = "BioC")
-```
-
-It only works with ‘ggplot2’ version \>3.3.0.9000, i.e. their master
-branch.
-
-``` r
-# install.packages("devtools")
-devtools::install_github("tidyverse/ggplot2")
+devtools::install_github("teunbrand/ggnomics")
 ```
 
 ## Example
 
 The main idea is that you would be able to plot S4 Vector classes as you
-would any other vector.
+would any other vector, without having to convert to base R or tidyverse
+data-structures first. Below is an example of how the `GRanges` class
+inside a `DataFrame` is handled.
 
 ``` r
 suppressPackageStartupMessages({
@@ -47,7 +40,7 @@ suppressPackageStartupMessages({
 })
 
 df <- DataFrame(
-  x = GRanges(c("chr1:100-200:+", "chr1:150-250:-", "chr2:200-300:*")),
+  x = GRanges(c("chr1:100-200:+", "chr1:150-300:-", "chr2:200-300:*")),
   y = 1:3
 )
 
@@ -56,17 +49,35 @@ g <- ggplot(df, aes(x, y, fill = strand(x))) +
 g
 ```
 
-<img src="man/figures/README-genomic_scale-1.png" width="60%" style="display: block; margin: auto;" />
+<img src="man/figures/README-genomic_scale-1.png" width="80%" style="display: block; margin: auto;" />
+
+## Explanation
+
+To showcase what happens in the example above notice a few things. Most
+noticeable is that the `GRanges` class is used as a valid position
+variable. You can also notice the new axis guide, that appropriately
+indicates the `seqnames` slot of the input.
+
+Because `geom_tile()` re-parametrises the data as a rectangle with
+`xmin` and `xmax` values, the `GRanges` object respectively uses it’s
+start- and end-positions depending on the context of the aesthetic’s
+name. This opens up a wide range of geoms to be compatible with ranged
+classes.
+
+The `aes(..., fill = strand(x))` statement uses ggplot2’s non-standard
+evaluation as you would expect with `base::data.frame`s. Furthermore,
+`strand(x)` evaluates to a `factor-Rle`, which is now a valid, mappable,
+discrete class.
 
 The data retains the S4 classes throughout the vast majority of plot
 building, allowing specialised geoms and stats to take advantage of
 this.
 
 ``` r
-layer_data(g)
+(ld <- layer_data(g))
 #>      fill              x y PANEL group           xmin           xmax ymin ymax
 #> 1 #F8766D chr1:100-200:+ 1     1    -1 chr1:100-200:+ chr1:100-200:+  0.6  1.4
-#> 2 #00BA38 chr1:150-250:- 2     1    -1 chr1:150-250:- chr1:150-250:-  1.6  2.4
+#> 2 #00BA38 chr1:150-300:- 2     1    -1 chr1:150-300:- chr1:150-300:-  1.6  2.4
 #> 3 #619CFF chr2:200-300:* 3     1    -1 chr2:200-300:* chr2:200-300:*  2.6  3.4
 #>   colour size linetype alpha width height
 #> 1     NA  0.1        1    NA     0    0.8
@@ -74,36 +85,35 @@ layer_data(g)
 #> 3     NA  0.1        1    NA     0    0.8
 ```
 
-## Working classes
+The trick here is that the S4 classes are protected from incompatible S3
+`data.frame` operations, such as `rbind()`, by being wrapped in their
+own `vctrs`-class. They still contain the beloved S4 classes though.
 
-Here is a list of classes that I’ve tested with:
+``` r
+class(ld$x)
+#> [1] "OakHorse"    "WoodenHorse" "vctrs_vctr"
+class(Nightfall(ld$x))
+#> [1] "GRanges"
+#> attr(,"package")
+#> [1] "GenomicRanges"
+```
 
-  - Rle
-  - IRanges
-  - GRanges
+## Footnotes
 
-## Likely advantages
+This package is still very much a work in progress. Since the
+Bioconductor ecosystem is rich with specialised infrastructure and
+classes, I haven’t managed to try and test every class. However, most
+things should work with `Rle`, `IRanges` and `GRanges` classes.
 
-Here is a list:
+Furthermore, not all ggplot2 features lend themselves well to S4 vectors
+yet: I’ve yet to devise a polar coordinate system and non-identity scale
+transformations. Also not all position adjustments or layer stats are
+expected to work perfectly.
 
-  - Grammar of graphics approach to plotting data
-  - Converting a DataFrame to be ggplot compatible will retain S4
-    classes
-  - Support for genomic scales
-  - Can be extended
-  - Layer data will remain S4 throughout the build process
-      - Which means geoms/stats/positions have access to the class
-
-## Known bugs
-
-Here is a list:
-
-  - Using GRanges as position unit is a tad slow
-  - Currently cannot represent non-integers on genomic scales.
-  - Doesn’t have a polar coordinate system
-  - No working List-like solution yet (e.g. IntegerList etc.)
-  - Mostly geared toward IRanges/GRanges and numerical-Rle classes at
-    this point, whether anything else will work is anyone’s guess
-  - No supported scale transformations so far
-  - If you even breathe too loudly in the general direction of your
-    screen, it will throw a hissyfit
+I’d also like to mention that this is not the only genomics-oriented
+ggplot package out there. Take a look at the
+[ggbio](https://www.bioconductor.org/packages/release/bioc/html/ggbio.html)
+package for instance. In my view, the main difference is that this
+package is not going to produce your pretty plots for you, but by
+extending ggplot2, this package allows the flexibility required to build
+your own genomics plots.

@@ -4,7 +4,6 @@
 .RData
 .Ruserdata
 .swp
-README.Rmd
 .gitignore.save
 ggnomics.Rproj
 inst/doc

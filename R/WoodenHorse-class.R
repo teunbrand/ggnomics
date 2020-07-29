@@ -99,35 +99,28 @@ vec_ptype_abbr.WoodenHorse <- function(x, ...) {
 
 # Wooden Horse prototyping ------------------------------------------------
 
+## Beech Horse ------------------------------------------------------------
+
 #' @importFrom vctrs vec_ptype2
-#' @method vec_ptype2 WoodenHorse
+#' @method vec_ptype2 BeechHorse
 #' @export
-#' @export vec_ptype2.WoodenHorse
+#' @export vec_ptype2.BeechHorse
 #' @describeIn WoodenHorse-vctr Generic for \code{\link[vctrs]{vec_ptype2}}
 #' @usage NULL
-vec_ptype2.WoodenHorse <- function(x, y, ...) {
-    UseMethod("vec_ptype2.WoodenHorse", y)
+vec_ptype2.BeechHorse <- function(x, y, ...) {
+    UseMethod("vec_ptype2.BeechHorse", y)
 }
 
-#' @method vec_ptype2.WoodenHorse default
-#' @export
-#' @describeIn WoodenHorse-vctr Default method for
-#'   \code{vec_ptype2.WoodenHorse}: there are no common types.
-#' @usage NULL
-vec_ptype2.WoodenHorse.default <- function(x, y, ...,
-                                           x_arg = "x", y_arg = "y") {
-    vctrs::vec_default_ptype2(x, y, x_arg = x_arg, y_arg = y_arg)
-}
-
-#' @method vec_ptype2.WoodenHorse BeechHorse
+#' @method vec_ptype2.BeechHorse BeechHorse
 #' @export
 #' @describeIn WoodenHorse-vctr BeechHorse method for
-#'   \code{vec_ptype2.WoodenHorse}: attempt to merge
+#'   \code{vec_ptype2.BeechHorse}: attempt to merge
 #'   \code{GreekSoldier} attributes.
 #' @usage NULL
-vec_ptype2.WoodenHorse.BeechHorse <- function(x, y, ...) {
+vec_ptype2.BeechHorse.BeechHorse <- function(x, y, ...) {
     new_vctr(
         numeric(0),
+        # Kind of relying to the attributes that these are incompatible
         GreekSoldier = bindROWS(
             attr(x, "GreekSoldier"),
             list(attr(y, "GreekSoldier")),
@@ -135,17 +128,27 @@ vec_ptype2.WoodenHorse.BeechHorse <- function(x, y, ...) {
         class = c("BeechHorse", "WoodenHorse"))
 }
 
-#' @method vec_ptype2.WoodenHorse OakHorse
+## Oak Horse --------------------------------------------------------------
+
+#' @importFrom vctrs vec_ptype2
+#' @method vec_ptype2 OakHorse
+#' @export
+#' @export vec_ptype2.BeechHorse
+#' @describeIn WoodenHorse-vctr Generic for \code{\link[vctrs]{vec_ptype2}}
+#' @usage NULL
+vec_ptype2.OakHorse <- function(x, y, ...) {
+    UseMethod("vec_ptype2.OakHorse", y)
+}
+
+#' @method vec_ptype2.OakHorse OakHorse
 #' @export
 #' @describeIn WoodenHorse-vctr OakHorse method for
-#'   \code{vec_ptype2.WoodenHorse}: only merge \code{GreekSoldier} attributes
-#'   when necessary.
+#'   \code{vec_ptype2.OakHorse}: attempt to merge
+#'   \code{GreekSoldier} attributes.
 #' @usage NULL
-vec_ptype2.WoodenHorse.OakHorse <- function(x, y, ...) {
+vec_ptype2.OakHorse.OakHorse <- function(x, y, ...) {
     if (attr(x, "hsh") == attr(y, "hsh")) {
         return(y)
-    } else if (length(y) == 0) {
-        return(x)
     } else if (all(attr(x, "GreekSoldier") %in% attr(y, "GreekSoldier"))) {
         return(y)
     } else if (all(a <- attr(y, "GreekSoldier") %in% attr(x, "GreekSoldier"))) {
@@ -165,45 +168,119 @@ vec_ptype2.WoodenHorse.OakHorse <- function(x, y, ...) {
     }
 }
 
+# #' @importFrom vctrs vec_ptype2
+# #' @method vec_ptype2 WoodenHorse
+# #' @export
+# #' @export vec_ptype2.WoodenHorse
+# #' @describeIn WoodenHorse-vctr Generic for \code{\link[vctrs]{vec_ptype2}}
+# #' @usage NULL
+# vec_ptype2.WoodenHorse <- function(x, y, ...) {
+#     print("Generic")
+#     UseMethod("vec_ptype2.WoodenHorse", y)
+# }
+#
+# #' @method vec_ptype2.WoodenHorse default
+# #' @export
+# #' @describeIn WoodenHorse-vctr Default method for
+# #'   \code{vec_ptype2.WoodenHorse}: there are no common types.
+# #' @usage NULL
+# vec_ptype2.WoodenHorse.default <- function(x, y, ...,
+#                                            x_arg = "x", y_arg = "y") {
+#     print('WoodenHorse-default')
+#     vctrs::vec_default_ptype2(x, y, x_arg = x_arg, y_arg = y_arg)
+# }
+# #' @method vec_ptype2.WoodenHorse BeechHorse
+# #' @export
+# #' @describeIn WoodenHorse-vctr BeechHorse method for
+# #'   \code{vec_ptype2.WoodenHorse}: attempt to merge
+# #'   \code{GreekSoldier} attributes.
+# #' @usage NULL
+# vec_ptype2.WoodenHorse.BeechHorse <- function(x, y, ...) {
+#     print("WoodenHorse-BeechHorse")
+#     new_vctr(
+#         numeric(0),
+#         GreekSoldier = c(attr(x, "GreekSoldier"),
+#                          attr(y, "GreekSoldier"))[0],
+#         # GreekSoldier = bindROWS(
+#         #     attr(x, "GreekSoldier"),
+#         #     list(attr(y, "GreekSoldier")),
+#         #     use.names = FALSE, ignore.mcols = TRUE, check = FALSE),
+#         class = c("BeechHorse", "WoodenHorse"))
+# }
+# @method vec_ptype2.WoodenHorse OakHorse
+# @export
+# @describeIn WoodenHorse-vctr OakHorse method for
+#   \code{vec_ptype2.WoodenHorse}: only merge \code{GreekSoldier} attributes
+#   when necessary.
+# @usage NULL
+# vec_ptype2.WoodenHorse.OakHorse <- function(x, y, ...) {
+#     if (attr(x, "hsh") == attr(y, "hsh")) {
+#         return(y)
+#     } else if (length(y) == 0) {
+#         return(x)
+#     } else if (all(attr(x, "GreekSoldier") %in% attr(y, "GreekSoldier"))) {
+#         return(y)
+#     } else if (all(a <- attr(y, "GreekSoldier") %in% attr(x, "GreekSoldier"))) {
+#         return(x)
+#     } else {
+#         new <- bindROWS(
+#             attr(x, "GreekSoldier"),
+#             list(attr(y, "GreekSoldier")[!a]),
+#             use.names = FALSE, ignore.mcols = TRUE, check = FALSE
+#         )
+#         new_vctr(
+#             integer(0),
+#             hsh = digest(new),
+#             GreekSoldier = new,
+#             class = c("OakHorse", "WoodenHorse")
+#         )
+#     }
+# }
+
 # Wooden Horse casting ----------------------------------------------------
 
+## Beech Horse ------------------------------------------------------------
+
 #' @importFrom vctrs vec_cast
-#' @method vec_cast WoodenHorse
+#' @method vec_cast BeechHorse
 #' @export
-#' @export vec_cast.WoodenHorse
+#' @export vec_cast.BeechHorse
 #' @describeIn WoodenHorse-vctr Generic for \code{\link[vctrs]{vec_cast}}
 #' @usage NULL
-vec_cast.WoodenHorse <- function(x, to, ...) {
-    UseMethod("vec_cast.WoodenHorse")
+vec_cast.BeechHorse <- function(x, to, ...) {
+    UseMethod("vec_cast.BeechHorse")
 }
 
-#' @method vec_cast.WoodenHorse default
-#' @export
-#' @describeIn WoodenHorse-vctr Default method for \code{vec_cast.WoodenHorse}:
-#'   it should not be casted.
-#' @usage NULL
-vec_cast.WoodenHorse.default <- function(x, to, ...) {
-    vctrs::vec_default_cast(x, to)
-}
-
-#' @method vec_cast.WoodenHorse BeechHorse
+# #' @method vec_cast.BeechHorse BeechHorse
 #' @export
 #' @describeIn WoodenHorse-vctr \code{BeechHorse} method for
-#'   \code{vec_cast.WoodenHorse}: attempt to cast if the \code{GreekSoldier}
+#'   \code{vec_cast.BeechHorse}: attempt to cast if the \code{GreekSoldier}
 #'   attribute is similar.
 #' @usage NULL
-vec_cast.WoodenHorse.BeechHorse <- function(x, to, ...) {
+vec_cast.BeechHorse.BeechHorse <- function(x, to, ...) {
     new_vctr(vec_data(x),
              GreekSoldier = attr(to, "GreekSoldier"),
              class = c("BeechHorse", "WoodenHorse"))
 }
 
-#' @method vec_cast.WoodenHorse OakHorse
+## Oak Horse --------------------------------------------------------------
+
+#' @method vec_cast OakHorse
+#' @export
+#' @export vec_cast.OakHorse
+#' @describeIn WoodenHorse-vctr Generic for \code{\link[vctrs]{vec_cast}}
+#' @usage NULL
+vec_cast.OakHorse <- function(x, to, ...) {
+    UseMethod("vec_cast.OakHorse")
+}
+
+#' @method vec_cast.OakHorse OakHorse
 #' @export
 #' @describeIn WoodenHorse-vctr \code{OakHorse} method for
-#'   \code{vec_cast.WoodenHorse}: only refactor when hashes don't match
+#'   \code{vec_cast.OakHorse}: attempt to cast if the \code{GreekSoldier}
+#'   attribute is similar.
 #' @usage NULL
-vec_cast.WoodenHorse.OakHorse <- function(x, to, ...) {
+vec_cast.OakHorse.OakHorse <- function(x, to, ...) {
     if (attr(x, "hsh") == attr(to, "hsh")) {
         return(x)
     } else {
@@ -216,6 +293,58 @@ vec_cast.WoodenHorse.OakHorse <- function(x, to, ...) {
         )
     }
 }
+
+
+
+# #' @importFrom vctrs vec_cast
+# #' @method vec_cast WoodenHorse
+# #' @export
+# #' @export vec_cast.WoodenHorse
+# #' @describeIn WoodenHorse-vctr Generic for \code{\link[vctrs]{vec_cast}}
+# #' @usage NULL
+# vec_cast.WoodenHorse <- function(x, to, ...) {
+#     UseMethod("vec_cast.WoodenHorse")
+# }
+#
+# #' @method vec_cast.WoodenHorse default
+# #' @export
+# #' @describeIn WoodenHorse-vctr Default method for \code{vec_cast.WoodenHorse}:
+# #'   it should not be casted.
+# #' @usage NULL
+# vec_cast.WoodenHorse.default <- function(x, to, ...) {
+#     vctrs::vec_default_cast(x, to)
+# }
+#
+# #' @method vec_cast.WoodenHorse BeechHorse
+# #' @export
+# #' @describeIn WoodenHorse-vctr \code{BeechHorse} method for
+# #'   \code{vec_cast.WoodenHorse}: attempt to cast if the \code{GreekSoldier}
+# #'   attribute is similar.
+# #' @usage NULL
+# vec_cast.WoodenHorse.BeechHorse <- function(x, to, ...) {
+#     new_vctr(vec_data(x),
+#              GreekSoldier = attr(to, "GreekSoldier"),
+#              class = c("BeechHorse", "WoodenHorse"))
+# }
+#
+# #' @method vec_cast.WoodenHorse OakHorse
+# #' @export
+# #' @describeIn WoodenHorse-vctr \code{OakHorse} method for
+# #'   \code{vec_cast.WoodenHorse}: only refactor when hashes don't match
+# #' @usage NULL
+# vec_cast.WoodenHorse.OakHorse <- function(x, to, ...) {
+#     if (attr(x, "hsh") == attr(to, "hsh")) {
+#         return(x)
+#     } else {
+#         new <- match(attr(x, "GreekSoldier"), attr(to, "GreekSoldier"))
+#         new_vctr(
+#             new[vec_data(x)],
+#             hsh = attr(to, "hsh"),
+#             GreekSoldier = attr(to, "GreekSoldier"),
+#             class = c("OakHorse", "WoodenHorse")
+#         )
+#     }
+# }
 
 # Wooden Horse subsetting -------------------------------------------------
 

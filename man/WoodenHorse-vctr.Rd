@@ -5,14 +5,14 @@
 \alias{obj_print_header.WoodenHorse}
 \alias{vec_ptype_full.WoodenHorse}
 \alias{vec_ptype_abbr.WoodenHorse}
-\alias{vec_ptype2.WoodenHorse}
-\alias{vec_ptype2.WoodenHorse.default}
-\alias{vec_ptype2.WoodenHorse.BeechHorse}
-\alias{vec_ptype2.WoodenHorse.OakHorse}
-\alias{vec_cast.WoodenHorse}
-\alias{vec_cast.WoodenHorse.default}
-\alias{vec_cast.WoodenHorse.BeechHorse}
-\alias{vec_cast.WoodenHorse.OakHorse}
+\alias{vec_ptype2.BeechHorse}
+\alias{vec_ptype2.BeechHorse.BeechHorse}
+\alias{vec_ptype2.OakHorse}
+\alias{vec_ptype2.OakHorse.OakHorse}
+\alias{vec_cast.BeechHorse}
+\alias{vec_cast.BeechHorse.BeechHorse}
+\alias{vec_cast.OakHorse}
+\alias{vec_cast.OakHorse.OakHorse}
 \alias{vec_math.WoodenHorse}
 \alias{vec_arith.WoodenHorse}
 \alias{vec_arith.WoodenHorse.default}
@@ -36,30 +36,29 @@ These are vctrs-methods that enable the \code{WoodenHorse} class,
 
 \item \code{vec_ptype_abbr.WoodenHorse}: See \code{\link[vctrs]{vec_ptype_abbr}}
 
-\item \code{vec_ptype2.WoodenHorse}: Generic for \code{\link[vctrs]{vec_ptype2}}
+\item \code{vec_ptype2.BeechHorse}: Generic for \code{\link[vctrs]{vec_ptype2}}
 
-\item \code{vec_ptype2.WoodenHorse.default}: Default method for
-\code{vec_ptype2.WoodenHorse}: there are no common types.
-
-\item \code{vec_ptype2.WoodenHorse.BeechHorse}: BeechHorse method for
-\code{vec_ptype2.WoodenHorse}: attempt to merge
+\item \code{vec_ptype2.BeechHorse.BeechHorse}: BeechHorse method for
+\code{vec_ptype2.BeechHorse}: attempt to merge
 \code{GreekSoldier} attributes.
 
-\item \code{vec_ptype2.WoodenHorse.OakHorse}: OakHorse method for
-\code{vec_ptype2.WoodenHorse}: only merge \code{GreekSoldier} attributes
-when necessary.
+\item \code{vec_ptype2.OakHorse}: Generic for \code{\link[vctrs]{vec_ptype2}}
 
-\item \code{vec_cast.WoodenHorse}: Generic for \code{\link[vctrs]{vec_cast}}
+\item \code{vec_ptype2.OakHorse.OakHorse}: OakHorse method for
+\code{vec_ptype2.OakHorse}: attempt to merge
+\code{GreekSoldier} attributes.
 
-\item \code{vec_cast.WoodenHorse.default}: Default method for \code{vec_cast.WoodenHorse}:
-it should not be casted.
+\item \code{vec_cast.BeechHorse}: Generic for \code{\link[vctrs]{vec_cast}}
 
-\item \code{vec_cast.WoodenHorse.BeechHorse}: \code{BeechHorse} method for
-\code{vec_cast.WoodenHorse}: attempt to cast if the \code{GreekSoldier}
+\item \code{vec_cast.BeechHorse.BeechHorse}: \code{BeechHorse} method for
+\code{vec_cast.BeechHorse}: attempt to cast if the \code{GreekSoldier}
 attribute is similar.
 
-\item \code{vec_cast.WoodenHorse.OakHorse}: \code{OakHorse} method for
-\code{vec_cast.WoodenHorse}: only refactor when hashes don't match
+\item \code{vec_cast.OakHorse}: Generic for \code{\link[vctrs]{vec_cast}}
+
+\item \code{vec_cast.OakHorse.OakHorse}: \code{OakHorse} method for
+\code{vec_cast.OakHorse}: attempt to cast if the \code{GreekSoldier}
+attribute is similar.
 
 \item \code{vec_math.WoodenHorse}: See \code{\link[vctrs]{vec_math}}. Exceptions to
 the math group generics for \code{WoodenHorse} class are \code{is.na()},

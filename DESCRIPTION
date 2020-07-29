@@ -35,7 +35,7 @@ Imports:
     GenomicRanges,
     IRanges,
     scales,
-    vctrs,
+    vctrs (>= 0.3.1),
     stats,
     methods,
     BiocGenerics,

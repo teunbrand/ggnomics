@@ -6,3 +6,4 @@
 .swp
 .gitignore.save
 inst/doc
+tests/testthat/Rplots.pdf

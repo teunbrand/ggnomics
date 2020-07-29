@@ -482,8 +482,8 @@ build_ideogram <- function(position = "b", ideograms,
 # Drawtime edits ----------------------------------------------------------
 
 #' @export
-#' @noRd
-#' @keywords internal
+#' @rdname guide_ideogram_axis
+#' @usage NULL
 makeContext.ideogrob <- function(x) {
 
     grob <- x

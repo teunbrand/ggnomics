@@ -96,12 +96,16 @@ setGeneric(
 
 # Methods -----------------------------------------------------------------
 
+#' @describeIn setup_ideograms Uses \code{data.frame} to generate ideograms
+#' @usage NULL
 setMethod(
     "setup_ideograms",
     signature = c(data = "data.frame"),
     .setup_ideogram
 )
 
+#' @describeIn setup_ideograms Uses \code{character} as file path.
+#' @usage NULL
 setMethod(
     "setup_ideograms",
     signature = c(data = "character"),
@@ -111,9 +115,14 @@ setMethod(
     }
 )
 
+#' @describeIn setup_ideograms Attempts to lookup genome in UCSC tables and
+#'   caches this.
+#' @usage NULL
 setMethod(
     "setup_ideograms",
-    signature = c(data = "missing_OR_NULL", genome = "character"),
+    signature = c(data = "missing_OR_NULL",
+                  colourmap = "ANY",
+                  genome = "character"),
     function(data, genome = NULL,
              colourmap = default_ideogram_colours()) {
         try_require("BiocFileCache", "setup_ideograms")
@@ -126,7 +135,7 @@ setMethod(
                  call. = FALSE)
         }
         if (genome %in% ls(ideo_cache)) {
-            stop("Ideograms already in cache.", call. = FALSE)
+            message("Ideograms already in cache. Overwiting previous cache.")
         }
 
         url <- switch(
@@ -165,10 +174,6 @@ ideo_cache_get <- function(genome = NULL) {
         stop("No cached ideograms found for genome `", genome, "`. Please run ",
              "`setup_ideograms()` first.", call. = FALSE)
     }
-}
-
-clear_ideogram_cache <- function() {
-
 }
 
 # Helpers -----------------------------------------------------------------

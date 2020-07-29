@@ -2,6 +2,9 @@
 % Please edit documentation in R/utils_ideograms.R
 \name{setup_ideograms}
 \alias{setup_ideograms}
+\alias{setup_ideograms,data.frame,ANY-method}
+\alias{setup_ideograms,character,ANY-method}
+\alias{setup_ideograms,missing_OR_NULL,character-method}
 \title{Setup ideograms}
 \usage{
 setup_ideograms(
@@ -45,6 +48,16 @@ If the \code{data} argument is missing but the \code{genome}
   \code{"mm10"}, BiocFileCache is used to cache the \code{cytoBand.txt}
   file from UCSC.
 }
+\section{Methods (by class)}{
+\itemize{
+\item \code{data = data.frame,genome = ANY}: Uses \code{data.frame} to generate ideograms
+
+\item \code{data = character,genome = ANY}: Uses \code{character} as file path.
+
+\item \code{data = missing_OR_NULL,genome = character}: Attempts to lookup genome in UCSC tables and
+caches this.
+}}
+
 \examples{
 setup_ideograms(genome = "hg38")
 }

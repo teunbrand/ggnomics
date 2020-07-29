@@ -11,7 +11,7 @@ Authors@R:
            comment = c(ORCID = "0000-0002-9335-7468"))
 Description: Provides tools for the integration of Bioconductor S4 classes and 
     the popular 'ggplot2' plotting package.
-License: file LICENSE
+License: MIT + file LICENSE
 Encoding: UTF-8
 LazyData: true
 RoxygenNote: 7.1.1
@@ -42,7 +42,8 @@ Imports:
     utils,
     rlang,
     digest,
-    gtable
+    gtable,
+    grid
 Collate: 
     'WoodenHorse-class.R'
     'all-class-unions.R'
@@ -85,3 +86,4 @@ Collate:
     'stat_coverage.R'
     'utils_ideograms.R'
     'zzz.R'
+BugReports: https://github.com/teunbrand/ggnomics/issues

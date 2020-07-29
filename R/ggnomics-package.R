@@ -9,11 +9,12 @@
 #' @importFrom methods selectMethod callGeneric is .valueClassTest getGeneric as
 #'   validObject hasMethod
 #' @importFrom stats setNames
-#' @importFrom utils getFromNamespace globalVariables
+#' @importFrom utils getFromNamespace globalVariables read.table
 #' @import IRanges
 #' @import vctrs
 #' @importFrom rlang `%||%`
 #' @importFrom digest digest
+#' @import grid
 NULL
 
 # The following block is used by usethis to automatically manage

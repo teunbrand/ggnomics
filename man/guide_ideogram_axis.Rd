@@ -5,6 +5,7 @@
 \alias{guide_train.ideogram_axis}
 \alias{guide_transform.ideogram_axis}
 \alias{guide_gengrob.ideogram_axis}
+\alias{makeContext.ideogrob}
 \title{Ideogram axis guide}
 \usage{
 guide_ideogram_axis(

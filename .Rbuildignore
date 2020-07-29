@@ -5,3 +5,4 @@
 ^\.travis\.yml$
 ^codecov\.yml$
 ^README\.Rmd$
+^LICENSE\.md$

@@ -51,6 +51,8 @@
   the levels/value slot is inspected to decide. Genomic classes in the 
   `GenomicRanges` package go to `*_genomic` scales. Anything else is currently 
   defaulting to the `*_S4_continuous` scales.
+* Added `guide_ideogram_axis()` to annotate positions with ideograms. Not
+  implemented for genomic scales yet!
 
 ### Coordinates
 

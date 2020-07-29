@@ -14,6 +14,7 @@
 #'   Defaults to \code{guide_axis} behaviour if not exposed to genomic data.
 #'
 #' @return A \code{guide} object.
+#' @family position guides
 #'
 #' @export
 #'

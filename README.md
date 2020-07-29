@@ -49,7 +49,7 @@ g <- ggplot(df, aes(x, y, fill = strand(x))) +
 g
 ```
 
-<img src="man/figures/README-genomic_scale-1.png" width="80%" style="display: block; margin: auto;" />
+<img src="man/figures/README-genomic_scale-1.png" width="80%" />
 
 ## Explanation
 

@@ -13,6 +13,7 @@ Provides tools for the integration of Bioconductor S4 classes and
 Useful links:
 \itemize{
   \item \url{https://github.com/teunbrand/ggnomics}
+  \item Report bugs at \url{https://github.com/teunbrand/ggnomics/issues}
 }
 
 }

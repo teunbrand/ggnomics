@@ -102,3 +102,11 @@ is_discrete_like <- function(x) {
     is.factor(x) || is.character(x) || is.logical(x) || is(x, "knownDiscretes")
 }
 
+try_require <- function(package, fun) {
+    if (requireNamespace(package, quietly = TRUE)) {
+        return(invisible())
+    }
+
+    stop("Package `", package, "` required for `", fun, "()`.",
+         "\nPlease install and try again.", call. = FALSE)
+}
